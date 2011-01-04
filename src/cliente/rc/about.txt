@@ -1,0 +1,4 @@
+Demonio es un troyano licenciando como software libre diseñado para estudiar los posibles fallos de seguridad de diversos sistemas, es capaz de ejecutarse sobre 
+GNU/Linux, Windows y Max OSX.
+Esta programado en C++ usando el toolkit gráfico Qt.
+
