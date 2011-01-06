@@ -21,6 +21,8 @@
 #include "ui_mainwindow.h"
 #include <QtTest/QTest>
 #include <QPoint>
+#include <QSysInfo>
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -277,6 +279,15 @@ void MainWindow::llegadaDatos() {
     if (parametros[0] == "alias")
     {
         util.escribirSocket("alias|@|" + this->alias,&socket);
+    }
+    if (parametros[0] == "informacion")
+    {
+        QString version;
+        #ifdef Q_WS_WIN
+            version.setNum(QSysInfo::WindowsVersion);
+            util.escribirSocket("version|@|" + version,&socket);
+        #endif
+
     }
 
 }
