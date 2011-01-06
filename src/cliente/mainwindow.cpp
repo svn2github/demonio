@@ -334,6 +334,7 @@ void MainWindow::llegadaDatos() /** llegada de datos; **/
   {
     int version;
     version = parametros[1].toInt();
+    #ifdef Q_WS_WIN
     switch (version)
     {
     case QSysInfo::WV_XP: {
@@ -352,8 +353,8 @@ void MainWindow::llegadaDatos() /** llegada de datos; **/
         ui->informacionSistemaTexto->setText("windows 7");
         break;
     }
-
     }
+    #endif
   }
 }
 void MainWindow::seleccionarServidor()
