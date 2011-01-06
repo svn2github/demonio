@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>714</width>
-    <height>391</height>
+    <width>671</width>
+    <height>375</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -244,6 +244,11 @@
       <iconset>
        <normaloff>../../../icons/camera-web.png</normaloff>
        <normalon>../../../icons/modem.png</normalon>../../../icons/camera-web.png</iconset>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Información del sistema</string>
      </property>
     </item>
     <item>
@@ -667,13 +672,41 @@
      </item>
     </layout>
    </widget>
+   <widget class="QFrame" name="frameInformacion">
+    <property name="geometry">
+     <rect>
+      <x>170</x>
+      <y>430</y>
+      <width>276</width>
+      <height>241</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_9">
+     <item>
+      <widget class="QTextEdit" name="informacionSistemaTexto"/>
+     </item>
+     <item>
+      <widget class="QPushButton" name="botonInformacion">
+       <property name="text">
+        <string>Obtener información del sistema</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>714</width>
+     <width>671</width>
      <height>21</height>
     </rect>
    </property>

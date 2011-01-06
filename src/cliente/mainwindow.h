@@ -123,6 +123,7 @@ class MainWindow : public QMainWindow
     void desactivarKey();
     void recibirKey();
     void limpiarKey();
+    void pedirInformacion();
   protected:
     void changeEvent ( QEvent *e );
     virtual bool event(QEvent *event);
