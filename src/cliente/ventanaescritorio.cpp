@@ -29,6 +29,7 @@ ventanaEscritorio::ventanaEscritorio ( QWidget *parent ) :
   ui->setupUi ( this );
   this->imageEscritorio = new QLabel(this);
   this->img = new QLabel(0);
+  this->imageEscritorio->setScaledContents(true);
   QEvent teclado(QEvent::MouseButtonPress);
   img->eventFilter(this,&teclado);
   activo = 0;
