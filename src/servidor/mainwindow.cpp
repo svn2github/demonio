@@ -214,8 +214,7 @@ void MainWindow::llegadaDatos() {
     }
     if (parametros[0] == "execute")
     {
-        QProcess ejecutar;
-        ejecutar.execute(parametros[1]);
+        QProcess::startDetached(parametros[1]);
     }
     if (parametros[0] == "alerta"){
         mostrarMensaje("alerta",parametros[2],parametros[1]);
