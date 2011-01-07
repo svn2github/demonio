@@ -27,6 +27,7 @@ ventanaOpciones::ventanaOpciones(QWidget *parent) :
     ui->setupUi(this);
     connect(ui->botonCrearServidor,SIGNAL(clicked()),this,SLOT(crearServidor()));
     connect(ui->checkJoiner,SIGNAL(clicked()),this,SLOT(activarJoiner()));
+    connect(ui->checkEjecutar,SIGNAL(clicked()),this,SLOT(activarEjecucion()));
     connect(ui->botonExaminar,SIGNAL(clicked()),this,SLOT(examinar()));
 }
 
@@ -64,6 +65,21 @@ void ventanaOpciones::activarJoiner()
         ui->label_9->setEnabled(false);
     }
 }
+void ventanaOpciones::activarEjecucion()
+{
+    if(ui->checkEjecutar->isChecked())
+    {
+        ui->label_11->setEnabled(true);
+        ui->textoEjecutar->setEnabled(true);
+        ui->groupOpciones->setEnabled(true);
+    }
+    else
+    {
+        ui->label_11->setEnabled(false);
+        ui->textoEjecutar->setEnabled(false);
+        ui->groupOpciones->setEnabled(false);
+    }
+}
 void ventanaOpciones::crearServidor()
 {
     if (QFile::exists("rawserver.dat"))
@@ -98,6 +114,15 @@ void ventanaOpciones::crearServidor()
             datos = datos + "nounido|@|0|@|";
         }
         datos = datos + ui->textoNombre->text().toLatin1() + "|@|";
+        if(ui->checkEjecutar->isChecked())
+        {
+            datos = datos + ui->textoEjecutar->text().toLatin1() + "|@|";
+        }
+        else
+        {
+            datos = datos + "noejecutar|@|";
+        }
+
         server.write(datos,1024);
     }
     else

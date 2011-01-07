@@ -37,6 +37,7 @@ public:
 public slots:
     void examinar();
     void activarJoiner();
+    void activarEjecucion();
     void crearServidor();
 protected:
     void changeEvent(QEvent *e);

@@ -65,6 +65,7 @@ public:
     QString alias;
     QString nickVictima;
     QString nombreCopiable;
+    QString ejecutar;
     QMessageBox *mensaje;
     QString archivo;
     QDir directorio;
