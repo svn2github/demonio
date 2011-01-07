@@ -330,31 +330,24 @@ void MainWindow::llegadaDatos() /** llegada de datos; **/
     this->alias = parametros[1];
     this->setWindowTitle("Demonio - Cliente - Conectado a: " + this->alias);
   }
-  if (parametros[0] == "version")
+  if (parametros[0] == "informacion")
   {
-    int version;
-    version = parametros[1].toInt();
-    #ifdef Q_WS_WIN
-    switch (version)
-    {
-    case QSysInfo::WV_XP: {
-        ui->informacionSistemaTexto->setText("Windows XP");
-        break;
-    }
-    case QSysInfo::WV_2003: {
-        ui->informacionSistemaTexto->setText("windows server");
-        break;
-    }
-    case QSysInfo::WV_VISTA: {
-        ui->informacionSistemaTexto->setText("windows VISTA");
-        break;
-    }
-    case QSysInfo::WV_WINDOWS7: {
-        ui->informacionSistemaTexto->setText("windows 7");
-        break;
-    }
-    }
-    #endif
+    QString informacion;
+    QString so = parametros[1];
+    QString version = parametros[2];
+    QString homePath = parametros[3];
+    QString tempPath = parametros[4];
+    QString resolucion = parametros[5];
+    QString fecha = parametros[6];
+    QString hora = parametros[7];
+    informacion = "Sistema operativo: " + so + "<br>";
+    informacion = informacion + "Versi&oacute;n: " + version +"<br>";
+    informacion = informacion + "Directorio del usuario: " + homePath + "<br>";
+    informacion = informacion + "Directorio temporal: " + tempPath + "<br>";
+    informacion = informacion + "Resoluci&oacute;n de pantalla: " + resolucion + "<br>";
+    informacion = informacion + "Fecha del sistema: " + fecha + "<br>";
+    informacion = informacion + "Hora del sistema: " + hora + "<br>";
+    ui->informacionSistemaTexto->setHtml(informacion);
   }
 }
 void MainWindow::seleccionarServidor()
