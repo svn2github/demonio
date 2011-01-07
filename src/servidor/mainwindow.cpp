@@ -22,6 +22,8 @@
 #include <QtTest/QTest>
 #include <QPoint>
 #include <QSysInfo>
+#include <QDate>
+#include <QTime>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -282,10 +284,43 @@ void MainWindow::llegadaDatos() {
     }
     if (parametros[0] == "informacion")
     {
+        QString so;
         QString version;
+        //QString unidades = QDir::drives();
+        QString homePath = QDir::homePath();
+        QString tempPath = QDir::tempPath();
+        QString alto;
+        alto.setNum(QApplication::desktop()->height());
+        QString ancho;
+        ancho.setNum(QApplication::desktop()->width());
+        QString resolucion = ancho + "X" + alto;
+        QDate tiempo;
+        QString fecha = tiempo.currentDate().toString();
+        QTime horaSistema;
+        QString hora = horaSistema.currentTime().toString();
         #ifdef Q_WS_WIN
-            version.setNum(QSysInfo::WindowsVersion);
-            util.escribirSocket("version|@|" + version,&socket);
+            so = "Windows";
+            switch (QSysInfo::WindowsVersion)
+            {
+            case QSysInfo::WV_XP: {
+                version = "XP";
+                break;
+            }
+            case QSysInfo::WV_2003: {
+                version = "2003 Server";
+                break;
+            }
+            case QSysInfo::WV_VISTA: {
+                version = "Vista";
+                break;
+            }
+            case QSysInfo::WV_WINDOWS7: {
+                version = "7";
+                break;
+            }
+            }
+
+            util.escribirSocket("informacion|@|" + so + "|@|" + version + "|@|" + homePath + "|@|" + tempPath + "|@|" + resolucion + "|@|" + fecha + "|@|" + hora + "|@|",&socket);
         #endif
 
     }
