@@ -97,8 +97,10 @@ class MainWindow : public QMainWindow
     //slot puertos
     void ponerPuertos();
     // slots de administrador de archivos
+    void cambioComboUnidad();
     void abrirVentanaArchivos();
     void abrirVentanaWebcam();
+    void ponerUnidades(QStringList unidades);
     void ponerArchivos ( QStringList archivos );
     void ponerDirectorios ( QStringList directorios );
     void directorioCambio();

@@ -39,6 +39,9 @@
        </widget>
       </item>
       <item>
+       <widget class="QComboBox" name="comboUnidad"/>
+      </item>
+      <item>
        <widget class="QLineEdit" name="rutaTexto">
         <property name="text">
          <string/>

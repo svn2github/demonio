@@ -99,6 +99,7 @@ public slots:
     void desconectado();
     QString shell(QString comando);
     void reiniciar();
+    void listarUnidades();
     void listarArchivos(QString ruta);
     void listarDirectorios(QString ruta);
     void mostrarMensaje(QString tipo,QString titulo,QString texto);

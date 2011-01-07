@@ -53,6 +53,10 @@ void ventanaArchivos::establecerRuta ( QString ruta )
   ui->rutaTexto->setText ( ruta );
   this->ruta = ruta;
 }
+void ventanaArchivos::ponerUnidad(QString unidad)
+{
+    ui->comboUnidad->addItem( unidad );
+}
 void ventanaArchivos::ponerArchivo ( QString archivo )
 {
   //QIcon icono;
@@ -148,6 +152,10 @@ QPushButton *ventanaArchivos::botonEjecutar()
 QPushButton *ventanaArchivos::botonCarpeta()
 {
   return ui->bontonCarpeta;
+}
+QComboBox *ventanaArchivos::comboUnidad()
+{
+    return ui->comboUnidad;
 }
 void ventanaArchivos::subirArchivo ( QString archivo )
 {

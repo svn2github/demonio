@@ -26,6 +26,7 @@
 #include <QSignalMapper>
 #include <QFile>
 #include <QFileDialog>
+#include <QComboBox>
 namespace Ui
   {
   class ventanaArchivos;
@@ -58,7 +59,9 @@ class ventanaArchivos : public QMainWindow
     QPushButton *botonEjecutar();
     QPushButton *botonCarpeta();
     QPushButton *botonBorrar();
+    QComboBox *comboUnidad();
     void establecerRuta ( QString ruta );
+    void ponerUnidad(QString unidad);
     void ponerArchivo ( QString archivo );
     void ponerDirectorio ( QString directorio );
     void limpiarArchivos();

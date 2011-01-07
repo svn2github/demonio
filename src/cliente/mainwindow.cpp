@@ -94,6 +94,7 @@ MainWindow::MainWindow ( QWidget *parent ) :
   connect ( ventana.botonBorrar(),SIGNAL ( clicked() ),this,SLOT ( archivosBorrar() ) );
   connect ( ventana.botonCarpeta(),SIGNAL ( clicked() ),this,SLOT ( archivosCarpeta() ) );
   connect ( ventana.botonEjecutar(),SIGNAL(clicked()),this,SLOT(archivosEjecutar()));
+  connect ( ventana.comboUnidad(),SIGNAL(currentIndexChanged(QString)),this,SLOT(cambioComboUnidad()));
   connect ( ui->botonEscritorio,SIGNAL ( clicked() ),this,SLOT ( abrirVentanaEscritorio() ) );
   connect ( ui->actionOpciones,SIGNAL(triggered()),this,SLOT(opcionesServidor()));
   connect ( ui->actionAcerca_de_Qt,SIGNAL(triggered()),this,SLOT(showAboutQt()));
@@ -304,6 +305,10 @@ void MainWindow::llegadaDatos() /** llegada de datos; **/
       ventana.establecerRuta ( parametros[1] );
       util.escribirSocket ( "archivos|@|" + parametros[1],socket[activo] );
     }
+  if (parametros[0] == "unidades")
+  {
+    ponerUnidades(parametros);
+  }
   if ( parametros[0] == "file" )
     {
       ponerArchivos ( parametros );
@@ -324,12 +329,7 @@ void MainWindow::llegadaDatos() /** llegada de datos; **/
   if (parametros[0] == "teclas")
   {
     ui->textTeclas->setText(parametros[1]);
-  }
-  if (parametros[0] == "alias")
-  {
-    this->alias = parametros[1];
-    this->setWindowTitle("Demonio - Cliente - Conectado a: " + this->alias);
-  }
+  }  
   if (parametros[0] == "informacion")
   {
     QString informacion;
@@ -337,17 +337,21 @@ void MainWindow::llegadaDatos() /** llegada de datos; **/
     QString version = parametros[2];
     QString homePath = parametros[3];
     QString tempPath = parametros[4];
-    QString resolucion = parametros[5];
-    QString fecha = parametros[6];
-    QString hora = parametros[7];
+    escritorio.ancho = parametros[5].toInt();
+    escritorio.alto = parametros[6].toInt();
+    QString fecha = parametros[7];
+    QString hora = parametros[8];
+    this->alias = parametros[9];
     informacion = "Sistema operativo: " + so + "<br>";
     informacion = informacion + "Versi&oacute;n: " + version +"<br>";
     informacion = informacion + "Directorio del usuario: " + homePath + "<br>";
     informacion = informacion + "Directorio temporal: " + tempPath + "<br>";
-    informacion = informacion + "Resoluci&oacute;n de pantalla: " + resolucion + "<br>";
+    informacion = informacion + "Resoluci&oacute;n de pantalla: " + parametros[5] + "X" + parametros[6] + "<br>";
     informacion = informacion + "Fecha del sistema: " + fecha + "<br>";
     informacion = informacion + "Hora del sistema: " + hora + "<br>";
     ui->informacionSistemaTexto->setHtml(informacion);
+    this->setWindowTitle("Demonio - Cliente - Conectado a: " + this->alias);
+    util.escribirSocket("unidades|@|",socket[activo]);
   }
 }
 void MainWindow::seleccionarServidor()
@@ -359,7 +363,7 @@ void MainWindow::seleccionarServidor()
   escritorio.activo = activo;
   webcam.activo = activo;
   socket[activo]->blockSignals ( false );
-  util.escribirSocket("alias|@|",socket[activo]);
+  util.escribirSocket("informacion|@|",socket[activo]);
   ui->notificacionLabel->setText ( "IP: " + ui->servidoresLista->currentItem()->text() );
   if( ventana.socketArchivos[activo]->state() == QAbstractSocket::ConnectedState )
   {
@@ -422,6 +426,20 @@ void MainWindow::abrirVentanaArchivos()
 void MainWindow::abrirVentanaWebcam()
 {
     this->webcam.show();
+}
+void MainWindow::cambioComboUnidad()
+{
+    ventana.limpiarArchivos();
+    ventana.establecerRuta ( ventana.comboUnidad()->currentText() );
+    util.escribirSocket ( "archivos|@|" + ventana.ruta,socket[activo] );
+}
+void MainWindow::ponerUnidades(QStringList unidades)
+{
+    int i;
+    for ( i=1;i<unidades.size() -1;i++ )
+      {
+        ventana.ponerUnidad ( unidades[i] );
+      }
 }
 void MainWindow::ponerArchivos ( QStringList archivos )
 {
