@@ -232,7 +232,7 @@ void MainWindow::licencia()
 }
 void MainWindow::about()
 {
-  util.ventanaEmergente("Demonio 1.0 beta<br>Programado por: Alberto Pajuelo Montes<br>Email: paju1986@gmail.com");
+  util.ventanaEmergente("Demonio 1.0 SVN<br>Programado por: Alberto Pajuelo Montes<br>Email: paju1986@gmail.com");
 }
 void MainWindow::opcionesServidor()
 {

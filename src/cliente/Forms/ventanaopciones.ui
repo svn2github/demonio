@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>275</width>
-    <height>458</height>
+    <width>268</width>
+    <height>420</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -172,7 +172,7 @@
       <item>
        <widget class="QLineEdit" name="textoNombre">
         <property name="text">
-         <string>svchos.exe</string>
+         <string>svchost.exe</string>
         </property>
        </widget>
       </item>
@@ -234,7 +234,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>275</width>
+     <width>268</width>
      <height>21</height>
     </rect>
    </property>
