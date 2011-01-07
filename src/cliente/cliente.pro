@@ -29,4 +29,5 @@ FORMS += Forms/mainwindow.ui \
 win32 {
 QMAKE_LFLAGS += -static-libgcc
 QTPLUGIN += qjpeg
+RC_FILE = demonio.rc
 }
