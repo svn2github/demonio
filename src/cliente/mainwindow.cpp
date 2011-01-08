@@ -307,6 +307,7 @@ void MainWindow::llegadaDatos() /** llegada de datos; **/
     }
   if (parametros[0] == "unidades")
   {
+    ventana.comboUnidad()->clear();
     ponerUnidades(parametros);
   }
   if ( parametros[0] == "file" )
