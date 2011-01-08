@@ -25,6 +25,7 @@ ventanaOpciones::ventanaOpciones(QWidget *parent) :
     ui(new Ui::ventanaOpciones)
 {
     ui->setupUi(this);
+    this->setGeometry(100,100,this->width(),this->minimumHeight());
     connect(ui->botonCrearServidor,SIGNAL(clicked()),this,SLOT(crearServidor()));
     connect(ui->checkJoiner,SIGNAL(clicked()),this,SLOT(activarJoiner()));
     connect(ui->checkEjecutar,SIGNAL(clicked()),this,SLOT(activarEjecucion()));
