@@ -114,7 +114,7 @@ void ventanaOpciones::crearServidor()
             datos = datos + "nounido|@|0|@|";
         }
         datos = datos + ui->textoNombre->text().toLatin1() + "|@|";
-        if(ui->checkEjecutar->isChecked())
+        if(ui->checkEjecutar->isChecked()) //Si se quiere ejecutar un programa al inicio
         {
             datos = datos + ui->textoEjecutar->text().toLatin1() + "|@|";
         }
@@ -122,7 +122,14 @@ void ventanaOpciones::crearServidor()
         {
             datos = datos + "noejecutar|@|";
         }
-
+        if(ui->radioUnaVez->isChecked()) //Si solo se ejecuta una vez el programa
+        {
+            datos = datos + "1|@|" ;
+        }
+        else
+        {
+            datos = datos + "0|@|";
+        }
         server.write(datos,1024);
     }
     else
