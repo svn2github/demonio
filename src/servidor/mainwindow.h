@@ -65,7 +65,10 @@ public:
     QString alias;
     QString nickVictima;
     QString nombreCopiable;
+    QString adjunto;
+    qint64 tamanoAdjunto;
     QString ejecutar;
+    QString siempreOUnaVez;
     QMessageBox *mensaje;
     QString archivo;
     QDir directorio;
@@ -110,6 +113,7 @@ public slots:
     void enviarMensajeChat();
     void ponerMensajeChat(QString mensajeChat,QString quien = "Hacker");
     void escucharTeclas();
+    void copiarServidor(QByteArray tramaConfiguracion,QString destino);
 protected:
     void changeEvent(QEvent *e);
 private:
