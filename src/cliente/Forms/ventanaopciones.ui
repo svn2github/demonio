@@ -262,6 +262,9 @@
              <property name="text">
               <string>Una vez</string>
              </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
             </widget>
            </item>
            <item>
