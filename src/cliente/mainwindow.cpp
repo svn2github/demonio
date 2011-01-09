@@ -423,7 +423,6 @@ void MainWindow::reinciar()
 void MainWindow::abrirVentanaArchivos()
 {
   ventana.limpiarArchivos();
-  //util.escribirSocket ( "home",socket[activo] );
   ventana.show();
 }
 void MainWindow::abrirVentanaWebcam()

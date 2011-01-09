@@ -85,6 +85,7 @@ bool ventanaArchivos::event ( QEvent *event )
     case QEvent::Show:
     {
       connect ( socketArchivos[activo],SIGNAL ( readyRead() ),this,SLOT ( llegadaDatos() ) );
+      ui->botonHome->click();
       // break;
     }
     default:
