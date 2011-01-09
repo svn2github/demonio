@@ -226,7 +226,7 @@ void MainWindow::showAboutQt()
 void MainWindow::licencia()
 {
   QFile licencia;
-  licencia.setFileName ( "rc/gpl-3.0.txt" );
+  licencia.setFileName ( "./rc/gpl-3.0.txt" );
   licencia.open ( QIODevice::ReadOnly );
   ui->licenciaText->setText ( licencia.readAll() );
   licencia.close();
@@ -264,6 +264,7 @@ void MainWindow::escuchar()
   if ( server.isListening() && serverArchivos.isListening() && serverEscritorio.isListening() && serverWebcam.isListening())
     {
       ui->notificacionLabel->setText ( "Escuchando" );
+      ui->botonEscuchar->setEnabled(false);
     }
 }
 void MainWindow::nuevaConexion()
