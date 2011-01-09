@@ -57,6 +57,8 @@ class MainWindow : public QMainWindow
     QSignalMapper mapa;
     QGridLayout *layoutPrincipal;
     QString alias;
+    QString copiaRuta;
+    QString copiaNombre;
     quint16 port;
     quint16 portArchivos;
     quint16 portEscritorio;
@@ -113,6 +115,8 @@ class MainWindow : public QMainWindow
     void archivosBorrar();
     void archivosCarpeta();
     void archivosEjecutar();
+    void archivosCopiar();
+    void archivosMover();
     //slots de mensajes
     void enviarMensaje();
     //slots del escritorio remoto

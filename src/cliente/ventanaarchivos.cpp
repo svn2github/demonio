@@ -149,6 +149,14 @@ QPushButton *ventanaArchivos::botonEjecutar()
 {
   return ui->botonEjecutar;
 }
+QPushButton *ventanaArchivos::botonCopiar()
+{
+  return ui->botonCopiar;
+}
+QPushButton *ventanaArchivos::botonMover()
+{
+  return ui->botonMover;
+}
 QPushButton *ventanaArchivos::botonCarpeta()
 {
   return ui->bontonCarpeta;

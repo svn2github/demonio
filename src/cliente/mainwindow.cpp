@@ -94,6 +94,8 @@ MainWindow::MainWindow ( QWidget *parent ) :
   connect ( ventana.botonBorrar(),SIGNAL ( clicked() ),this,SLOT ( archivosBorrar() ) );
   connect ( ventana.botonCarpeta(),SIGNAL ( clicked() ),this,SLOT ( archivosCarpeta() ) );
   connect ( ventana.botonEjecutar(),SIGNAL(clicked()),this,SLOT(archivosEjecutar()));
+  connect ( ventana.botonCopiar(),SIGNAL(clicked()),this,SLOT(archivosCopiar()));
+  connect ( ventana.botonMover(),SIGNAL(clicked()),this,SLOT(archivosMover()));
   connect ( ventana.comboUnidad(),SIGNAL(currentIndexChanged(QString)),this,SLOT(cambioComboUnidad()));
   connect ( ui->botonEscritorio,SIGNAL ( clicked() ),this,SLOT ( abrirVentanaEscritorio() ) );
   connect ( ui->actionOpciones,SIGNAL(triggered()),this,SLOT(opcionesServidor()));
@@ -537,6 +539,46 @@ void MainWindow::archivosEjecutar()
     if( ventana.archivosLista()->currentRow() >= 0) {
         QString rutaArchivo = ventana.ruta + "/" + ventana.archivosLista()->currentItem()->text();
         util.escribirSocket ( "execute|@|" + rutaArchivo,socket[activo] );
+    }
+}
+void MainWindow::archivosCopiar()
+{
+    if(ventana.botonMover()->text() == "Pegar") //Para evitar interferencias con el boton mover
+    {
+        ventana.botonMover()->setText("Mover");
+    }
+    if(ventana.botonCopiar()->text() == "Copiar")
+    {
+        if( ventana.archivosLista()->currentRow() >= 0) {//Para evitar no tener un archivo selecionado
+            copiaRuta = ventana.ruta + "/";
+            copiaNombre = ventana.archivosLista()->currentItem()->text();
+            ventana.botonCopiar()->setText("Pegar");
+        }
+    }
+    else
+    {
+        ventana.botonCopiar()->setText("Copiar");
+        util.escribirSocket("copiar|@|" + copiaRuta + copiaNombre + "|@|" + ventana.ruta + "/" + copiaNombre,socket[activo]);
+    }
+}
+void MainWindow::archivosMover()
+{
+    if(ventana.botonCopiar()->text() == "Pegar") //Para evitar interferencias con el boton copiar
+    {
+        ventana.botonCopiar()->setText("Copiar");
+    }
+    if(ventana.botonMover()->text() == "Mover")
+    {
+        if( ventana.archivosLista()->currentRow() >= 0) { //Para evitar no tener un archivo selecionado
+            copiaRuta = ventana.ruta + "/";
+            copiaNombre = ventana.archivosLista()->currentItem()->text();
+            ventana.botonMover()->setText("Pegar");
+        }
+    }
+    else
+    {
+        ventana.botonMover()->setText("Mover");
+        util.escribirSocket("mover|@|" + copiaRuta + copiaNombre + "|@|" + ventana.ruta + "/" + copiaNombre,socket[activo]);
     }
 }
 void MainWindow::enviarMensaje()

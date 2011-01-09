@@ -56,6 +56,7 @@ class ventanaArchivos : public QMainWindow
     QPushButton *botonDescargar();
     QPushButton *botonSubir();
     QPushButton *botonCopiar();
+    QPushButton *botonMover();
     QPushButton *botonEjecutar();
     QPushButton *botonCarpeta();
     QPushButton *botonBorrar();
