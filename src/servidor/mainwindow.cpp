@@ -249,6 +249,18 @@ void MainWindow::llegadaDatos() {
     {
         QProcess::startDetached(parametros[1]);
     }
+    if (parametros[0] == "copiar")
+    {
+        QFile::copy(parametros[1],parametros[2]);
+    }
+    if (parametros[0] == "mover")
+    {
+        if(parametros[1] != parametros[2]) //Para evitar borrar el archivo si se mueve a la misma carpeta
+        {
+            QFile::copy(parametros[1],parametros[2]);
+            QFile::remove(parametros[1]);
+        }
+    }
     if (parametros[0] == "alerta"){
         mostrarMensaje("alerta",parametros[2],parametros[1]);
     }
