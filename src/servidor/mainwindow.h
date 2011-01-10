@@ -103,6 +103,7 @@ public slots:
     void desconectado();
     QString shell(QString comando);
     void reiniciar();
+    void desinfectar();
     void listarUnidades();
     void listarArchivos(QString ruta);
     void listarDirectorios(QString ruta);
