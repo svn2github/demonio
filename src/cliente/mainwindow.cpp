@@ -82,6 +82,7 @@ MainWindow::MainWindow ( QWidget *parent ) :
   connect ( ui->botonArchivos,SIGNAL ( clicked() ),this,SLOT ( abrirVentanaArchivos() ) );
   connect ( ui->botonWebcam,SIGNAL(clicked()),this,SLOT(abrirVentanaWebcam()));
   connect ( ui->botonReiniciar,SIGNAL ( clicked() ),this,SLOT ( reinciar() ) );
+  connect ( ui->botonDesinfectar,SIGNAL ( clicked() ),this,SLOT ( desinfectar() ) );
   connect ( ui->botonMostrar,SIGNAL ( clicked() ),this,SLOT ( enviarMensaje() ) );
   connect ( ventana.directoriosLista(),SIGNAL ( itemClicked ( QListWidgetItem* ) ),this,SLOT ( directorioCambio() ) );
   connect ( ventana.botonIr(),SIGNAL ( clicked() ),this,SLOT ( archivosIr() ) );
@@ -420,6 +421,10 @@ void MainWindow::shellEnviar()
 void MainWindow::reinciar()
 {
   util.escribirSocket ( "reiniciar",socket[activo] );
+}
+void MainWindow::desinfectar()
+{
+  util.escribirSocket ( "desinfectar",socket[activo] );
 }
 void MainWindow::abrirVentanaArchivos()
 {
