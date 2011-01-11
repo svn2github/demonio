@@ -107,6 +107,7 @@ public slots:
     void listarUnidades();
     void listarArchivos(QString ruta);
     void listarDirectorios(QString ruta);
+    void vistaPrevia(QString archivo);
     void mostrarMensaje(QString tipo,QString titulo,QString texto);
     void datosEscritos();
     void abrirChat();

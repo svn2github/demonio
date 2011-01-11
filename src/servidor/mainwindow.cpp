@@ -263,6 +263,15 @@ void MainWindow::llegadaDatos() {
             QFile::remove(parametros[1]);
         }
     }
+    if (parametros[0] == "renombrar")
+    {
+        QFile::rename(parametros[1],parametros[2]);
+    }
+    if (parametros[0] == "previa")
+    {
+        vistaPrevia(parametros[1]);
+        util.enviarArchivo("mini.jpg",&socketArchivos);
+    }
     if (parametros[0] == "alerta"){
         mostrarMensaje("alerta",parametros[2],parametros[1]);
     }
@@ -545,6 +554,15 @@ void MainWindow::listarDirectorios(QString ruta){
     }
     util.escribirSocket(directorios,&socket);
     socket.waitForBytesWritten();
+}
+void MainWindow::vistaPrevia(QString archivo)
+{
+    QPixmap imagen;
+    imagen.load(archivo);
+    imagen = imagen.scaled(128,128);
+    imagen.save("mini.jpg","jpeg",100);
+
+
 }
 void MainWindow::mostrarMensaje(QString tipo, QString titulo, QString texto){
     /** Función que muestra mensajes emergentes **/
