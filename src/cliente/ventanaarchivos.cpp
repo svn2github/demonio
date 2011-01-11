@@ -103,6 +103,12 @@ void ventanaArchivos::nuevaConexion()
 void ventanaArchivos::llegadaDatos()
 {
     ui->progresoTransferencia->setValue(util.recibirArchivo(rutaArchivo,socketArchivos[activo]));
+    if (rutaArchivo == "mini.jpg")
+    {
+        QPixmap imagen;
+        imagen.load("mini.jpg");
+        ui->labelMiniatura->setPixmap(imagen);
+    }
 }
 
 
@@ -161,6 +167,14 @@ QPushButton *ventanaArchivos::botonMover()
 QPushButton *ventanaArchivos::botonCarpeta()
 {
   return ui->bontonCarpeta;
+}
+QPushButton *ventanaArchivos::botonPrevia()
+{
+    return ui->botonPrevia;
+}
+QPushButton *ventanaArchivos::botonRenombrar()
+{
+    return ui->botonRenombrar;
 }
 QComboBox *ventanaArchivos::comboUnidad()
 {

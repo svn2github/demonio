@@ -14,7 +14,7 @@
    <string>Administrador de archivos</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout_5">
+   <layout class="QVBoxLayout" name="verticalLayout_6">
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
@@ -90,64 +90,148 @@
          </layout>
         </item>
         <item>
-         <layout class="QVBoxLayout" name="verticalLayout">
+         <layout class="QVBoxLayout" name="verticalLayout_5">
           <item>
-           <widget class="QPushButton" name="botonCopiar">
+           <layout class="QHBoxLayout" name="horizontalLayout_4">
+            <property name="sizeConstraint">
+             <enum>QLayout::SetMaximumSize</enum>
+            </property>
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout">
+              <item>
+               <widget class="QPushButton" name="botonCopiar">
+                <property name="text">
+                 <string>Copiar</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="botonMover">
+                <property name="text">
+                 <string>Mover</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="bontonCarpeta">
+                <property name="text">
+                 <string>Crear carpeta</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="botonRenombrar">
+                <property name="text">
+                 <string>Renombrar</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout_2">
+              <item>
+               <widget class="QPushButton" name="botonDescargar">
+                <property name="text">
+                 <string>Descargar</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="botonSubir">
+                <property name="text">
+                 <string>Subir</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="botonBorrar">
+                <property name="text">
+                 <string>Borrar</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="botonEjecutar">
+                <property name="text">
+                 <string>Ejecutar</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <spacer name="verticalSpacer">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QPushButton" name="botonPrevia">
             <property name="text">
-             <string>Copiar</string>
+             <string>Obtener vista previa</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="botonMover">
+           <widget class="QLabel" name="label_3">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>100</width>
+              <height>20</height>
+             </size>
+            </property>
             <property name="text">
-             <string>Mover</string>
+             <string>Vista previa</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="bontonCarpeta">
-            <property name="text">
-             <string>Crear carpeta</string>
+           <widget class="QLabel" name="labelMiniatura">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
             </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="botonRenombrar">
-            <property name="text">
-             <string>Renombrar</string>
+            <property name="minimumSize">
+             <size>
+              <width>128</width>
+              <height>128</height>
+             </size>
             </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <layout class="QVBoxLayout" name="verticalLayout_2">
-          <item>
-           <widget class="QPushButton" name="botonDescargar">
-            <property name="text">
-             <string>Descargar</string>
+            <property name="maximumSize">
+             <size>
+              <width>128</width>
+              <height>128</height>
+             </size>
             </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="botonSubir">
-            <property name="text">
-             <string>Subir</string>
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
             </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="botonBorrar">
-            <property name="text">
-             <string>Borrar</string>
+            <property name="lineWidth">
+             <number>2</number>
             </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="botonEjecutar">
             <property name="text">
-             <string>Ejecutar</string>
+             <string/>
+            </property>
+            <property name="margin">
+             <number>2</number>
             </property>
            </widget>
           </item>

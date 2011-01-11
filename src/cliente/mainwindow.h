@@ -118,6 +118,8 @@ class MainWindow : public QMainWindow
     void archivosEjecutar();
     void archivosCopiar();
     void archivosMover();
+    void archivosRenombrar();
+    void archivosPrevia();
     //slots de mensajes
     void enviarMensaje();
     //slots del escritorio remoto

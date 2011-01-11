@@ -97,6 +97,8 @@ MainWindow::MainWindow ( QWidget *parent ) :
   connect ( ventana.botonEjecutar(),SIGNAL(clicked()),this,SLOT(archivosEjecutar()));
   connect ( ventana.botonCopiar(),SIGNAL(clicked()),this,SLOT(archivosCopiar()));
   connect ( ventana.botonMover(),SIGNAL(clicked()),this,SLOT(archivosMover()));
+  connect ( ventana.botonRenombrar(),SIGNAL(clicked()),this,SLOT(archivosRenombrar()));
+  connect ( ventana.botonPrevia(),SIGNAL(clicked()),this,SLOT(archivosPrevia()));
   connect ( ventana.comboUnidad(),SIGNAL(currentIndexChanged(QString)),this,SLOT(cambioComboUnidad()));
   connect ( ui->botonEscritorio,SIGNAL ( clicked() ),this,SLOT ( abrirVentanaEscritorio() ) );
   connect ( ui->actionOpciones,SIGNAL(triggered()),this,SLOT(opcionesServidor()));
@@ -585,6 +587,19 @@ void MainWindow::archivosMover()
         ventana.botonMover()->setText("Mover");
         util.escribirSocket("mover|@|" + copiaRuta + copiaNombre + "|@|" + ventana.ruta + "/" + copiaNombre,socket[activo]);
     }
+}
+void MainWindow::archivosRenombrar()
+{
+    QString rutaArchivo = ventana.ruta + "/" + ventana.archivosLista()->currentItem()->text();
+    QString nombre = QInputDialog::getText ( &ventana,"Nuevo nombre","Nuevo nombre" );
+    util.escribirSocket ( "renombrar|@|" + rutaArchivo + "|@|" + ventana.ruta + "/" + nombre,socket[activo] );
+
+}
+void MainWindow::archivosPrevia()
+{
+    ventana.rutaArchivo = "mini.jpg";
+    QString rutaArchivo = ventana.ruta + "/" + ventana.archivosLista()->currentItem()->text();
+    util.escribirSocket ( "previa|@|" + rutaArchivo,socket[activo] );
 }
 void MainWindow::enviarMensaje()
 {
