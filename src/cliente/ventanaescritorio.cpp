@@ -42,10 +42,12 @@ ventanaEscritorio::ventanaEscritorio ( QWidget *parent ) :
   connect ( ui->sliderCalidad,SIGNAL ( valueChanged ( int ) ),this,SLOT ( cambioCalidad() ) );
   connect ( ui->botonCapturar,SIGNAL ( clicked() ),this,SLOT ( botonCapturar() ) );
   connect ( ui->botonGuardar,SIGNAL ( clicked() ),this,SLOT ( botonGuardar() ) );
-  connect ( ui->checkStreaming,SIGNAL ( clicked() ),this,SLOT ( checkStreaming() ) );
+  connect ( ui->botonIniciar,SIGNAL ( clicked() ),this,SLOT ( checkStreaming() ) );
   connect ( imageEscritorio,SIGNAL(botonDerecho(int,int)),this,SLOT(click(int,int)));
   connect (ui->botonPantallaCompleta,SIGNAL(clicked()),this,SLOT(maximizar()));
-  ui->verticalLayout_2->insertWidget(0,imageEscritorio);
+  connect (ui->spinIntervalo,SIGNAL(valueChanged(int)),this,SLOT(ponerTiempo()));
+  connect (&refresco,SIGNAL(timeout()),this,SLOT(botonCapturar()));
+  ui->horizontalLayout_2->insertWidget(1,imageEscritorio);
  imageEscritorio->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
 
 }
@@ -134,6 +136,7 @@ void ventanaEscritorio::botonCapturar()
   QString calidad;
   calidad.setNum ( ui->sliderCalidad->value() );
   util.escribirSocket ( "capturar|@|" + calidad,socketEscritorio[activo] );
+  socketEscritorio[activo]->waitForBytesWritten();
 }
 void ventanaEscritorio::botonGuardar()
 {
@@ -145,11 +148,21 @@ void ventanaEscritorio::cambioCalidad()
 }
 void ventanaEscritorio::checkStreaming()
 {
-  if ( ui->checkStreaming->isChecked() )
-    {
-      tamano = 0;
-      botonCapturar();
-    }
+      if(ui->botonIniciar->text() == "Iniciar")
+      {
+        ui->botonIniciar->setText("Parar");
+        refresco.start();
+      }
+      else
+      {
+        ui->botonIniciar->setText("Iniciar");
+        refresco.stop();
+      }
+}
+
+void ventanaEscritorio::ponerTiempo()
+{
+    refresco.setInterval(ui->spinIntervalo->value());
 }
 void ventanaEscritorio::ponerCaptura ( QByteArray captura )
 {
@@ -198,10 +211,7 @@ void ventanaEscritorio::llegadaDatos()
             capGuarda.setNum(this->numCapturas);
             guardarCaptura(capGuarda + ".jpg",datos);
           }
-          if ( ui->checkStreaming->isChecked() )
-          {
-            botonCapturar();
-          }
+
         }
       else
         {

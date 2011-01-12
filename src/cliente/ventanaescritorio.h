@@ -25,6 +25,7 @@
 #include <QFileDialog>
 #include "../../lib/headers/Utilidades.h"
 #include "imageescritorio.h"
+#include <QTimer>
 
 namespace Ui
   {
@@ -40,6 +41,7 @@ class ventanaEscritorio : public QMainWindow
     QByteArray datos;
     QLabel *img;
     QLabel *imageEscritorio;
+    QTimer refresco;
     int tamano;
     unsigned long int numCapturas;
     Utilidades util;
@@ -55,6 +57,7 @@ class ventanaEscritorio : public QMainWindow
     void guardarCaptura ( QString rutaArchivo,QByteArray captura );
     void botonGuardar();
     void checkStreaming();
+    void ponerTiempo();
     void maximizar();
     void ocultar();
     void obtenerResolucion();
