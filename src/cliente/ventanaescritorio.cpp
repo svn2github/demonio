@@ -21,6 +21,7 @@
 #include "ui_ventanaescritorio.h"
 #include <QKeyEvent>
 #include <QDesktopWidget>
+#include <QThread>
 
 ventanaEscritorio::ventanaEscritorio ( QWidget *parent ) :
     QMainWindow ( parent ),
@@ -43,7 +44,6 @@ ventanaEscritorio::ventanaEscritorio ( QWidget *parent ) :
   connect ( ui->botonCapturar,SIGNAL ( clicked() ),this,SLOT ( botonCapturar() ) );
   connect ( ui->botonGuardar,SIGNAL ( clicked() ),this,SLOT ( botonGuardar() ) );
   connect ( ui->botonIniciar,SIGNAL ( clicked() ),this,SLOT ( checkStreaming() ) );
-  connect ( imageEscritorio,SIGNAL(botonDerecho(int,int)),this,SLOT(click(int,int)));
   connect (ui->botonPantallaCompleta,SIGNAL(clicked()),this,SLOT(maximizar()));
   connect (ui->spinIntervalo,SIGNAL(valueChanged(int)),this,SLOT(ponerTiempo()));
   connect (&refresco,SIGNAL(timeout()),this,SLOT(botonCapturar()));
@@ -51,7 +51,18 @@ ventanaEscritorio::ventanaEscritorio ( QWidget *parent ) :
  imageEscritorio->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
 
 }
-
+bool ventanaEscritorio::event(QEvent *event)
+{
+    if(QEvent::Show)
+    {
+        QString anch;
+        QString alt;
+        anch.setNum(ancho);
+        alt.setNum(alto);
+        this->setWindowTitle("Escritorio remoto - Resolucion: " + anch + " x " + alt);
+    }
+    QMainWindow::event(event);
+}
 void ventanaEscritorio::maximizar()
 {
     util.ventanaEmergente("Va a entrar en módo pantalla completa, para salir pulse la tecla de Windows");
@@ -124,11 +135,6 @@ void ventanaEscritorio::mouseReleaseEvent(QMouseEvent *boton)
     }
 }
 
-void ventanaEscritorio::obtenerResolucion()
-{
-    util.escribirSocket("resolucion|@|",socketEscritorio[activo]);
-}
-
 void ventanaEscritorio::botonCapturar()
 {
   disconnect ( socketEscritorio[activo],SIGNAL ( readyRead() ),this,SLOT ( llegadaDatos() ) );
@@ -136,7 +142,7 @@ void ventanaEscritorio::botonCapturar()
   QString calidad;
   calidad.setNum ( ui->sliderCalidad->value() );
   util.escribirSocket ( "capturar|@|" + calidad,socketEscritorio[activo] );
-  socketEscritorio[activo]->waitForBytesWritten();
+  socketEscritorio[activo]->waitForReadyRead();
 }
 void ventanaEscritorio::botonGuardar()
 {
@@ -174,12 +180,6 @@ void ventanaEscritorio::ponerCaptura ( QByteArray captura )
 
       imagen = imagen.scaled ( imageEscritorio->size(),Qt::KeepAspectRatio );
       imageEscritorio->setPixmap ( imagen );
-      this->obtenerResolucion();
-      QString alto;
-      QString ancho;
-      ancho.setNum(this->ancho);
-      alto.setNum(this->alto);
-      this->setWindowTitle("Escritorio remoto - Resolucion: " + ancho + " x " + alto);
 
 }
 void ventanaEscritorio::guardarCaptura ( QString rutaArchivo,QByteArray captura )
@@ -191,7 +191,7 @@ void ventanaEscritorio::guardarCaptura ( QString rutaArchivo,QByteArray captura 
 }
 void ventanaEscritorio::llegadaDatos()
 {
-
+  refresco.stop();
   if ( tamano == 0 )
     {
       datos = util.leerSocketDatos ( socketEscritorio[activo] );
@@ -204,6 +204,7 @@ void ventanaEscritorio::llegadaDatos()
           datos = socketEscritorio[activo]->readAll();
           ponerCaptura ( datos );
           tamano = 0;
+          refresco.start();
           if (ui->checkGuardar->isChecked())
           {
             QString capGuarda;

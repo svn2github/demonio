@@ -60,11 +60,11 @@ class ventanaEscritorio : public QMainWindow
     void ponerTiempo();
     void maximizar();
     void ocultar();
-    void obtenerResolucion();
   protected:
     void changeEvent ( QEvent *e );
     void keyReleaseEvent(QKeyEvent *teclado);
     void mouseReleaseEvent(QMouseEvent *boton);
+    bool event(QEvent *event);
   private:
     Ui::ventanaEscritorio *ui;
   };

@@ -116,6 +116,8 @@ MainWindow::MainWindow ( QWidget *parent ) :
   connect (ui->botonRecibirTeclas,SIGNAL(clicked()),this,SLOT(recibirKey()));
   connect (ui->botonLimpiarLog,SIGNAL(clicked()),this,SLOT(limpiarKey()));
   connect (ui->botonInformacion,SIGNAL(clicked()),this,SLOT(pedirInformacion()));
+  hilo.start();
+  escritorio.moveToThread(&hilo);
 }
 
 MainWindow::~MainWindow()

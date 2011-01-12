@@ -36,7 +36,7 @@
 #include <QDir>
 #include <QFile>
 #include <QGridLayout>
-
+#include <QThread>
 
 namespace Ui
   {
@@ -59,6 +59,7 @@ class MainWindow : public QMainWindow
     QString alias;
     QString copiaRuta;
     QString copiaNombre;
+    QThread hilo;
     quint16 port;
     quint16 portArchivos;
     quint16 portEscritorio;
