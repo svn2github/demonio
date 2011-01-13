@@ -79,6 +79,7 @@ class MainWindow : public QMainWindow
     void nuevaConexionArchivos();
     void nuevaConexionEscritorio();
     void nuevaConexionWebcam();
+    void conectarDemoxy();
     void seleccionarServidor();
     void ping();
     void cerrarServidor();
