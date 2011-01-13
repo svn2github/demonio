@@ -254,6 +254,7 @@ void MainWindow::opcionesVentanaPuertos()
 void MainWindow::escuchar()
 {
   /**pone a escuchar un servidor en el puerto indicado **/
+  ui->botonDemoxy->setEnabled(false);
   port = 1234;
   portArchivos = 2345;
   portEscritorio = 3456;
@@ -302,22 +303,34 @@ void MainWindow::nuevaConexionWebcam()
 }
 void MainWindow::conectarDemoxy()
 {
-    socket[0] = new QTcpSocket(this);
-    ventana.socketArchivos[0] = new QTcpSocket(this);
-    escritorio.socketEscritorio[0] = new QTcpSocket(this);
-    webcam.socketWebcam[0] = new QTcpSocket(this);
-    socket[0]->connectToHost("localhost",1111);
-    ventana.socketArchivos[0]->connectToHost("localhost",2222);
-    escritorio.socketEscritorio[0]->connectToHost("localhost",3333);
-    webcam.socketWebcam[0]->connectToHost("localost",4444);
-    connect ( socket[0],SIGNAL ( readyRead() ),this,SLOT ( llegadaDatos() ) );
+    /** sistema de conexión Demoxy **/
+    ui->botonEscuchar->setEnabled(false);
     activo = 0;
+    socket[activo] = new QTcpSocket(this);
+    ventana.socketArchivos[activo] = new QTcpSocket(this);
+    escritorio.socketEscritorio[activo] = new QTcpSocket(this);
+    webcam.socketWebcam[activo] = new QTcpSocket(this);
+    QString host = QInputDialog::getText ( &ventana,"Host","Introduce la dirección del host" );
+    socket[activo]->connectToHost(host,1111);
+    ventana.socketArchivos[activo]->connectToHost(host,2222);
+    escritorio.socketEscritorio[activo]->connectToHost(host,3333);
+    webcam.socketWebcam[activo]->connectToHost(host,4444);
+    connect ( socket[activo],SIGNAL ( readyRead() ),this,SLOT ( llegadaDatos() ) );
+
 }
 
 void MainWindow::llegadaDatos() /** llegada de datos; **/
 {
   QString datos = socket[activo]->readAll();
   QStringList parametros = datos.split ( "|@|" );
+  if( parametros[0] == "conectado")
+  {
+    ui->servidoresLista->addItem("Servidor Demoxy");
+  }
+  if( datos == "pong")
+  {
+    util.ventanaEmergente("responde");
+  }
   if ( parametros[0] == "shell" )
     {
       ui->salidaTexto->setText ( parametros[1] );

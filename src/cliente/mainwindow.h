@@ -37,6 +37,7 @@
 #include <QFile>
 #include <QGridLayout>
 #include <QThread>
+#include <QTime>
 
 namespace Ui
   {
