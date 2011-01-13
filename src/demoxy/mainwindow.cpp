@@ -63,7 +63,9 @@ MainWindow::~MainWindow()
 void MainWindow::conectadoPrincipal()
 {
     socketPrincipal = servidorPrincipal.nextPendingConnection();
+    socketPrincipalCliente->write("conectado|@|");
     connect ( socketPrincipal,SIGNAL ( readyRead() ),this,SLOT ( llegadaDatosPrincipal() ) );
+
 }
 void MainWindow::conectadoEscritorio()
 {
