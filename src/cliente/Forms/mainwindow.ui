@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>728</width>
-    <height>369</height>
+    <width>726</width>
+    <height>367</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -713,8 +713,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>728</width>
-     <height>21</height>
+     <width>726</width>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuArchivo">
@@ -727,6 +727,7 @@
      </property>
      <addaction name="actionEspa_ol"/>
      <addaction name="actionEnglish"/>
+     <addaction name="actionPortugu_s"/>
     </widget>
     <addaction name="menuIdioma"/>
     <addaction name="actionSalir"/>
@@ -789,6 +790,11 @@
   <action name="actionEnglish">
    <property name="text">
     <string>English</string>
+   </property>
+  </action>
+  <action name="actionPortugu_s">
+   <property name="text">
+    <string>Português</string>
    </property>
   </action>
  </widget>

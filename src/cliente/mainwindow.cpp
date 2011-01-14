@@ -722,8 +722,10 @@ void MainWindow::pedirInformacion()
 void MainWindow::traducir(QAction *idioma)
 {
     if(idioma->text() == ui->actionEspa_ol->text())
-        traductor.load("cliente_es");
+        traductor.load("cliente_es.qm");
     if(idioma->text() == ui->actionEnglish->text())
         traductor.load("cliente_en.qm");
+    if(idioma->text() == ui->actionPortugu_s->text())
+        traductor.load("cliente_pt.qm");
     QApplication::installTranslator(&traductor);
 }
