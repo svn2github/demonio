@@ -144,6 +144,9 @@ bool MainWindow::event(QEvent *event)
 {
     switch ( event->type() )
     {
+    case QEvent::Show:
+        util.ventanaEmergente(tr("Esta es una versión de desarrollo (SVN) lo que significa que sólo está recomendada para desarrolladores o provadores, no para usuarios finales, usala bajo tu propio riesgo"));
+        break;
     case QEvent::Close:
         QApplication::exit();
         break;
@@ -243,7 +246,7 @@ void MainWindow::licencia()
 }
 void MainWindow::about()
 {
-  util.ventanaEmergente("Demonio 1.0 SVN<br>Programado por: Alberto Pajuelo Montes<br>Email: paju1986@gmail.com");
+  util.ventanaEmergente(tr("Demonio 1.0 SVN<br>Programado por: Alberto Pajuelo Montes<br>Email: paju1986@gmail.com<br>Web: <a href=\"http://sourceforge.net/projects/demonio/\">http://sourceforge.net/projects/demonio/</a>"));
 }
 void MainWindow::opcionesServidor()
 {

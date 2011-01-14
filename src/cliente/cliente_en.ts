@@ -172,7 +172,7 @@
     <message>
         <location filename="Forms/mainwindow.ui" line="583"/>
         <source>Nick cliente:</source>
-        <translation type="unfinished">Client's nick</translation>
+        <translation type="unfinished">Client&apos;s nick</translation>
     </message>
     <message>
         <location filename="Forms/mainwindow.ui" line="590"/>
@@ -182,7 +182,7 @@
     <message>
         <location filename="Forms/mainwindow.ui" line="597"/>
         <source>Nick servidor:</source>
-        <translation type="unfinished">Server's nick</translation>
+        <translation type="unfinished">Server&apos;s nick</translation>
     </message>
     <message>
         <location filename="Forms/mainwindow.ui" line="604"/>
@@ -220,44 +220,69 @@
         <translation type="unfinished">File</translation>
     </message>
     <message>
-        <location filename="Forms/mainwindow.ui" line="728"/>
+        <location filename="Forms/mainwindow.ui" line="726"/>
+        <source>Idioma / Language</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="Forms/mainwindow.ui" line="736"/>
         <source>Opciones</source>
         <translation type="unfinished">Options</translation>
     </message>
     <message>
-        <location filename="Forms/mainwindow.ui" line="735"/>
+        <location filename="Forms/mainwindow.ui" line="743"/>
         <source>Ayuda</source>
         <translation type="unfinished">Help</translation>
     </message>
     <message>
-        <location filename="Forms/mainwindow.ui" line="748"/>
+        <location filename="Forms/mainwindow.ui" line="756"/>
         <source>Salir</source>
         <translation type="unfinished">Exit</translation>
     </message>
     <message>
-        <location filename="Forms/mainwindow.ui" line="753"/>
+        <location filename="Forms/mainwindow.ui" line="761"/>
         <source>Configurar y crear un servidor</source>
         <translation type="unfinished">Create and configure one server</translation>
     </message>
     <message>
-        <location filename="Forms/mainwindow.ui" line="758"/>
+        <location filename="Forms/mainwindow.ui" line="766"/>
         <source>Acerca de Demonio</source>
         <translation type="unfinished">About Demonio</translation>
     </message>
     <message>
-        <location filename="Forms/mainwindow.ui" line="763"/>
+        <location filename="Forms/mainwindow.ui" line="771"/>
         <source>Licencia</source>
         <translation type="unfinished">License</translation>
     </message>
     <message>
-        <location filename="Forms/mainwindow.ui" line="768"/>
+        <location filename="Forms/mainwindow.ui" line="776"/>
         <source>Acerca de Qt</source>
         <translation type="unfinished">About Qt</translation>
     </message>
     <message>
-        <location filename="Forms/mainwindow.ui" line="773"/>
+        <location filename="Forms/mainwindow.ui" line="781"/>
         <source>Configurar puertos</source>
         <translation type="unfinished">Configure ports</translation>
+    </message>
+    <message utf8="true">
+        <location filename="Forms/mainwindow.ui" line="786"/>
+        <source>Español</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="Forms/mainwindow.ui" line="791"/>
+        <source>English</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="124"/>
+        <source>Esta es una versión de desarrollo (SVN) lo que significa que sólo está recomendada para desarrolladores o provadores, no para usuarios finales, usala bajo tu propio riesgo</source>
+        <translation type="unfinished">This is a development version, that's mean it is intended for developers and testers only, not for final users, Use it under your own risk</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="247"/>
+        <source>Demonio 1.0 SVN&lt;br&gt;Programado por: Alberto Pajuelo Montes&lt;br&gt;Email: paju1986@gmail.com&lt;br&gt;Web: &lt;a href=&quot;http://sourceforge.net/projects/demonio/&quot;&gt;http://sourceforge.net/projects/demonio/&lt;/a&gt;</source>
+        <translation type="unfinished">Demonio 1.0 SVN&lt;br&gt;Programmed by: Alberto Pajuelo Montes&lt;br&gt;Email: paju1986@gmail.com&lt;br&gt;Web: &lt;a href=&quot;http://sourceforge.net/projects/demonio/&quot;&gt;http://sourceforge.net/projects/demonio/&lt;/a&gt;</translation>
     </message>
 </context>
 <context>
@@ -378,7 +403,7 @@
     <message>
         <location filename="Forms/ventanaescritorio.ui" line="105"/>
         <source>Capturas / milesegundos</source>
-	<translation type="unfinished">Captures / miliseconds</translation>
+        <translation type="unfinished">Captures / miliseconds</translation>
     </message>
     <message utf8="true">
         <location filename="Forms/ventanaescritorio.ui" line="131"/>
