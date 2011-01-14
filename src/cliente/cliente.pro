@@ -31,3 +31,4 @@ QMAKE_LFLAGS += -static-libgcc
 QTPLUGIN += qjpeg
 RC_FILE = demonio.rc
 }
+TRANSLATIONS = cliente_en.ts

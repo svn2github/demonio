@@ -304,7 +304,7 @@ void MainWindow::nuevaConexionWebcam()
 void MainWindow::conectarDemoxy()
 {
     /** sistema de conexión Demoxy **/
-    ui->botonEscuchar->setEnabled(false);
+    ui->botonEscuchar->setEnabled(false); //No puede estar conectado a demoxy y escuchando conexiones a la vez (Por ahora)
     activo = 0;
     socket[activo] = new QTcpSocket(this);
     ventana.socketArchivos[activo] = new QTcpSocket(this);
@@ -316,14 +316,25 @@ void MainWindow::conectarDemoxy()
     escritorio.socketEscritorio[activo]->connectToHost(host,3333);
     webcam.socketWebcam[activo]->connectToHost(host,4444);
     connect ( socket[activo],SIGNAL ( readyRead() ),this,SLOT ( llegadaDatos() ) );
-
+    if( ventana.socketArchivos[activo]->state() == QAbstractSocket::ConnectedState )
+    {
+      ui->notificacionLabel->setText("socket principal conectado a Demoxy");
+    }
+    if(escritorio.socketEscritorio[activo]->state() == QAbstractSocket::ConnectedState)
+    {
+      ui->notificacionLabel->setText(ui->notificacionLabel->text() + " socket de escritorio conectado a Demoxy.");
+    }
+    if(webcam.socketWebcam[activo]->state() == QAbstractSocket::ConnectedState)
+    {
+      ui->notificacionLabel->setText(ui->notificacionLabel->text() + " socket de webcam conectado a Demoxy.");
+    }
 }
 
 void MainWindow::llegadaDatos() /** llegada de datos; **/
 {
   QString datos = socket[activo]->readAll();
   QStringList parametros = datos.split ( "|@|" );
-  if( parametros[0] == "conectado")
+  if( parametros[0] == "conectado") //Si la conexión proviene a traves de Demoxy
   {
     ui->servidoresLista->addItem("Servidor Demoxy");
   }

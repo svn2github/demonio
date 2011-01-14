@@ -49,6 +49,7 @@ ventanaEscritorio::ventanaEscritorio ( QWidget *parent ) :
   connect (&refresco,SIGNAL(timeout()),this,SLOT(botonCapturar()));
   ui->horizontalLayout_2->insertWidget(1,imageEscritorio);
  imageEscritorio->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
+ refresco.stop();
 
 }
 bool ventanaEscritorio::event(QEvent *event)
@@ -142,7 +143,6 @@ void ventanaEscritorio::botonCapturar()
   QString calidad;
   calidad.setNum ( ui->sliderCalidad->value() );
   util.escribirSocket ( "capturar|@|" + calidad,socketEscritorio[activo] );
-  socketEscritorio[activo]->waitForReadyRead();
 }
 void ventanaEscritorio::botonGuardar()
 {
