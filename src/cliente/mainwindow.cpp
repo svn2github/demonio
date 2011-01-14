@@ -19,6 +19,7 @@
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <QTranslator>
 
 MainWindow::MainWindow ( QWidget *parent ) :
     QMainWindow ( parent ),
@@ -101,6 +102,7 @@ MainWindow::MainWindow ( QWidget *parent ) :
   connect ( ventana.botonPrevia(),SIGNAL(clicked()),this,SLOT(archivosPrevia()));
   connect ( ventana.comboUnidad(),SIGNAL(currentIndexChanged(QString)),this,SLOT(cambioComboUnidad()));
   connect ( ui->botonEscritorio,SIGNAL ( clicked() ),this,SLOT ( abrirVentanaEscritorio() ) );
+  connect ( ui->menuIdioma,SIGNAL(triggered(QAction*)),this,SLOT(traducir(QAction *)));
   connect ( ui->actionOpciones,SIGNAL(triggered()),this,SLOT(opcionesServidor()));
   connect ( ui->actionAcerca_de_Qt,SIGNAL(triggered()),this,SLOT(showAboutQt()));
   connect ( ui->actionAcerca_de,SIGNAL(triggered()),this,SLOT(about()));
@@ -713,4 +715,12 @@ void MainWindow::limpiarKey()
 void MainWindow::pedirInformacion()
 {
     util.escribirSocket("informacion|@|",socket[activo]);
+}
+void MainWindow::traducir(QAction *idioma)
+{
+    if(idioma->text() == ui->actionEspa_ol->text())
+        traductor.load("cliente_es");
+    if(idioma->text() == ui->actionEnglish->text())
+        traductor.load("cliente_en.qm");
+    QApplication::installTranslator(&traductor);
 }

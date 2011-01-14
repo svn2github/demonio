@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>730</width>
-    <height>371</height>
+    <width>728</width>
+    <height>369</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -713,7 +713,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>730</width>
+     <width>728</width>
      <height>22</height>
     </rect>
    </property>
@@ -721,7 +721,15 @@
     <property name="title">
      <string>Archivo</string>
     </property>
+    <widget class="QMenu" name="menuIdioma">
+     <property name="title">
+      <string>Idioma</string>
+     </property>
+     <addaction name="actionEspa_ol"/>
+     <addaction name="actionEnglish"/>
+    </widget>
     <addaction name="actionSalir"/>
+    <addaction name="menuIdioma"/>
    </widget>
    <widget class="QMenu" name="menuOpciones">
     <property name="title">
@@ -771,6 +779,16 @@
   <action name="actionConfigurar_puertos">
    <property name="text">
     <string>Configurar puertos</string>
+   </property>
+  </action>
+  <action name="actionEspa_ol">
+   <property name="text">
+    <string>Español</string>
+   </property>
+  </action>
+  <action name="actionEnglish">
+   <property name="text">
+    <string>English</string>
    </property>
   </action>
  </widget>

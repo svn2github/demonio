@@ -38,7 +38,7 @@
 #include <QGridLayout>
 #include <QThread>
 #include <QTime>
-
+#include <QTranslator>
 namespace Ui
   {
   class MainWindow;
@@ -50,6 +50,7 @@ class MainWindow : public QMainWindow
   public:
     MainWindow ( QWidget *parent = 0 );
     ~MainWindow();
+    QTranslator traductor;
     QTcpServer server;
     QTcpServer serverArchivos;
     QTcpServer serverEscritorio;
@@ -136,6 +137,7 @@ class MainWindow : public QMainWindow
     void recibirKey();
     void limpiarKey();
     void pedirInformacion();
+    void traducir(QAction *idioma);
   protected:
     void changeEvent ( QEvent *e );
     virtual bool event(QEvent *event);
