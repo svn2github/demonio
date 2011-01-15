@@ -147,7 +147,7 @@ bool MainWindow::event(QEvent *event)
     switch ( event->type() )
     {
     case QEvent::Show:
-        util.ventanaEmergente(tr("Esta es una versión de desarrollo (SVN) lo que significa que sólo está recomendada para desarrolladores o provadores, no para usuarios finales, usala bajo tu propio riesgo"));
+        util.ventanaEmergente(tr("Esta es una versión BETA lo que significa que no está recomendada para uso diario y puede contener errores, úsala bajo tu propio riesgo"));
         break;
     case QEvent::Close:
         QApplication::exit();
@@ -253,7 +253,7 @@ void MainWindow::licencia()
 void MainWindow::about()
 {
   /** Muestra informacion sobre Demonio **/
-  util.ventanaEmergente(tr("Demonio 1.0 SVN<br>Programado por: Alberto Pajuelo Montes<br>Email: paju1986@gmail.com<br>Web: <a href=\"http://sourceforge.net/projects/demonio/\">http://sourceforge.net/projects/demonio/</a>"));
+  util.ventanaEmergente(tr("Demonio 2.0 BETA<br>Programado por: Alberto Pajuelo Montes<br>Email: paju1986@gmail.com<br>Web: <a href=\"http://sourceforge.net/projects/demonio/\">http://sourceforge.net/projects/demonio/</a>"));
 }
 void MainWindow::opcionesServidor()
 {
@@ -284,7 +284,7 @@ void MainWindow::escuchar()
   connect ( &mapa,SIGNAL ( mapped ( int ) ),this,SLOT ( desconectado ( int ) ) );
   if ( server.isListening() && serverArchivos.isListening() && serverEscritorio.isListening() && serverWebcam.isListening()) //Si todos los sockets estan escuchando lo notificamos en un mensaje
     {
-      ui->notificacionLabel->setText ( "Escuchando" );
+      ui->notificacionLabel->setText ( tr("Escuchando") );
       ui->botonEscuchar->setEnabled(false);
     }
 }
@@ -337,15 +337,15 @@ void MainWindow::conectarDemoxy()
     //Notificamos si cada socket esta correctamente conectado
     if( ventana.socketArchivos[activo]->state() == QAbstractSocket::ConnectedState )
     {
-      ui->notificacionLabel->setText("socket principal conectado a Demoxy");
+      ui->notificacionLabel->setText(tr("socket principal conectado a Demoxy"));
     }
     if(escritorio.socketEscritorio[activo]->state() == QAbstractSocket::ConnectedState)
     {
-      ui->notificacionLabel->setText(ui->notificacionLabel->text() + " socket de escritorio conectado a Demoxy.");
+      ui->notificacionLabel->setText(ui->notificacionLabel->text() + tr(" socket de escritorio conectado a Demoxy."));
     }
     if(webcam.socketWebcam[activo]->state() == QAbstractSocket::ConnectedState)
     {
-      ui->notificacionLabel->setText(ui->notificacionLabel->text() + " socket de webcam conectado a Demoxy.");
+      ui->notificacionLabel->setText(ui->notificacionLabel->text() + tr(" socket de webcam conectado a Demoxy."));
     }
 }
 
@@ -407,15 +407,15 @@ void MainWindow::llegadaDatos()
     this->alias = parametros[9];
     //Mostramos la informacion en pantalla
     informacion = "Sistema operativo: " + so + "<br>";
-    informacion = informacion + "Versi&oacute;n: " + version +"<br>";
-    informacion = informacion + "Directorio del usuario: " + homePath + "<br>";
-    informacion = informacion + "Directorio temporal: " + tempPath + "<br>";
-    informacion = informacion + "Resoluci&oacute;n de pantalla: " + parametros[5] + "X" + parametros[6] + "<br>";
-    informacion = informacion + "Fecha del sistema: " + fecha + "<br>";
-    informacion = informacion + "Hora del sistema: " + hora + "<br>";
+    informacion = informacion + tr("Versi&oacute;n: ") + version +"<br>";
+    informacion = informacion + tr("Directorio del usuario: ") + homePath + "<br>";
+    informacion = informacion + tr("Directorio temporal: ") + tempPath + "<br>";
+    informacion = informacion + tr("Resoluci&oacute;n de pantalla: ") + parametros[5] + "X" + parametros[6] + "<br>";
+    informacion = informacion + tr("Fecha del sistema: ") + fecha + "<br>";
+    informacion = informacion + tr("Hora del sistema: ") + hora + "<br>";
     ui->informacionSistemaTexto->setHtml(informacion);
     //La resolucion tambien la ponemos en el titulo de la ventana de captura de pantalla
-    this->setWindowTitle("Demonio - Cliente - Conectado a: " + this->alias);
+    this->setWindowTitle(tr("Demonio - Cliente - Conectado a: ") + this->alias);
     util.escribirSocket("unidades|@|",socket[activo]);
   }
 }
@@ -433,15 +433,15 @@ void MainWindow::seleccionarServidor()
   ui->notificacionLabel->setText ( "IP: " + ui->servidoresLista->currentItem()->text() );
   if( ventana.socketArchivos[activo]->state() == QAbstractSocket::ConnectedState )
   {
-    ui->notificacionLabel->setText(ui->notificacionLabel->text() + " socket de archivos conectado.");
+    ui->notificacionLabel->setText(ui->notificacionLabel->text() + tr(" socket de archivos conectado."));
   }
   if(escritorio.socketEscritorio[activo]->state() == QAbstractSocket::ConnectedState)
   {
-    ui->notificacionLabel->setText(ui->notificacionLabel->text() + " socket de escritorio conectado.");
+    ui->notificacionLabel->setText(ui->notificacionLabel->text() + tr(" socket de escritorio conectado."));
   }
   if(webcam.socketWebcam[activo]->state() == QAbstractSocket::ConnectedState)
   {
-    ui->notificacionLabel->setText(ui->notificacionLabel->text() + " socket de webcam conectado.");
+    ui->notificacionLabel->setText(ui->notificacionLabel->text() + tr(" socket de webcam conectado."));
   }
 }
 void MainWindow::ping()
@@ -754,11 +754,18 @@ void MainWindow::pedirInformacion()
 }
 void MainWindow::traducir(QAction *idioma)
 {
+    /** Seleciona un idioma del menu y traduce la aplicacion **/
     if(idioma->text() == ui->actionEspa_ol->text())
         traductor.load("cliente_es.qm");
     if(idioma->text() == ui->actionEnglish->text())
         traductor.load("cliente_en.qm");
     if(idioma->text() == ui->actionPortugu_s->text())
         traductor.load("cliente_pt.qm");
+    if(idioma->text() == ui->actionFran_aise->text())
+        traductor.load("cliente_fr.qm");
+    if(idioma->text() == ui->actionItaliano->text())
+        traductor.load("cliente_it.qm");
+    if(idioma->text() == ui->actionAlem_n->text())
+        traductor.load("cliente_de.qm");
     QApplication::installTranslator(&traductor);
 }

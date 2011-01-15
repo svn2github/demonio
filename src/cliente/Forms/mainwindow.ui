@@ -714,7 +714,7 @@
      <x>0</x>
      <y>0</y>
      <width>726</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuArchivo">
@@ -728,6 +728,9 @@
      <addaction name="actionEspa_ol"/>
      <addaction name="actionEnglish"/>
      <addaction name="actionPortugu_s"/>
+     <addaction name="actionAlem_n"/>
+     <addaction name="actionFran_aise"/>
+     <addaction name="actionItaliano"/>
     </widget>
     <addaction name="menuIdioma"/>
     <addaction name="actionSalir"/>
@@ -795,6 +798,21 @@
   <action name="actionPortugu_s">
    <property name="text">
     <string>Português</string>
+   </property>
+  </action>
+  <action name="actionAlem_n">
+   <property name="text">
+    <string>Deutsch</string>
+   </property>
+  </action>
+  <action name="actionFran_aise">
+   <property name="text">
+    <string>Française</string>
+   </property>
+  </action>
+  <action name="actionItaliano">
+   <property name="text">
+    <string>Italiano</string>
    </property>
   </action>
  </widget>

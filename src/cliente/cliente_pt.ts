@@ -225,64 +225,156 @@
         <translation type="unfinished">Idioma / Language</translation>
     </message>
     <message>
-        <location filename="Forms/mainwindow.ui" line="736"/>
+        <location filename="Forms/mainwindow.ui" line="740"/>
         <source>Opciones</source>
         <translation type="unfinished">Opçoes</translation>
     </message>
     <message>
-        <location filename="Forms/mainwindow.ui" line="743"/>
+        <location filename="Forms/mainwindow.ui" line="747"/>
         <source>Ayuda</source>
         <translation type="unfinished">Ajuda</translation>
     </message>
     <message>
-        <location filename="Forms/mainwindow.ui" line="756"/>
+        <location filename="Forms/mainwindow.ui" line="760"/>
         <source>Salir</source>
         <translation type="unfinished">Sair</translation>
     </message>
     <message>
-        <location filename="Forms/mainwindow.ui" line="761"/>
+        <location filename="Forms/mainwindow.ui" line="765"/>
         <source>Configurar y crear un servidor</source>
         <translation type="unfinished">Configurar e criar um servidor</translation>
     </message>
     <message>
-        <location filename="Forms/mainwindow.ui" line="766"/>
+        <location filename="Forms/mainwindow.ui" line="770"/>
         <source>Acerca de Demonio</source>
         <translation type="unfinished">Sobre Demonio</translation>
     </message>
     <message>
-        <location filename="Forms/mainwindow.ui" line="771"/>
+        <location filename="Forms/mainwindow.ui" line="775"/>
         <source>Licencia</source>
         <translation type="unfinished">Licença</translation>
     </message>
     <message>
-        <location filename="Forms/mainwindow.ui" line="776"/>
+        <location filename="Forms/mainwindow.ui" line="780"/>
         <source>Acerca de Qt</source>
         <translation type="unfinished">Sobre o Qt</translation>
     </message>
     <message>
-        <location filename="Forms/mainwindow.ui" line="781"/>
+        <location filename="Forms/mainwindow.ui" line="785"/>
         <source>Configurar puertos</source>
         <translation type="unfinished">Configurar portos</translation>
     </message>
     <message utf8="true">
-        <location filename="Forms/mainwindow.ui" line="786"/>
+        <location filename="Forms/mainwindow.ui" line="790"/>
         <source>Español</source>
         <translation type="unfinished">Español</translation>
     </message>
     <message>
-        <location filename="Forms/mainwindow.ui" line="791"/>
+        <location filename="Forms/mainwindow.ui" line="795"/>
         <source>English</source>
         <translation type="unfinished">English</translation>
     </message>
+    <message utf8="true">
+        <location filename="Forms/mainwindow.ui" line="800"/>
+        <source>Português</source>
+        <translation type="unfinished"></translation>
+    </message>
     <message>
-        <location filename="mainwindow.cpp" line="148"/>
-        <source>Esta es una versión de desarrollo (SVN) lo que significa que sólo está recomendada para desarrolladores o provadores, no para usuarios finales, usala bajo tu propio riesgo</source>
+        <location filename="Forms/mainwindow.ui" line="805"/>
+        <source>Deutsch</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message utf8="true">
+        <location filename="Forms/mainwindow.ui" line="810"/>
+        <source>Française</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="Forms/mainwindow.ui" line="815"/>
+        <source>Italiano</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="150"/>
+        <source>Esta es una versión BETA lo que significa que no está recomendada para uso diario y puede contener errores, úsala bajo tu propio riesgo</source>
+        <oldsource>Esta es una versión de desarrollo (SVN) lo que significa que sólo está recomendada para desarrolladores o provadores, no para usuarios finales, usala bajo tu propio riesgo</oldsource>
         <translation type="unfinished">Esta é uma versao de desenvolvemento (SVN), isso sinifica que so esta recomendada para desenvolvedores ou testadores, nao para usuarios finais, use-a baixo o seu propio risco</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="249"/>
-        <source>Demonio 1.0 SVN&lt;br&gt;Programado por: Alberto Pajuelo Montes&lt;br&gt;Email: paju1986@gmail.com&lt;br&gt;Web: &lt;a href=&quot;http://sourceforge.net/projects/demonio/&quot;&gt;http://sourceforge.net/projects/demonio/&lt;/a&gt;</source>
+        <location filename="mainwindow.cpp" line="256"/>
+        <source>Demonio 2.0 BETA&lt;br&gt;Programado por: Alberto Pajuelo Montes&lt;br&gt;Email: paju1986@gmail.com&lt;br&gt;Web: &lt;a href=&quot;http://sourceforge.net/projects/demonio/&quot;&gt;http://sourceforge.net/projects/demonio/&lt;/a&gt;</source>
+        <oldsource>Demonio 1.0 SVN&lt;br&gt;Programado por: Alberto Pajuelo Montes&lt;br&gt;Email: paju1986@gmail.com&lt;br&gt;Web: &lt;a href=&quot;http://sourceforge.net/projects/demonio/&quot;&gt;http://sourceforge.net/projects/demonio/&lt;/a&gt;</oldsource>
         <translation type="unfinished">Demonio 1.0 SVN&lt;br&gt;Programado por:Alberto Pajuelo Montes&lt;br&gt;Email: paju1986@gmail.com&lt;br&gt;Web: &lt;a href=&quot;http://sourceforge.net/projects/demonio/&quot;&gt;http://sourceforge.net/projects/demonio/&lt;/a&gt;</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="287"/>
+        <source>Escuchando</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="340"/>
+        <source>socket principal conectado a Demoxy</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="344"/>
+        <source> socket de escritorio conectado a Demoxy.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="348"/>
+        <source> socket de webcam conectado a Demoxy.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="410"/>
+        <source>Versi&amp;oacute;n: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="411"/>
+        <source>Directorio del usuario: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="412"/>
+        <source>Directorio temporal: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="413"/>
+        <source>Resoluci&amp;oacute;n de pantalla: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="414"/>
+        <source>Fecha del sistema: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="415"/>
+        <source>Hora del sistema: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="418"/>
+        <source>Demonio - Cliente - Conectado a: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="436"/>
+        <source> socket de archivos conectado.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="440"/>
+        <source> socket de escritorio conectado.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="444"/>
+        <source> socket de webcam conectado.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -290,7 +382,7 @@
     <message>
         <location filename="Forms/ventanaArchivos.ui" line="14"/>
         <source>Administrador de archivos</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">administrador de ficheiros</translation>
     </message>
     <message utf8="true">
         <location filename="Forms/ventanaArchivos.ui" line="23"/>
@@ -378,7 +470,7 @@
     <message>
         <location filename="Forms/ventanaescritorio.ui" line="14"/>
         <source>Escritorio remoto</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">ecra remota</translation>
     </message>
     <message>
         <location filename="Forms/ventanaescritorio.ui" line="25"/>
@@ -426,7 +518,7 @@
     <message>
         <location filename="Forms/ventanaopciones.ui" line="14"/>
         <source>Configurar y crear un servidor</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Configurar e criar um servidor</translation>
     </message>
     <message>
         <location filename="Forms/ventanaopciones.ui" line="23"/>
@@ -501,7 +593,7 @@
     <message>
         <location filename="Forms/ventanaopciones.ui" line="157"/>
         <source>victima</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">victima</translation>
     </message>
     <message>
         <location filename="Forms/ventanaopciones.ui" line="168"/>
@@ -541,7 +633,7 @@
     <message>
         <location filename="Forms/ventanaopciones.ui" line="257"/>
         <source>Opciones</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Opçoes</translation>
     </message>
     <message>
         <location filename="Forms/ventanaopciones.ui" line="263"/>

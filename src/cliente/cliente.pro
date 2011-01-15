@@ -32,4 +32,7 @@ QTPLUGIN += qjpeg
 RC_FILE = demonio.rc
 }
 TRANSLATIONS = cliente_en.ts \
+               cliente_de.ts \
+               cliente_fr.ts \
+               cliente_it.ts \
                cliente_pt.ts
