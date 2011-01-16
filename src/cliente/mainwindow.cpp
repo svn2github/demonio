@@ -609,8 +609,17 @@ void MainWindow::archivosBorrar()
 {
     /** Manda borrar un archivo **/
     if( ventana.archivosLista()->currentRow() >= 0) {
-        QString rutaArchivo = ventana.ruta + "/" + ventana.archivosLista()->currentItem()->text();
-        util.escribirSocket ( "remove|@|" + rutaArchivo,socket[activo] );
+        //Crear una ventana de confirmación
+        QMessageBox confirmacion(&ventana);
+        confirmacion.setWindowTitle(tr("Confirmación"));
+        confirmacion.setText(tr("¿Está seguro de que desea borrar el archivo?"));
+        confirmacion.addButton(tr("No"),QMessageBox::NoRole);
+        confirmacion.addButton(tr("Si"),QMessageBox::YesRole);
+        if(confirmacion.exec())
+        {
+            QString rutaArchivo = ventana.ruta + "/" + ventana.archivosLista()->currentItem()->text();
+            util.escribirSocket ( "remove|@|" + rutaArchivo,socket[activo] );
+        }
     }
 }
 void MainWindow::archivosCarpeta()
