@@ -124,6 +124,8 @@ class MainWindow : public QMainWindow
     void archivosMover();
     void archivosRenombrar();
     void archivosPrevia();
+    void archivosBorrarCarpeta();
+    void archivosTamano();
     //slots de mensajes
     void enviarMensaje();
     //slots del escritorio remoto

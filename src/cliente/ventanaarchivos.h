@@ -62,6 +62,8 @@ class ventanaArchivos : public QMainWindow
     QPushButton *botonRenombrar();
     QPushButton *botonBorrar();
     QPushButton *botonPrevia();
+    QPushButton *botonBorrarCarpeta();
+    QPushButton *botonTamano();
     QComboBox *comboUnidad();
     void establecerRuta ( QString ruta );
     void ponerUnidad(QString unidad);

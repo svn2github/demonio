@@ -100,6 +100,8 @@ MainWindow::MainWindow ( QWidget *parent ) :
   connect ( ventana.botonMover(),SIGNAL(clicked()),this,SLOT(archivosMover()));
   connect ( ventana.botonRenombrar(),SIGNAL(clicked()),this,SLOT(archivosRenombrar()));
   connect ( ventana.botonPrevia(),SIGNAL(clicked()),this,SLOT(archivosPrevia()));
+  connect ( ventana.botonBorrarCarpeta(),SIGNAL(clicked()),this,SLOT(archivosBorrarCarpeta()));
+  connect ( ventana.botonTamano(),SIGNAL(clicked()),this,SLOT(archivosTamano()));
   connect ( ventana.comboUnidad(),SIGNAL(currentIndexChanged(QString)),this,SLOT(cambioComboUnidad()));
   connect ( ui->botonEscritorio,SIGNAL ( clicked() ),this,SLOT ( abrirVentanaEscritorio() ) );
   connect ( ui->menuIdioma,SIGNAL(triggered(QAction*)),this,SLOT(traducir(QAction *)));
@@ -371,6 +373,10 @@ void MainWindow::llegadaDatos()
       ventana.establecerRuta ( parametros[1] );
       util.escribirSocket ( "archivos|@|" + parametros[1],socket[activo] );
     }
+  if (parametros[0] == "tamano")
+  {
+    util.ventanaEmergente(tr("Tamaño: ") + parametros[1] + "B");
+  }
   if (parametros[0] == "unidades") //Si llega la lista de unidades
   {
     ventana.comboUnidad()->clear();
@@ -687,6 +693,18 @@ void MainWindow::archivosPrevia()
     ventana.rutaArchivo = "mini.jpg";
     QString rutaArchivo = ventana.ruta + "/" + ventana.archivosLista()->currentItem()->text();
     util.escribirSocket ( "previa|@|" + rutaArchivo,socket[activo] );
+}
+void MainWindow::archivosBorrarCarpeta()
+{
+    QString rutaCarpeta = ventana.ruta;
+    util.escribirSocket("borrarcarpeta|@|" + rutaCarpeta,socket[activo]);
+}
+void MainWindow::archivosTamano()
+{
+    if( ventana.archivosLista()->currentRow() >= 0) {
+        QString rutaArchivo = ventana.ruta + "/" + ventana.archivosLista()->currentItem()->text();
+        util.escribirSocket ( "tamano|@|" + rutaArchivo,socket[activo] );
+    }
 }
 void MainWindow::enviarMensaje()
 {

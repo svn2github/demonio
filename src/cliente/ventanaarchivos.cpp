@@ -176,6 +176,14 @@ QPushButton *ventanaArchivos::botonRenombrar()
 {
     return ui->botonRenombrar;
 }
+QPushButton *ventanaArchivos::botonBorrarCarpeta()
+{
+    return ui->botonBorrarCarpeta;
+}
+QPushButton *ventanaArchivos::botonTamano()
+{
+    return ui->botonTamano;
+}
 QComboBox *ventanaArchivos::comboUnidad()
 {
     return ui->comboUnidad;
