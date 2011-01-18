@@ -59,17 +59,31 @@ void ventanaArchivos::ponerUnidad(QString unidad)
 }
 void ventanaArchivos::ponerArchivo ( QString archivo )
 {
-  //QIcon icono;
-  //icono.addFile("drive-harddisk.png");
+  QIcon icono;
+  QStringList cachos = archivo.split(".");
+  QString extension = cachos[cachos.size() - 1];
+  if (extension == "jpg" || extension == "jpeg" || extension == "png" || extension == "gif" || extension == "bmp")
+      icono.addFile("./icons/tiposmime/imagen.png");
+  if (extension == "mp3" || extension == "wav" || extension == "ogg" || extension == "wma")
+      icono.addFile("./icons/tiposmime/audio.png");
+  if (extension == "mp4" || extension == "webm" || extension == "avi" || extension == "flv" || extension == "mpeg" || extension == "wmv")
+      icono.addFile("./icons/tiposmime/video.png");
+  if (extension == "exe" || extension == "com" || extension == "bat" || extension == "jar")
+      icono.addFile("./icons/tiposmime/ejecutable.png");
+  if (extension == "txt" || extension == "doc" || extension == "odt")
+      icono.addFile("./icons/tiposmime/txt.png");
+  if (extension == "pdf")
+      icono.addFile("./icons/tiposmime/pdf.png");
+
   ui->archivosLista->addItem ( archivo );
-  //ui->archivosLista->item(ui->archivosLista->count() - 1)->setIcon(icono);
+  ui->archivosLista->item(ui->archivosLista->count() - 1)->setIcon(icono);
 }
 void ventanaArchivos::ponerDirectorio ( QString directorio )
 {
-  //QIcon icono;
-  //icono.addFile("drive-harddisk.png");
+  QIcon icono;
+  icono.addFile("./icons/tiposmime/carpeta.png");
   ui->directoriosLista->addItem ( directorio );
-  //ui->directoriosLista->item(ui->directoriosLista->count() - 1)->setIcon(icono);
+  ui->directoriosLista->item(ui->directoriosLista->count() - 1)->setIcon(icono);
 }
 bool ventanaArchivos::event ( QEvent *event )
 {
