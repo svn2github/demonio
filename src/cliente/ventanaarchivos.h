@@ -76,6 +76,7 @@ class ventanaArchivos : public QMainWindow
     void llegadaDatos();
 
   protected:
+    QIcon iconoArchivo(QString archivo);
     void changeEvent ( QEvent *e );
     bool event ( QEvent *event );
 
