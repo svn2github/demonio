@@ -54,14 +54,7 @@ QString Utilidades::obtenerRutaAnterior(QString rutaActual){
     QString rutaAnterior;
     rutaActual.replace("\\","/");
     QStringList cachosRuta = rutaActual.split("/");
-    if (cachosRuta[0] == "")
-    {
-        rutaAnterior = "/";
-    }
-    else
-    {
-        rutaAnterior = cachosRuta[0];
-    }
+    rutaAnterior = cachosRuta[0];
     for (i=1;i< cachosRuta.size() - 1;i++){
         rutaAnterior = rutaAnterior + "/" + cachosRuta[i];
     }
