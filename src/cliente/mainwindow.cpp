@@ -701,9 +701,18 @@ void MainWindow::archivosPrevia()
 }
 void MainWindow::archivosBorrarCarpeta()
 {
-    QString rutaCarpeta = ventana.ruta;
-    util.escribirSocket("borrarcarpeta|@|" + rutaCarpeta,socket[activo]);
-    archivosRefresco();
+    //Crear una ventana de confirmación
+    QMessageBox confirmacion(&ventana);
+    confirmacion.setWindowTitle(tr("Confirmación"));
+    confirmacion.setText(tr("¿Está seguro de que desea borrar la carpeta actual?"));
+    confirmacion.addButton(tr("No"),QMessageBox::NoRole);
+    confirmacion.addButton(tr("Si"),QMessageBox::YesRole);
+    if(confirmacion.exec())
+    {
+        QString rutaCarpeta = ventana.ruta;
+        util.escribirSocket("borrarcarpeta|@|" + rutaCarpeta,socket[activo]);
+        archivosRefresco();
+    }
 }
 void MainWindow::archivosTamano()
 {

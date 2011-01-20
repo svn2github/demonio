@@ -60,13 +60,13 @@ bool ventanaEscritorio::event(QEvent *event)
         QString alt;
         anch.setNum(ancho);
         alt.setNum(alto);
-        this->setWindowTitle("Escritorio remoto - Resolucion: " + anch + " x " + alt);
+        this->setWindowTitle(tr("Escritorio remoto - Resolucion: ") + anch + " x " + alt);
     }
-    QMainWindow::event(event);
+    return QMainWindow::event(event);
 }
 void ventanaEscritorio::maximizar()
 {
-    util.ventanaEmergente("Va a entrar en módo pantalla completa, para salir pulse la tecla de Windows");
+    util.ventanaEmergente(tr("Va a entrar en módo pantalla completa, para salir pulse la tecla de Windows"));
     this->grabKeyboard();
     this->grabMouse();
     this->img->showFullScreen();
