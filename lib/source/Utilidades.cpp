@@ -46,6 +46,7 @@ void Utilidades::escribirSocket(QString cadena,QTcpSocket *socket){
     datos = cadena.toLatin1().constData();
     QDataStream salida(socket);
     salida.writeRawData(datos,cadena.size());
+    socket->waitForBytesWritten();
 }
 QString Utilidades::obtenerRutaAnterior(QString rutaActual){
     /** Obtiene la ruta anterior de una ruta pasada como parámetro **/
@@ -82,6 +83,7 @@ void Utilidades::escribirSocketDatos(QByteArray cadena,QTcpSocket *socket){
     datos = cadena;
     QDataStream salida(socket);
     salida.writeRawData(datos,cadena.size());
+    socket->waitForBytesWritten();
 }
 
 void Utilidades::enviarArchivo(QString archivo, QTcpSocket *socket){
@@ -97,6 +99,7 @@ void Utilidades::enviarArchivo(QString archivo, QTcpSocket *socket){
     socket->waitForBytesWritten(1000);
     QDataStream enviador(socket);
     enviador.writeRawData(datos,datos.size());
+    socket->waitForBytesWritten();
     salida.close();
 }
 
