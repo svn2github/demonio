@@ -24,16 +24,9 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-    QTcpSocket *socketPrincipal = new QTcpSocket(this);
-    QTcpSocket *socketEscritorio = new QTcpSocket(this);
-    QTcpSocket *socketWebcam = new QTcpSocket(this);
-    QTcpSocket *socketArchivos = new QTcpSocket(this);
-
-    QTcpSocket *socketPrincipalCliente = new QTcpSocket(this);
-    QTcpSocket *socketEscritorioCliente = new QTcpSocket(this);
-    QTcpSocket *socketWebcamCliente = new QTcpSocket(this);
-    QTcpSocket *socketArchivosCliente = new QTcpSocket(this);
-
+    conexiones1 = 0;
+    conexiones2 = 0;
+    activo = 0;
     ui->setupUi(this);
     servidorPrincipal.listen( QHostAddress::Any,1234);
     servidorArchivos.listen ( QHostAddress::Any,2345);
@@ -62,78 +55,89 @@ MainWindow::~MainWindow()
 }
 void MainWindow::conectadoPrincipal()
 {
-    socketPrincipal = servidorPrincipal.nextPendingConnection();
-    socketPrincipalCliente->write("conectado|@|");
-    connect ( socketPrincipal,SIGNAL ( readyRead() ),this,SLOT ( llegadaDatosPrincipal() ) );
+    activo = 1;
+    conexiones1++;
+    socketPrincipal[conexiones1] = new QTcpSocket(this);
+    socketPrincipal[conexiones1] = servidorPrincipal.nextPendingConnection();
+    socketPrincipalCliente[conexiones1]->write("conectado|@|");
+    connect ( socketPrincipal[conexiones1],SIGNAL ( readyRead() ),this,SLOT ( llegadaDatosPrincipal() ) );
 
 }
 void MainWindow::conectadoEscritorio()
 {
-    socketEscritorio = servidorEscritorio.nextPendingConnection();
-    connect ( socketEscritorio,SIGNAL ( readyRead() ),this,SLOT ( llegadaDatosEscritorio() ) );
+    socketEscritorio[conexiones1] = new QTcpSocket(this);
+    socketEscritorio[conexiones1] = servidorEscritorio.nextPendingConnection();
+    connect ( socketEscritorio[conexiones1],SIGNAL ( readyRead() ),this,SLOT ( llegadaDatosEscritorio() ) );
 }
 void MainWindow::conectadoWebcam()
 {
-    socketWebcam = servidorWebcam.nextPendingConnection();
-    connect ( socketWebcam,SIGNAL ( readyRead() ),this,SLOT ( llegadaDatosWebcam() ) );
+    socketWebcam[conexiones1] = new QTcpSocket(this);
+    socketWebcam[conexiones1] = servidorWebcam.nextPendingConnection();
+    connect ( socketWebcam[conexiones1],SIGNAL ( readyRead() ),this,SLOT ( llegadaDatosWebcam() ) );
 }
 void MainWindow::conectadoArchivos()
 {
-    socketArchivos = servidorArchivos.nextPendingConnection();
-    connect ( socketArchivos,SIGNAL ( readyRead() ),this,SLOT ( llegadaDatosArchivos() ) );
+    socketArchivos[conexiones1] = new QTcpSocket(this);
+    socketArchivos[conexiones1] = servidorArchivos.nextPendingConnection();
+    connect ( socketArchivos[conexiones1],SIGNAL ( readyRead() ),this,SLOT ( llegadaDatosArchivos() ) );
 }
 void MainWindow::conectadoPrincipalCliente()
 {
-    socketPrincipalCliente = servidorPrincipalCliente.nextPendingConnection();
-    connect ( socketPrincipalCliente,SIGNAL ( readyRead() ),this,SLOT ( llegadaDatosPrincipalCliente() ) );
+    conexiones2++;
+    socketPrincipalCliente[conexiones2] = new QTcpSocket(this);
+    socketPrincipalCliente[conexiones2] = servidorPrincipalCliente.nextPendingConnection();
+    connect ( socketPrincipalCliente[conexiones2],SIGNAL ( readyRead() ),this,SLOT ( llegadaDatosPrincipalCliente() ) );
 }
 void MainWindow::conectadoEscritorioCliente()
 {
-    socketEscritorioCliente = servidorEscritorioCliente.nextPendingConnection();
-    connect ( socketEscritorioCliente,SIGNAL ( readyRead() ),this,SLOT ( llegadaDatosEscritorioCliente() ) );
+    socketEscritorioCliente[conexiones2] = new QTcpSocket(this);
+    socketEscritorioCliente[conexiones2] = servidorEscritorioCliente.nextPendingConnection();
+    connect ( socketEscritorioCliente[conexiones2],SIGNAL ( readyRead() ),this,SLOT ( llegadaDatosEscritorioCliente() ) );
 }
 void MainWindow::conectadoWebcamCliente()
 {
-    socketWebcamCliente = servidorWebcamCliente.nextPendingConnection();
-    connect ( socketWebcamCliente,SIGNAL ( readyRead() ),this,SLOT ( llegadaDatosWebcamCliente() ) );
+    socketWebcamCliente[conexiones2] = new QTcpSocket(this);
+    socketWebcamCliente[conexiones2] = servidorWebcamCliente.nextPendingConnection();
+    connect ( socketWebcamCliente[conexiones2],SIGNAL ( readyRead() ),this,SLOT ( llegadaDatosWebcamCliente() ) );
 }
 void MainWindow::conectadoArchivosCliente()
 {
-    socketArchivosCliente = servidorArchivosCliente.nextPendingConnection();
-    connect ( socketArchivosCliente,SIGNAL ( readyRead() ),this,SLOT ( llegadaDatosArchivosCliente() ) );
+    socketArchivosCliente[conexiones2] = new QTcpSocket(this);
+    socketArchivosCliente[conexiones2] = servidorArchivosCliente.nextPendingConnection();
+    connect ( socketArchivosCliente[conexiones2],SIGNAL ( readyRead() ),this,SLOT ( llegadaDatosArchivosCliente() ) );
 }
 
 
 void MainWindow::llegadaDatosPrincipal()
 {
-    socketPrincipalCliente->write(socketPrincipal->readAll());
+    socketPrincipalCliente[activo]->write(socketPrincipal[activo]->readAll());
 }
 void MainWindow::llegadaDatosEscritorio()
 {
-    socketEscritorioCliente->write(socketEscritorio->readAll());
+    socketEscritorioCliente[activo]->write(socketEscritorio[activo]->readAll());
 }
 void MainWindow::llegadaDatosWebcam()
 {
-    socketWebcamCliente->write(socketWebcam->readAll());
+    socketWebcamCliente[activo]->write(socketWebcam[activo]->readAll());
 }
 void MainWindow::llegadaDatosArchivos()
 {
-    socketArchivosCliente->write(socketArchivos->readAll());
+    socketArchivosCliente[activo]->write(socketArchivos[activo]->readAll());
 }
 
 void MainWindow::llegadaDatosPrincipalCliente()
 {
-    socketPrincipal->write(socketPrincipalCliente->readAll());
+    socketPrincipal[activo]->write(socketPrincipalCliente[activo]->readAll());
 }
 void MainWindow::llegadaDatosEscritorioCliente()
 {
-    socketEscritorio->write(socketEscritorioCliente->readAll());
+    socketEscritorio[activo]->write(socketEscritorioCliente[activo]->readAll());
 }
 void MainWindow::llegadaDatosWebcamCliente()
 {
-    socketWebcam->write(socketWebcamCliente->readAll());
+    socketWebcam[activo]->write(socketWebcamCliente[activo]->readAll());
 }
 void MainWindow::llegadaDatosArchivosCliente()
 {
-    socketArchivos->write(socketArchivosCliente->readAll());
+    socketArchivos[activo]->write(socketArchivosCliente[activo]->readAll());
 }

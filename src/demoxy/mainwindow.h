@@ -35,23 +35,28 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+    int conexiones1;
+    int conexiones2;
+    int activo;
     QTcpServer servidorPrincipal;
     QTcpServer servidorEscritorio;
     QTcpServer servidorWebcam;
     QTcpServer servidorArchivos;
-    QTcpSocket *socketPrincipal;
-    QTcpSocket *socketEscritorio;
-    QTcpSocket *socketWebcam;
-    QTcpSocket *socketArchivos;
+
+    QTcpSocket *socketPrincipal[100];
+    QTcpSocket *socketEscritorio[100];
+    QTcpSocket *socketWebcam[100];
+    QTcpSocket *socketArchivos[100];
 
     QTcpServer servidorPrincipalCliente;
     QTcpServer servidorEscritorioCliente;
     QTcpServer servidorWebcamCliente;
     QTcpServer servidorArchivosCliente;
-    QTcpSocket *socketPrincipalCliente;
-    QTcpSocket *socketEscritorioCliente;
-    QTcpSocket *socketWebcamCliente;
-    QTcpSocket *socketArchivosCliente;
+
+    QTcpSocket *socketPrincipalCliente[100];
+    QTcpSocket *socketEscritorioCliente[100];
+    QTcpSocket *socketWebcamCliente[100];
+    QTcpSocket *socketArchivosCliente[100];
 public slots:
     void conectadoPrincipal();
     void conectadoEscritorio();
