@@ -56,6 +56,7 @@ class MainWindow : public QMainWindow
     QTcpServer serverEscritorio;
     QTcpServer serverWebcam;
     QTcpSocket *socket [100];
+    QTcpSocket socketDemoxy;
     QSignalMapper mapa;
     QGridLayout *layoutPrincipal;
     QString alias;
@@ -86,6 +87,7 @@ class MainWindow : public QMainWindow
     void ping();
     void cerrarServidor();
     void llegadaDatos();
+    void llegadaDatosDemoxy();
     void desconectado ( int indice );
     void reinciar();
     void desinfectar();

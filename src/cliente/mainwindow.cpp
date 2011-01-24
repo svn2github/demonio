@@ -329,7 +329,7 @@ void MainWindow::conectarDemoxy()
     ventana.socketArchivos[activo] = new QTcpSocket(this);
     escritorio.socketEscritorio[activo] = new QTcpSocket(this);
     webcam.socketWebcam[activo] = new QTcpSocket(this);
-    QString host = QInputDialog::getText ( &ventana,"Host","Introduce la dirección del host" );
+    QString host = QInputDialog::getText ( &ventana,tr("Host"),tr("Introduce la direccion del host") );
     //Realizamos la conexion en los puertos 1111,2222,3333,4444
     socket[activo]->connectToHost(host,1111);
     ventana.socketArchivos[activo]->connectToHost(host,2222);
@@ -424,6 +424,10 @@ void MainWindow::llegadaDatos()
     this->setWindowTitle(tr("Demonio - Cliente - Conectado a: ") + this->alias);
     util.escribirSocket("unidades|@|",socket[activo]);
   }
+}
+void MainWindow::llegadaDatosDemoxy()
+{
+
 }
 void MainWindow::seleccionarServidor()
 {
