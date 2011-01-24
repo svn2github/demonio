@@ -42,11 +42,13 @@ public:
     QTcpServer servidorEscritorio;
     QTcpServer servidorWebcam;
     QTcpServer servidorArchivos;
+    QTcpServer servidorDemoxy;
 
     QTcpSocket *socketPrincipal[100];
     QTcpSocket *socketEscritorio[100];
     QTcpSocket *socketWebcam[100];
     QTcpSocket *socketArchivos[100];
+    QTcpSocket *socketDemoxy;
 
     QTcpServer servidorPrincipalCliente;
     QTcpServer servidorEscritorioCliente;
@@ -66,6 +68,7 @@ public slots:
     void conectadoEscritorioCliente();
     void conectadoWebcamCliente();
     void conectadoArchivosCliente();
+    void conectadoDemoxy();
     void llegadaDatosPrincipal();
     void llegadaDatosEscritorio();
     void llegadaDatosWebcam();
@@ -74,6 +77,7 @@ public slots:
     void llegadaDatosEscritorioCliente();
     void llegadaDatosWebcamCliente();
     void llegadaDatosArchivosCliente();
+    void llegadaDatosDemoxy();
 private:
     Ui::MainWindow *ui;
 };

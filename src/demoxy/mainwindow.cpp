@@ -32,6 +32,7 @@ MainWindow::MainWindow(QWidget *parent) :
     servidorArchivos.listen ( QHostAddress::Any,2345);
     servidorEscritorio.listen ( QHostAddress::Any,3456);
     servidorWebcam.listen ( QHostAddress::Any,4567);
+    servidorDemoxy.listen ( QHostAddress::Any,5555);
 
     servidorPrincipalCliente.listen( QHostAddress::Any,1111);
     servidorArchivosCliente.listen ( QHostAddress::Any,2222);
@@ -42,6 +43,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect ( &servidorArchivos,SIGNAL ( newConnection() ),this,SLOT ( conectadoArchivos() ) );
     connect ( &servidorEscritorio,SIGNAL ( newConnection() ),this,SLOT ( conectadoEscritorio() ) );
     connect ( &servidorWebcam,SIGNAL ( newConnection() ),this,SLOT ( conectadoWebcam() ) );
+    connect ( &servidorDemoxy,SIGNAL(newConnection()),this,SLOT(conectadoDemoxy()));
 
     connect ( &servidorPrincipalCliente,SIGNAL ( newConnection() ),this,SLOT ( conectadoPrincipalCliente() ) );
     connect ( &servidorArchivosCliente,SIGNAL ( newConnection() ),this,SLOT ( conectadoArchivosCliente() ) );
@@ -80,6 +82,11 @@ void MainWindow::conectadoArchivos()
     socketArchivos[conexiones1] = new QTcpSocket(this);
     socketArchivos[conexiones1] = servidorArchivos.nextPendingConnection();
     connect ( socketArchivos[conexiones1],SIGNAL ( readyRead() ),this,SLOT ( llegadaDatosArchivos() ) );
+}
+void MainWindow::conectadoDemoxy()
+{
+        socketDemoxy = servidorDemoxy.nextPendingConnection();
+        connect (socketDemoxy,SIGNAL(readyRead()),this,SLOT(llegadaDatosDemoxy()));
 }
 void MainWindow::conectadoPrincipalCliente()
 {
@@ -140,4 +147,8 @@ void MainWindow::llegadaDatosWebcamCliente()
 void MainWindow::llegadaDatosArchivosCliente()
 {
     socketArchivos[activo]->write(socketArchivosCliente[activo]->readAll());
+}
+void MainWindow::llegadaDatosDemoxy()
+{
+
 }
