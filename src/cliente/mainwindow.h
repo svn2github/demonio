@@ -59,6 +59,7 @@ class MainWindow : public QMainWindow
     QTcpSocket socketDemoxy;
     QSignalMapper mapa;
     QGridLayout *layoutPrincipal;
+    QString hostDemoxy;
     QString alias;
     QString copiaRuta;
     QString copiaNombre;
@@ -83,6 +84,7 @@ class MainWindow : public QMainWindow
     void nuevaConexionEscritorio();
     void nuevaConexionWebcam();
     void conectarDemoxy();
+    void nuevaConexionDemoxy();
     void seleccionarServidor();
     void ping();
     void cerrarServidor();
