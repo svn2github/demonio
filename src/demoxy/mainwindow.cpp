@@ -61,7 +61,7 @@ void MainWindow::conectadoPrincipal()
     conexiones1++;
     socketPrincipal[conexiones1] = new QTcpSocket(this);
     socketPrincipal[conexiones1] = servidorPrincipal.nextPendingConnection();
-    socketPrincipalCliente[conexiones1]->write("conectado|@|");
+    this->socketDemoxy->write("conectado|@|");
     connect ( socketPrincipal[conexiones1],SIGNAL ( readyRead() ),this,SLOT ( llegadaDatosPrincipal() ) );
 
 }
@@ -86,7 +86,7 @@ void MainWindow::conectadoArchivos()
 void MainWindow::conectadoDemoxy()
 {
         socketDemoxy = servidorDemoxy.nextPendingConnection();
-        connect (socketDemoxy,SIGNAL(readyRead()),this,SLOT(llegadaDatosDemoxy()));
+        connect (socketDemoxy,SIGNAL(readyRead()),this,SLOT(llegadaDatosDemoxy()));        
 }
 void MainWindow::conectadoPrincipalCliente()
 {
