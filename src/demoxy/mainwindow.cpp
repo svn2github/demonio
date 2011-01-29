@@ -72,8 +72,13 @@ void MainWindow::conectadoPrincipal()
         this->socketDemoxy->write("conectado|@|");
     }
     connect ( socketPrincipal[conexiones1],SIGNAL ( readyRead() ),this,SLOT ( llegadaDatosPrincipal() ) );
+    connect ( socketPrincipal[conexiones1],SIGNAL(disconnected()),this,SLOT(desconectadoPrincipal()));
     conexiones1++;
 
+}
+void MainWindow::desconectadoPrincipal()
+{
+   //A implementar
 }
 void MainWindow::conectadoEscritorio()
 {
@@ -100,16 +105,30 @@ void MainWindow::conectadoDemoxy()
 {
         socketDemoxy = servidorDemoxy.nextPendingConnection();
         connect (socketDemoxy,SIGNAL(readyRead()),this,SLOT(llegadaDatosDemoxy()));
+        connect (socketDemoxy,SIGNAL(disconnected()),this,SLOT(desconectadoDemoxy()));
         QByteArray listaConexiones;
         listaConexiones.setNum(conexiones1);
         socketDemoxy->write("servidores|@|" + listaConexiones);
+}
+void MainWindow::desconectadoDemoxy()
+{
+    conexiones2 = 0;
+    conexionesArchivos2 = 0;
+    conexionesEscritorio2 = 0;
+    conexionesWebcam2 = 0;
+
 }
 void MainWindow::conectadoPrincipalCliente()
 {
     socketPrincipalCliente[conexiones2] = new QTcpSocket(this);
     socketPrincipalCliente[conexiones2] = servidorPrincipalCliente.nextPendingConnection();
     connect ( socketPrincipalCliente[conexiones2],SIGNAL ( readyRead() ),this,SLOT ( llegadaDatosPrincipalCliente() ) );
+    connect ( socketPrincipalCliente[conexiones2],SIGNAL(disconnected()),this,SLOT(desconectadoPrincipalCliente()));
     conexiones2++;
+}
+void MainWindow::desconectadoPrincipalCliente()
+{
+    //A implementar
 }
 void MainWindow::conectadoEscritorioCliente()
 {

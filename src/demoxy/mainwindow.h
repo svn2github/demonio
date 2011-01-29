@@ -75,6 +75,9 @@ public slots:
     void conectadoWebcamCliente();
     void conectadoArchivosCliente();
     void conectadoDemoxy();
+    void desconectadoDemoxy();
+    void desconectadoPrincipal();
+    void desconectadoPrincipalCliente();
     void llegadaDatosPrincipal();
     void llegadaDatosEscritorio();
     void llegadaDatosWebcam();
