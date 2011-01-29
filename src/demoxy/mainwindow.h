@@ -36,7 +36,13 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
     int conexiones1;
+    int conexionesArchivos1;
+    int conexionesEscritorio1;
+    int conexionesWebcam1;
     int conexiones2;
+    int conexionesArchivos2;
+    int conexionesEscritorio2;
+    int conexionesWebcam2;
     int activo;
     QTcpServer servidorPrincipal;
     QTcpServer servidorEscritorio;

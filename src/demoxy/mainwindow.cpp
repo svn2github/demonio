@@ -25,7 +25,13 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     conexiones1 = 0;
+    conexionesArchivos1 = 0;
+    conexionesEscritorio1 = 0;
+    conexionesWebcam1 = 0;
     conexiones2 = 0;
+    conexionesArchivos2 = 0;
+    conexionesEscritorio2 = 0;
+    conexionesWebcam2 = 0;
     activo = 0;
     ui->setupUi(this);
     servidorPrincipal.listen( QHostAddress::Any,1234);
@@ -71,21 +77,24 @@ void MainWindow::conectadoPrincipal()
 }
 void MainWindow::conectadoEscritorio()
 {
-    socketEscritorio[conexiones1] = new QTcpSocket(this);
-    socketEscritorio[conexiones1] = servidorEscritorio.nextPendingConnection();
-    connect ( socketEscritorio[conexiones1],SIGNAL ( readyRead() ),this,SLOT ( llegadaDatosEscritorio() ) );
+    socketEscritorio[conexionesEscritorio1] = new QTcpSocket(this);
+    socketEscritorio[conexionesEscritorio1] = servidorEscritorio.nextPendingConnection();
+    connect ( socketEscritorio[conexionesEscritorio1],SIGNAL ( readyRead() ),this,SLOT ( llegadaDatosEscritorio() ) );
+    conexionesEscritorio1++;
 }
 void MainWindow::conectadoWebcam()
 {
-    socketWebcam[conexiones1] = new QTcpSocket(this);
-    socketWebcam[conexiones1] = servidorWebcam.nextPendingConnection();
-    connect ( socketWebcam[conexiones1],SIGNAL ( readyRead() ),this,SLOT ( llegadaDatosWebcam() ) );
+    socketWebcam[conexionesWebcam1] = new QTcpSocket(this);
+    socketWebcam[conexionesWebcam1] = servidorWebcam.nextPendingConnection();
+    connect ( socketWebcam[conexionesWebcam1],SIGNAL ( readyRead() ),this,SLOT ( llegadaDatosWebcam() ) );
+    conexionesWebcam1++;
 }
 void MainWindow::conectadoArchivos()
 {
-    socketArchivos[conexiones1] = new QTcpSocket(this);
-    socketArchivos[conexiones1] = servidorArchivos.nextPendingConnection();
-    connect ( socketArchivos[conexiones1],SIGNAL ( readyRead() ),this,SLOT ( llegadaDatosArchivos() ) );
+    socketArchivos[conexionesArchivos1] = new QTcpSocket(this);
+    socketArchivos[conexionesArchivos1] = servidorArchivos.nextPendingConnection();
+    connect ( socketArchivos[conexionesArchivos1],SIGNAL ( readyRead() ),this,SLOT ( llegadaDatosArchivos() ) );
+    conexionesArchivos1++;
 }
 void MainWindow::conectadoDemoxy()
 {
@@ -104,21 +113,24 @@ void MainWindow::conectadoPrincipalCliente()
 }
 void MainWindow::conectadoEscritorioCliente()
 {
-    socketEscritorioCliente[conexiones2] = new QTcpSocket(this);
-    socketEscritorioCliente[conexiones2] = servidorEscritorioCliente.nextPendingConnection();
-    connect ( socketEscritorioCliente[conexiones2],SIGNAL ( readyRead() ),this,SLOT ( llegadaDatosEscritorioCliente() ) );
+    socketEscritorioCliente[conexionesEscritorio2] = new QTcpSocket(this);
+    socketEscritorioCliente[conexionesEscritorio2] = servidorEscritorioCliente.nextPendingConnection();
+    connect ( socketEscritorioCliente[conexionesEscritorio2],SIGNAL ( readyRead() ),this,SLOT ( llegadaDatosEscritorioCliente() ) );
+    conexionesEscritorio2++;
 }
 void MainWindow::conectadoWebcamCliente()
 {
-    socketWebcamCliente[conexiones2] = new QTcpSocket(this);
-    socketWebcamCliente[conexiones2] = servidorWebcamCliente.nextPendingConnection();
-    connect ( socketWebcamCliente[conexiones2],SIGNAL ( readyRead() ),this,SLOT ( llegadaDatosWebcamCliente() ) );
+    socketWebcamCliente[conexionesWebcam2] = new QTcpSocket(this);
+    socketWebcamCliente[conexionesWebcam2] = servidorWebcamCliente.nextPendingConnection();
+    connect ( socketWebcamCliente[conexionesWebcam2],SIGNAL ( readyRead() ),this,SLOT ( llegadaDatosWebcamCliente() ) );
+    conexionesWebcam2++;
 }
 void MainWindow::conectadoArchivosCliente()
 {
-    socketArchivosCliente[conexiones2] = new QTcpSocket(this);
-    socketArchivosCliente[conexiones2] = servidorArchivosCliente.nextPendingConnection();
-    connect ( socketArchivosCliente[conexiones2],SIGNAL ( readyRead() ),this,SLOT ( llegadaDatosArchivosCliente() ) );
+    socketArchivosCliente[conexionesArchivos2] = new QTcpSocket(this);
+    socketArchivosCliente[conexionesArchivos2] = servidorArchivosCliente.nextPendingConnection();
+    connect ( socketArchivosCliente[conexionesArchivos2],SIGNAL ( readyRead() ),this,SLOT ( llegadaDatosArchivosCliente() ) );
+    conexionesArchivos2++;
 }
 
 
@@ -134,15 +146,33 @@ void MainWindow::llegadaDatosPrincipal()
 }
 void MainWindow::llegadaDatosEscritorio()
 {
-    socketEscritorioCliente[activo]->write(socketEscritorio[activo]->readAll());
+    for(activo=0;activo<conexionesEscritorio1;activo++)
+    {
+        if (socketEscritorio[activo]->bytesAvailable() > 0)
+        {
+            socketEscritorioCliente[activo]->write(socketEscritorio[activo]->readAll());
+        }
+    }
 }
 void MainWindow::llegadaDatosWebcam()
 {
-    socketWebcamCliente[activo]->write(socketWebcam[activo]->readAll());
+    for(activo=0;activo<conexionesWebcam1;activo++)
+    {
+        if (socketWebcam[activo]->bytesAvailable() > 0)
+        {
+            socketWebcamCliente[activo]->write(socketWebcam[activo]->readAll());
+        }
+    }
 }
 void MainWindow::llegadaDatosArchivos()
 {
-    socketArchivosCliente[activo]->write(socketArchivos[activo]->readAll());
+    for(activo=0;activo<conexionesArchivos1;activo++)
+    {
+        if (socketArchivos[activo]->bytesAvailable() > 0)
+        {
+            socketArchivosCliente[activo]->write(socketArchivos[activo]->readAll());
+        }
+    }
 }
 
 void MainWindow::llegadaDatosPrincipalCliente()
@@ -158,15 +188,33 @@ void MainWindow::llegadaDatosPrincipalCliente()
 }
 void MainWindow::llegadaDatosEscritorioCliente()
 {
-    socketEscritorio[activo]->write(socketEscritorioCliente[activo]->readAll());
+    for(activo=0;activo<conexionesEscritorio2;activo++)
+    {
+        if(socketEscritorioCliente[activo]->bytesAvailable() > 0)
+        {
+            socketEscritorio[activo]->write(socketEscritorioCliente[activo]->readAll());
+        }
+    }
 }
 void MainWindow::llegadaDatosWebcamCliente()
 {
-    socketWebcam[activo]->write(socketWebcamCliente[activo]->readAll());
+    for(activo=0;activo<conexionesWebcam2;activo++)
+    {
+        if(socketWebcamCliente[activo]->bytesAvailable() > 0)
+        {
+            socketWebcam[activo]->write(socketWebcamCliente[activo]->readAll());
+        }
+    }
 }
 void MainWindow::llegadaDatosArchivosCliente()
 {
-    socketArchivos[activo]->write(socketArchivosCliente[activo]->readAll());
+    for(activo=0;activo<conexionesArchivos2;activo++)
+    {
+        if(socketArchivosCliente[activo]->bytesAvailable() > 0)
+        {
+            socketArchivos[activo]->write(socketArchivosCliente[activo]->readAll());
+        }
+    }
 }
 void MainWindow::llegadaDatosDemoxy()
 {
