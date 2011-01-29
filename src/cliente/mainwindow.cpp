@@ -640,7 +640,6 @@ void MainWindow::archivosSubir()
   QStringList cachosArchivo = nombreArchivo.split ( "/" );
   util.escribirSocket ( "put|@|" + cachosArchivo[cachosArchivo.size() - 1],socket[activo] );
   ventana.subirArchivo ( nombreArchivo );
-  archivosRefresco();
 }
 
 void MainWindow::archivosBorrar()        
@@ -657,7 +656,6 @@ void MainWindow::archivosBorrar()
         {
             QString rutaArchivo = ventana.ruta + "/" + ventana.archivosLista()->currentItem()->text();
             util.escribirSocket ( "remove|@|" + rutaArchivo,socket[activo] );
-            archivosRefresco();
         }
     }
 }
@@ -665,7 +663,6 @@ void MainWindow::archivosCarpeta()
 {
   QString nombre = QInputDialog::getText ( &ventana,"Nombre de la carpeta","Nombre de la carpeta" );
   util.escribirSocket ( "createfolder|@|" + nombre,socket[activo] );
-  archivosRefresco();
 
 }
 void MainWindow::archivosEjecutar()
@@ -687,7 +684,6 @@ void MainWindow::archivosCopiar()
             copiaRuta = ventana.ruta + "/";
             copiaNombre = ventana.archivosLista()->currentItem()->text();
             ventana.botonCopiar()->setText("Pegar");
-            archivosRefresco();
         }
     }
     else
@@ -708,7 +704,6 @@ void MainWindow::archivosMover()
             copiaRuta = ventana.ruta + "/";
             copiaNombre = ventana.archivosLista()->currentItem()->text();
             ventana.botonMover()->setText("Pegar");
-            archivosRefresco();
         }
     }
     else
@@ -722,7 +717,6 @@ void MainWindow::archivosRenombrar()
     QString rutaArchivo = ventana.ruta + "/" + ventana.archivosLista()->currentItem()->text();
     QString nombre = QInputDialog::getText ( &ventana,"Nuevo nombre","Nuevo nombre" );
     util.escribirSocket ( "renombrar|@|" + rutaArchivo + "|@|" + ventana.ruta + "/" + nombre,socket[activo] );
-    archivosRefresco();
 }
 void MainWindow::archivosPrevia()
 {
