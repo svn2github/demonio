@@ -39,6 +39,8 @@ MainWindow::MainWindow(QWidget *parent) :
     servidorEscritorioCliente.listen ( QHostAddress::Any,3333);
     servidorWebcamCliente.listen ( QHostAddress::Any,4444);
 
+    socketDemoxy = new QTcpSocket(this);
+
     connect ( &servidorPrincipal,SIGNAL ( newConnection() ),this,SLOT ( conectadoPrincipal() ) );
     connect ( &servidorArchivos,SIGNAL ( newConnection() ),this,SLOT ( conectadoArchivos() ) );
     connect ( &servidorEscritorio,SIGNAL ( newConnection() ),this,SLOT ( conectadoEscritorio() ) );
@@ -56,13 +58,15 @@ MainWindow::~MainWindow()
     delete ui;
 }
 void MainWindow::conectadoPrincipal()
-{
-    activo = 1;
-    conexiones1++;
+{    
     socketPrincipal[conexiones1] = new QTcpSocket(this);
     socketPrincipal[conexiones1] = servidorPrincipal.nextPendingConnection();
-    this->socketDemoxy->write("conectado|@|");
+    if (this->socketDemoxy->state() == QAbstractSocket::ConnectedState)
+    {
+        this->socketDemoxy->write("conectado|@|");
+    }
     connect ( socketPrincipal[conexiones1],SIGNAL ( readyRead() ),this,SLOT ( llegadaDatosPrincipal() ) );
+    conexiones1++;
 
 }
 void MainWindow::conectadoEscritorio()
@@ -86,14 +90,17 @@ void MainWindow::conectadoArchivos()
 void MainWindow::conectadoDemoxy()
 {
         socketDemoxy = servidorDemoxy.nextPendingConnection();
-        connect (socketDemoxy,SIGNAL(readyRead()),this,SLOT(llegadaDatosDemoxy()));        
+        connect (socketDemoxy,SIGNAL(readyRead()),this,SLOT(llegadaDatosDemoxy()));
+        QByteArray listaConexiones;
+        listaConexiones.setNum(conexiones1);
+        socketDemoxy->write("servidores|@|" + listaConexiones);
 }
 void MainWindow::conectadoPrincipalCliente()
 {
-    conexiones2++;
     socketPrincipalCliente[conexiones2] = new QTcpSocket(this);
     socketPrincipalCliente[conexiones2] = servidorPrincipalCliente.nextPendingConnection();
     connect ( socketPrincipalCliente[conexiones2],SIGNAL ( readyRead() ),this,SLOT ( llegadaDatosPrincipalCliente() ) );
+    conexiones2++;
 }
 void MainWindow::conectadoEscritorioCliente()
 {
@@ -117,7 +124,13 @@ void MainWindow::conectadoArchivosCliente()
 
 void MainWindow::llegadaDatosPrincipal()
 {
-    socketPrincipalCliente[activo]->write(socketPrincipal[activo]->readAll());
+    for(activo=0;activo<conexiones1;activo++)
+    {
+        if (socketPrincipal[activo]->bytesAvailable() > 0)
+        {
+            socketPrincipalCliente[activo]->write(socketPrincipal[activo]->readAll());
+        }
+    }
 }
 void MainWindow::llegadaDatosEscritorio()
 {
@@ -134,7 +147,14 @@ void MainWindow::llegadaDatosArchivos()
 
 void MainWindow::llegadaDatosPrincipalCliente()
 {
-    socketPrincipal[activo]->write(socketPrincipalCliente[activo]->readAll());
+    for(activo=0;activo<conexiones2;activo++)
+    {
+        if(socketPrincipalCliente[activo]->bytesAvailable() > 0)
+        {
+            socketPrincipal[activo]->write(socketPrincipalCliente[activo]->readAll());
+        }
+    }
+
 }
 void MainWindow::llegadaDatosEscritorioCliente()
 {
