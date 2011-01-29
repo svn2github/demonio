@@ -112,7 +112,7 @@ bool MainWindow::cargarConfiguracion(){
     this->portEscritorio = 3456;
     this->portWebcam = 4567;
     this->tiempoConexion = 30000;
-    this->alias = "victima";
+    this->alias = "servidor";
     QString appPath = QApplication::applicationFilePath(); //ruta absoluta a la aplicación
     this->nombreCopiable =  QFileInfo(appPath).fileName(); //Nombre del ejecutable
     // No olividar renombrar el ejecutable a rawserver.dat y moverlo al directorio del cliente
