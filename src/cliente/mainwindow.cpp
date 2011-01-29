@@ -357,6 +357,10 @@ void MainWindow::nuevaConexionDemoxy()
     {
       ui->notificacionLabel->setText(ui->notificacionLabel->text() + tr(" socket de webcam conectado a Demoxy."));
     }
+    socket[conexiones]->waitForConnected();
+    ventana.socketArchivos[ventana.conexiones]->waitForConnected();
+    escritorio.socketEscritorio[escritorio.conexiones]->waitForConnected();
+    webcam.socketWebcam[webcam.conexiones]->waitForConnected();
     conexiones++;
     ventana.conexiones++;
     escritorio.conexiones++;
@@ -441,6 +445,15 @@ void MainWindow::llegadaDatosDemoxy()
     if( parametros[0] == "conectado") //Si la conexión proviene a traves de Demoxy
     {
       this->nuevaConexionDemoxy();
+    }
+    if( parametros[0] == "servidores")
+    {
+        int i;
+        int max = parametros[1].toInt();
+        for(i=0;i<max;i++)
+        {
+            this->nuevaConexionDemoxy();
+        }
     }
 }
 void MainWindow::seleccionarServidor()
