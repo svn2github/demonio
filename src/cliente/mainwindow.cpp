@@ -435,6 +435,7 @@ void MainWindow::llegadaDatos()
     ui->informacionSistemaTexto->setHtml(informacion);
     //La resolucion tambien la ponemos en el titulo de la ventana de captura de pantalla
     this->setWindowTitle(tr("Demonio - Cliente - Conectado a: ") + this->alias);
+    //ui->servidoresLista->currentItem()->setText(this->alias); //Poner en la lista el alias en vez de la IP
     util.escribirSocket("unidades|@|",socket[activo]);
   }
 }
