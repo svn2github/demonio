@@ -169,7 +169,7 @@
        <item>
         <widget class="QPushButton" name="botonDesinfectar">
          <property name="text">
-          <string>Desinfectar</string>
+          <string>Desinstalar </string>
          </property>
         </widget>
        </item>
@@ -587,7 +587,7 @@
        <item>
         <widget class="QLineEdit" name="textoNickCliente">
          <property name="text">
-          <string>hacker</string>
+          <string>Cliente</string>
          </property>
         </widget>
        </item>
@@ -601,7 +601,7 @@
        <item>
         <widget class="QLineEdit" name="textoNickServidor">
          <property name="text">
-          <string>victima</string>
+          <string>Servidor</string>
          </property>
         </widget>
        </item>

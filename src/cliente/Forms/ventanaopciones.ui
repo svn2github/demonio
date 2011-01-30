@@ -154,7 +154,7 @@
       <item>
        <widget class="QLineEdit" name="textoAlias">
         <property name="text">
-         <string>victima</string>
+         <string>servidor</string>
         </property>
        </widget>
       </item>
