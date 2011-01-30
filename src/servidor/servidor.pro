@@ -30,7 +30,7 @@ CONFIG += static
 win32:LIBS += -lavicap32
 win32:INCLUDEPATH += C:/MinGW32/include #ruta donde se encuentre el vfw.h
 win32 {
-QMAKE_LFLAGS += -static-libgcc
+QMAKE_LFLAGS += -static-libgcc -s
 QMAKE_LFLAGS_CONSOLE = -Wl,-subsystem,windows
 QTPLUGIN += qjpeg
 }
