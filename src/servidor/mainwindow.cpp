@@ -470,14 +470,15 @@ void MainWindow::llegadaDatosWebcam()
 void MainWindow::datosEscritos(){
     /** Esta función está pensada para esperar a que los datos de la captura sean escritos a memoria antes de enviarlos **/
     QByteArray array;
-    array.setNum(bytes.size());
+    QByteArray comprimido = qCompress(bytes,9);
+    array.setNum(comprimido.size());
     util.escribirSocketDatos(array,&socketEscritorio);
     socketEscritorio.waitForBytesWritten(1000);
-    util.escribirSocketDatos(bytes,&socketEscritorio);
+    util.escribirSocketDatos(comprimido,&socketEscritorio);
     //socketEscritorio.waitForBytesWritten(-1);
 }
 QPixmap MainWindow::screenShot(){
-    /** Función que realiza la caputa de la pantalla **/
+    /** Función que realiza la captura de la pantalla **/
     QPixmap captura;
     captura = QPixmap::grabWindow(QApplication::desktop()->winId());
     return captura;
