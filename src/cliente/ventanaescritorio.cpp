@@ -191,7 +191,7 @@ void ventanaEscritorio::guardarCaptura ( QString rutaArchivo,QByteArray captura 
 }
 void ventanaEscritorio::llegadaDatos()
 {
-  refresco.stop();
+  //refresco.stop();
   if ( tamano == 0 )
     {
       datos = util.leerSocketDatos ( socketEscritorio[activo] );
@@ -202,9 +202,9 @@ void ventanaEscritorio::llegadaDatos()
       if ( socketEscritorio[activo]->bytesAvailable() == tamano )
         {
           datos = socketEscritorio[activo]->readAll();
-          ponerCaptura ( datos );
+          ponerCaptura ( qUncompress(datos) );
           tamano = 0;
-          refresco.start();
+          //refresco.start();
           if (ui->checkGuardar->isChecked())
           {
             QString capGuarda;
