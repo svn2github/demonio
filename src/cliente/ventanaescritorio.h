@@ -42,6 +42,8 @@ class ventanaEscritorio : public QMainWindow
     QLabel *img;
     QLabel *imageEscritorio;
     QTimer refresco;
+    QPixmap captura1;
+    bool interruptor;
     int tamano;
     unsigned long int numCapturas;
     Utilidades util;

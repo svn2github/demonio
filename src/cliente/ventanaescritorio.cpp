@@ -50,7 +50,7 @@ ventanaEscritorio::ventanaEscritorio ( QWidget *parent ) :
   ui->horizontalLayout_2->insertWidget(1,imageEscritorio);
  imageEscritorio->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
  refresco.stop();
-
+  interruptor = true;
 }
 bool ventanaEscritorio::event(QEvent *event)
 {
@@ -172,14 +172,40 @@ void ventanaEscritorio::ponerTiempo()
 }
 void ventanaEscritorio::ponerCaptura ( QByteArray captura )
 {
+    //Cambiar lo del interruptor por inicializar la imagen a fucsia
       QPixmap imagen;
-      imagen.loadFromData ( captura,"jpg" );
-
+      if(!interruptor)
+      {
+        int i,j;
+        QImage imagen1;
+        QImage imagen2;
+        imagen1 = captura1.toImage();
+        imagen2.loadFromData ( captura,"jpg" );
+        for(i=0;i<imagen1.width();i++)
+        {
+            for(j=0;j<imagen1.height();j++)
+            {
+                if(imagen2.pixel(i,j) <= QColor(245, 180, 190).rgb() || imagen2.pixel(i,j) >= QColor(255, 200, 210).rgb())
+                {
+                    imagen1.setPixel(i,j,imagen2.pixel(i,j));
+                }
+            }
+        }
+        imagen = imagen.fromImage(imagen1,Qt::ColorOnly);
+        captura1 = imagen;
+      }
+      else
+      {
+        imagen.loadFromData ( captura,"jpg" );
+        captura1 = imagen;
+        interruptor = false;
+      }
       imagen = imagen.scaled ( QApplication::desktop()->size());
       img->setPixmap ( imagen );
 
       imagen = imagen.scaled ( imageEscritorio->size(),Qt::KeepAspectRatio );
       imageEscritorio->setPixmap ( imagen );
+
 
 }
 void ventanaEscritorio::guardarCaptura ( QString rutaArchivo,QByteArray captura )
