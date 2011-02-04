@@ -45,25 +45,13 @@ ventanaEscritorio::ventanaEscritorio ( QWidget *parent ) :
   connect ( ui->botonGuardar,SIGNAL ( clicked() ),this,SLOT ( botonGuardar() ) );
   connect ( ui->botonIniciar,SIGNAL ( clicked() ),this,SLOT ( checkStreaming() ) );
   connect (ui->botonPantallaCompleta,SIGNAL(clicked()),this,SLOT(maximizar()));
-  connect (ui->spinIntervalo,SIGNAL(valueChanged(int)),this,SLOT(ponerTiempo()));
+  //connect (ui->spinIntervalo,SIGNAL(valueChanged(int)),this,SLOT(ponerTiempo()));
   connect (&refresco,SIGNAL(timeout()),this,SLOT(botonCapturar()));
   ui->horizontalLayout_2->insertWidget(1,imageEscritorio);
- imageEscritorio->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
- refresco.stop();
-  interruptor = true;
+  imageEscritorio->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
+  interruptor = false;
 }
-bool ventanaEscritorio::event(QEvent *event)
-{
-    if(QEvent::Show)
-    {
-        QString anch;
-        QString alt;
-        anch.setNum(ancho);
-        alt.setNum(alto);
-        this->setWindowTitle(tr("Escritorio remoto - Resolucion: ") + anch + " x " + alt);
-    }
-    return QMainWindow::event(event);
-}
+
 void ventanaEscritorio::maximizar()
 {
     util.ventanaEmergente(tr("Va a entrar en módo pantalla completa, para salir pulse la tecla de Windows"));
@@ -138,6 +126,7 @@ void ventanaEscritorio::mouseReleaseEvent(QMouseEvent *boton)
 
 void ventanaEscritorio::botonCapturar()
 {
+  refresco.stop();
   disconnect ( socketEscritorio[activo],SIGNAL ( readyRead() ),this,SLOT ( llegadaDatos() ) );
   connect ( socketEscritorio[activo],SIGNAL ( readyRead() ),this,SLOT ( llegadaDatos() ) );
   QString calidad;
@@ -154,15 +143,16 @@ void ventanaEscritorio::cambioCalidad()
 }
 void ventanaEscritorio::checkStreaming()
 {
-      if(ui->botonIniciar->text() == "Iniciar")
+      if(interruptor)
       {
-        ui->botonIniciar->setText("Parar");
-        refresco.start();
+        interruptor = false;
+        refresco.stop();
       }
       else
       {
-        ui->botonIniciar->setText("Iniciar");
-        refresco.stop();
+        ponerTiempo();
+        interruptor = true;
+        refresco.start();
       }
 }
 
@@ -172,40 +162,32 @@ void ventanaEscritorio::ponerTiempo()
 }
 void ventanaEscritorio::ponerCaptura ( QByteArray captura )
 {
-    //Cambiar lo del interruptor por inicializar la imagen a fucsia
       QPixmap imagen;
-      if(!interruptor)
+      int i,j;
+      QImage imagen1;
+      QImage imagen2;
+      imagen1 = captura1->toImage();
+      imagen2.loadFromData ( captura,"jpg" );
+      for(i=0;i<imagen1.width();i++)
       {
-        int i,j;
-        QImage imagen1;
-        QImage imagen2;
-        imagen1 = captura1.toImage();
-        imagen2.loadFromData ( captura,"jpg" );
-        for(i=0;i<imagen1.width();i++)
-        {
-            for(j=0;j<imagen1.height();j++)
-            {
-                if(imagen2.pixel(i,j) <= QColor(245, 180, 190).rgb() || imagen2.pixel(i,j) >= QColor(255, 200, 210).rgb())
-                {
-                    imagen1.setPixel(i,j,imagen2.pixel(i,j));
-                }
-            }
-        }
-        imagen = imagen.fromImage(imagen1,Qt::ColorOnly);
-        captura1 = imagen;
+          for(j=0;j<imagen1.height();j++)
+          {
+              if(imagen2.pixel(i,j) <= QColor(255,180, 193).rgb() || imagen2.pixel(i,j) >= QColor(255, 195, 205).rgb())
+              {
+                  imagen1.setPixel(i,j,imagen2.pixel(i,j));
+              }
+          }
       }
-      else
-      {
-        imagen.loadFromData ( captura,"jpg" );
-        captura1 = imagen;
-        interruptor = false;
-      }
+      *captura1 = imagen.fromImage(imagen1,Qt::ColorOnly);
+      imagen = *captura1;
+
       imagen = imagen.scaled ( QApplication::desktop()->size());
       img->setPixmap ( imagen );
 
       imagen = imagen.scaled ( imageEscritorio->size(),Qt::KeepAspectRatio );
       imageEscritorio->setPixmap ( imagen );
-
+      if(interruptor)
+        refresco.start();
 
 }
 void ventanaEscritorio::guardarCaptura ( QString rutaArchivo,QByteArray captura )
@@ -230,7 +212,6 @@ void ventanaEscritorio::llegadaDatos()
           datos = socketEscritorio[activo]->readAll();
           ponerCaptura ( qUncompress(datos) );
           tamano = 0;
-          //refresco.start();
           if (ui->checkGuardar->isChecked())
           {
             QString capGuarda;
@@ -243,6 +224,14 @@ void ventanaEscritorio::llegadaDatos()
       else
         {
           ui->progresoDescarga->setValue ( ( socketEscritorio[activo]->bytesAvailable() / tamano ) * 100 );
+          if(socketEscritorio[activo]->bytesAvailable() > tamano )
+          {
+            datos = socketEscritorio[activo]->readAll();
+            tamano = 0;
+            if(interruptor)
+              refresco.start();
+          }
+
         }
     }
 }

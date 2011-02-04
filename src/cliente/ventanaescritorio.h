@@ -42,7 +42,7 @@ class ventanaEscritorio : public QMainWindow
     QLabel *img;
     QLabel *imageEscritorio;
     QTimer refresco;
-    QPixmap captura1;
+    QPixmap *captura1;
     bool interruptor;
     int tamano;
     unsigned long int numCapturas;
@@ -66,7 +66,6 @@ class ventanaEscritorio : public QMainWindow
     void changeEvent ( QEvent *e );
     void keyReleaseEvent(QKeyEvent *teclado);
     void mouseReleaseEvent(QMouseEvent *boton);
-    bool event(QEvent *event);
   private:
     Ui::ventanaEscritorio *ui;
   };

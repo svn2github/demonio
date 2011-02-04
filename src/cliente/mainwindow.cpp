@@ -436,6 +436,7 @@ void MainWindow::llegadaDatos()
     //La resolucion tambien la ponemos en el titulo de la ventana de captura de pantalla
     this->setWindowTitle(tr("Demonio - Cliente - Conectado a: ") + this->alias);
     //ui->servidoresLista->currentItem()->setText(this->alias); //Poner en la lista el alias en vez de la IP
+    escritorio.captura1 = new QPixmap(escritorio.ancho,escritorio.alto);
     util.escribirSocket("unidades|@|",socket[activo]);
   }
 }
