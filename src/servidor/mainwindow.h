@@ -90,6 +90,8 @@ public:
     QPushButton *botonChatEnviar;
     QLineEdit *enviarChatTexto;
     QPlainTextEdit *salidaChatTexto;
+    QPixmap captura1;
+    int sincroniza;
     void generarVentanaChat();
 public slots:
     void inicio();
