@@ -146,10 +146,12 @@ void ventanaEscritorio::checkStreaming()
       if(interruptor)
       {
         interruptor = false;
+        ui->botonIniciar->setText(tr("Parar"));
         refresco.stop();
       }
       else
       {
+        ui->botonIniciar->setText(tr("Iniciar"));
         ponerTiempo();
         interruptor = true;
         refresco.start();
