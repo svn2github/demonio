@@ -45,7 +45,7 @@ ventanaEscritorio::ventanaEscritorio ( QWidget *parent ) :
   connect ( ui->botonGuardar,SIGNAL ( clicked() ),this,SLOT ( botonGuardar() ) );
   connect ( ui->botonIniciar,SIGNAL ( clicked() ),this,SLOT ( checkStreaming() ) );
   connect (ui->botonPantallaCompleta,SIGNAL(clicked()),this,SLOT(maximizar()));
-  //connect (ui->spinIntervalo,SIGNAL(valueChanged(int)),this,SLOT(ponerTiempo()));
+  connect (ui->spinIntervalo,SIGNAL(valueChanged(int)),this,SLOT(ponerTiempo()));
   connect (&refresco,SIGNAL(timeout()),this,SLOT(botonCapturar()));
   ui->horizontalLayout_2->insertWidget(1,imageEscritorio);
   imageEscritorio->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
@@ -135,7 +135,7 @@ void ventanaEscritorio::botonCapturar()
 }
 void ventanaEscritorio::botonGuardar()
 {
-  guardarCaptura ( QFileDialog::getSaveFileName ( this,"Guardar captura" ),datos );
+  guardarCaptura ( QFileDialog::getSaveFileName ( this,"Guardar captura" ),*captura1);
 }
 void ventanaEscritorio::cambioCalidad()
 {
@@ -146,12 +146,12 @@ void ventanaEscritorio::checkStreaming()
       if(interruptor)
       {
         interruptor = false;
-        ui->botonIniciar->setText(tr("Parar"));
+        ui->botonIniciar->setText(tr("Iniciar"));
         refresco.stop();
       }
       else
       {
-        ui->botonIniciar->setText(tr("Iniciar"));
+        ui->botonIniciar->setText(tr("Parar"));
         ponerTiempo();
         interruptor = true;
         refresco.start();
@@ -188,16 +188,20 @@ void ventanaEscritorio::ponerCaptura ( QByteArray captura )
 
       imagen = imagen.scaled ( imageEscritorio->size(),Qt::KeepAspectRatio );
       imageEscritorio->setPixmap ( imagen );
+      if (ui->checkGuardar->isChecked()) //Si hay que guardar la captura
+      {
+        QString capGuarda;
+        this->numCapturas++;
+        capGuarda.setNum(this->numCapturas);
+        guardarCaptura(capGuarda + ".jpg",*captura1);
+      }
       if(interruptor)
         refresco.start();
 
 }
-void ventanaEscritorio::guardarCaptura ( QString rutaArchivo,QByteArray captura )
+void ventanaEscritorio::guardarCaptura ( QString rutaArchivo,QPixmap captura )
 {
-  QFile salida;
-  salida.setFileName ( rutaArchivo );
-  salida.open ( QIODevice::WriteOnly );
-  salida.write ( captura );
+    captura.save(rutaArchivo,"jpeg",100);
 }
 void ventanaEscritorio::llegadaDatos()
 {
@@ -212,16 +216,9 @@ void ventanaEscritorio::llegadaDatos()
       if ( socketEscritorio[activo]->bytesAvailable() == tamano )
         {
           datos = socketEscritorio[activo]->readAll();
-          ponerCaptura ( qUncompress(datos) );
+          datos = qUncompress(datos);
+          ponerCaptura ( datos );
           tamano = 0;
-          if (ui->checkGuardar->isChecked())
-          {
-            QString capGuarda;
-            this->numCapturas++;
-            capGuarda.setNum(this->numCapturas);
-            guardarCaptura(capGuarda + ".jpg",datos);
-          }
-
         }
       else
         {

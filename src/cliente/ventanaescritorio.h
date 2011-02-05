@@ -56,7 +56,7 @@ class ventanaEscritorio : public QMainWindow
     void botonCapturar();
     void cambioCalidad();
     void ponerCaptura ( QByteArray captura );
-    void guardarCaptura ( QString rutaArchivo,QByteArray captura );
+    void guardarCaptura ( QString rutaArchivo,QPixmap captura );
     void botonGuardar();
     void checkStreaming();
     void ponerTiempo();
