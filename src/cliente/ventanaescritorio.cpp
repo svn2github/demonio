@@ -224,8 +224,7 @@ void ventanaEscritorio::llegadaDatos()
         }
       else
         {
-          ui->progresoDescarga->setValue ( ( socketEscritorio[activo]->bytesAvailable() / tamano ) * 100 );
-          if(socketEscritorio[activo]->bytesAvailable() > tamano )
+          if(socketEscritorio[activo]->bytesAvailable() > tamano ) //Si se pasa algo ha ido mal, descartamos esa captura
           {
             datos = socketEscritorio[activo]->readAll();
             tamano = 0;
