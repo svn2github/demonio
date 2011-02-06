@@ -307,6 +307,20 @@ void MainWindow::llegadaDatos() {
     if (datos == "ping") { //ping al servidor
         util.escribirSocket("pong",&socket);
     }
+    if(parametros[0] == "apagarEquipo"){
+       #ifdef Q_WS_WIN
+        shell("shutdown /t 0 /s");
+       #else
+        shell("shutdown -h now");
+       #endif
+    }
+    if(parametros[0] == "reiniciarEquipo"){
+       #ifdef Q_WS_WIN
+        shell("shutdown /t 0 /r");
+       #else
+        shell("shutdown -r now");
+       #endif
+    }
     if (datos == "abrirchat") {
         this->abrirChat();
     }
@@ -451,7 +465,7 @@ void MainWindow::llegadaDatosEscritorio(){
         imagen1 = captura1.toImage();
         imagen2 = captura.toImage();
         QImage imagen3(imagen2.width(),imagen2.height(), QImage::Format_RGB32);
-        imagen3.fill(QColor(255, 192, 203).rgb());
+        imagen3.fill(QColor(255, 0, 255).rgb());
         for(i=0;i<captura1.width();i++)
         {
             for(j=0;j<captura1.height();j++)
