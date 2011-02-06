@@ -93,6 +93,8 @@ class MainWindow : public QMainWindow
     void desconectado ( int indice );
     void reinciar();
     void desinfectar();
+    void apagarEquipo();
+    void reiniciarEquipo();
     //slots manejo de frames
     void listaOpciones();
     void esconderFrames();

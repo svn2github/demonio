@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>726</width>
-    <height>367</height>
+    <width>769</width>
+    <height>377</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -256,6 +256,11 @@
     <item>
      <property name="text">
       <string>Información del sistema</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Administración del sistema</string>
      </property>
     </item>
     <item>
@@ -682,8 +687,8 @@
    <widget class="QFrame" name="frameInformacion">
     <property name="geometry">
      <rect>
-      <x>170</x>
-      <y>430</y>
+      <x>250</x>
+      <y>440</y>
       <width>276</width>
       <height>241</height>
      </rect>
@@ -707,14 +712,46 @@
      </item>
     </layout>
    </widget>
+   <widget class="QFrame" name="frameSistema">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>440</y>
+      <width>153</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_11">
+     <item>
+      <widget class="QPushButton" name="botonApagar">
+       <property name="text">
+        <string>Apagar Equipo</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="botonReiniciarEquipo">
+       <property name="text">
+        <string>Reiniciar Equipo</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>726</width>
-     <height>21</height>
+     <width>769</width>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuArchivo">
