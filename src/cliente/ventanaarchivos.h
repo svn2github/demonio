@@ -27,7 +27,6 @@
 #include <QFile>
 #include <QFileDialog>
 #include <QComboBox>
-#include <hiloEscritorio.h>
 
 namespace Ui
   {

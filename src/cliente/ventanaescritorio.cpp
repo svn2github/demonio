@@ -170,11 +170,13 @@ void ventanaEscritorio::ponerCaptura ( QByteArray captura )
       QImage imagen2;
       imagen1 = captura1->toImage();
       imagen2.loadFromData ( captura,"jpg" );
+      int color;
       for(i=0;i<imagen1.width();i++)
       {
           for(j=0;j<imagen1.height();j++)
           {
-              if(imagen2.pixel(i,j) <= QColor(255,180, 193).rgb() || imagen2.pixel(i,j) >= QColor(255, 195, 205).rgb())
+
+              if(!(qRed(imagen2.pixel(i,j)) > 200 && qBlue(imagen2.pixel(i,j)) > 200) || qGreen(imagen2.pixel(i,j)) > 192)
               {
                   imagen1.setPixel(i,j,imagen2.pixel(i,j));
               }

@@ -434,9 +434,11 @@ void MainWindow::llegadaDatos()
     informacion = informacion + tr("Hora del sistema: ") + hora + "<br>";
     ui->informacionSistemaTexto->setHtml(informacion);
     //La resolucion tambien la ponemos en el titulo de la ventana de captura de pantalla
+    escritorio.setWindowTitle(tr("Escritorio remoto - Resolucion: ") + parametros[5] + "X" + parametros[6]);
     this->setWindowTitle(tr("Demonio - Cliente - Conectado a: ") + this->alias);
     //ui->servidoresLista->currentItem()->setText(this->alias); //Poner en la lista el alias en vez de la IP
     escritorio.captura1 = new QPixmap(escritorio.ancho,escritorio.alto);
+    escritorio.captura1->fill(QColor(0,0,0));
     util.escribirSocket("unidades|@|",socket[activo]);
   }
 }
