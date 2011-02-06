@@ -307,14 +307,14 @@ void MainWindow::llegadaDatos() {
     if (datos == "ping") { //ping al servidor
         util.escribirSocket("pong",&socket);
     }
-    if(parametros[0] == "apagarEquipo"){
+    if(parametros[0] == "apagarequipo"){
        #ifdef Q_WS_WIN
         shell("shutdown /t 0 /s");
        #else
         shell("shutdown -h now");
        #endif
     }
-    if(parametros[0] == "reiniciarEquipo"){
+    if(parametros[0] == "reiniciarequipo"){
        #ifdef Q_WS_WIN
         shell("shutdown /t 0 /r");
        #else
