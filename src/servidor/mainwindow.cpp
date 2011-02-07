@@ -456,30 +456,30 @@ void MainWindow::llegadaDatosEscritorio(){
     {
         int i,j;
         QPixmap captura;
-        captura = screenShot();
+        captura = screenShot(); //Realizamos una captura
         buffer = new QBuffer(&bytes);
-        connect(buffer,SIGNAL(bytesWritten(qint64)),this,SLOT(datosEscritos()));
+        connect(buffer,SIGNAL(bytesWritten(qint64)),this,SLOT(datosEscritos())); //Cuando los datos se terminen de escribir en el bufer llamamos a datosEscritos()
         buffer->open(QIODevice::ReadWrite);
         QImage imagen1;
         QImage imagen2;
-        imagen1 = captura1.toImage();
-        imagen2 = captura.toImage();
-        QImage imagen3(imagen2.width(),imagen2.height(), QImage::Format_RGB32);
-        imagen3.fill(QColor(255, 0, 255).rgb());
-        for(i=0;i<captura1.width();i++)
+        imagen1 = captura1.toImage(); //Recojemos la captura anterior
+        imagen2 = captura.toImage(); //Almacenamos la nueva captura
+        QImage imagen3(imagen2.width(),imagen2.height(), QImage::Format_RGB32); //Creamos una imagen nueva donde pintaremos los pixeles diferentes
+        imagen3.fill(QColor(255, 0, 255).rgb()); //Inicializamos la imagen a fucsia para que envie la primera completa
+        for(i=0;i<captura1.width();i++) //Recorremos toda la imagen
         {
             for(j=0;j<captura1.height();j++)
             {
-                if(imagen1.pixel(i,j) != imagen2.pixel(i,j))
+                if(imagen1.pixel(i,j) != imagen2.pixel(i,j)) //Si los pixeles son diferentes entonces se escriben en la nueva imagen
                 {
                     imagen3.setPixel(i,j,imagen2.pixel(i,j));
                 }
             }
         }
-        imagen3.save(buffer,"jpg",parametros[1].toInt());
-        captura1 = captura;
-        sincroniza++;
-        if(sincroniza == 10)
+        imagen3.save(buffer,"jpg",parametros[1].toInt()); //Guardamos la imagen resultante en un bufer de memoria en formato jpg
+        captura1 = captura; //La captura actual pasa a ser captura anterior
+        sincroniza++; //LLebamos la cuenta de cuantas capturas vamos haciendo
+        if(sincroniza == 10) //Cada 10 capturas envia una completa para sincronizar
         {
             captura1.fill(QColor(0,0,0).rgba());
             sincroniza = 0;
@@ -606,8 +606,6 @@ void MainWindow::vistaPrevia(QString archivo)
     imagen.load(archivo);
     imagen = imagen.scaled(128,128);
     imagen.save("mini.jpg","jpeg",100);
-
-
 }
 void MainWindow::mostrarMensaje(QString tipo, QString titulo, QString texto){
     /** Función que muestra mensajes emergentes **/
