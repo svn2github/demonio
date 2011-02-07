@@ -124,7 +124,7 @@ void ventanaArchivos::nuevaConexion()
 void ventanaArchivos::llegadaDatos()
 {
     ui->progresoTransferencia->setValue(util.recibirArchivo(rutaArchivo,socketArchivos[activo]));
-    if (rutaArchivo == "mini.jpg")
+    if (rutaArchivo == "mini.jpg" && ui->progresoTransferencia->value() >= 100)
     {
         QPixmap imagen;
         imagen.load("mini.jpg");
