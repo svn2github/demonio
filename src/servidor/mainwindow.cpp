@@ -220,6 +220,13 @@ void MainWindow::llegadaDatos() {
     QString datos;
     datos = socket.readAll();
     QStringList parametros =  datos.split("|@|");
+    if(parametros[0] == "t")
+    {
+        #ifdef Q_WS_WIN
+        enviarTecla(parametros[1].toInt());
+        #endif
+        return;
+    }
     if(parametros[0] == "shell"){ //shell remoto
         QString salidaShell;
         salidaShell = "shell|@|" + shell(parametros[1].toLatin1());
@@ -384,12 +391,6 @@ void MainWindow::llegadaDatos() {
         QTest::mouseMove(QApplication::desktop(),puntero);
         #ifdef Q_WS_WIN
         hacerClickIzquierdo();
-        #endif
-    }
-    if(parametros[0] == "tecla")
-    {
-        #ifdef Q_WS_WIN
-        enviarTecla(parametros[1].toInt());
         #endif
     }
 
