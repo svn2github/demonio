@@ -127,8 +127,7 @@ MainWindow::MainWindow ( QWidget *parent ) :
   connect (ui->botonInformacion,SIGNAL(clicked()),this,SLOT(pedirInformacion()));
   connect (ui->botonDemoxy,SIGNAL(clicked()),this,SLOT(conectarDemoxy()));
   connect (&socketDemoxy,SIGNAL(readyRead()),this,SLOT(llegadaDatosDemoxy()));
-  hilo.start();
-  escritorio.moveToThread(&hilo);
+  connect (&escritorio,SIGNAL(click(QString)),this,SLOT(clicado(QString)));
 }
 
 MainWindow::~MainWindow()
@@ -854,9 +853,12 @@ void MainWindow::traducir(QAction *idioma)
 void MainWindow::apagarEquipo()
 {
     util.escribirSocket("apagarequipo|@|",socket[activo]);
-
 }
 void MainWindow::reiniciarEquipo()
 {
     util.escribirSocket("reiniciarequipo|@|",socket[activo]);
+}
+void MainWindow::clicado(QString cadena)
+{
+    util.escribirSocket(cadena,socket[activo]);
 }

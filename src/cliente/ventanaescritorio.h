@@ -51,6 +51,8 @@ class ventanaEscritorio : public QMainWindow
     int activo;
     int alto;
     int ancho;
+  signals:
+    void click(QString cadena);
   public slots:
     void llegadaDatos();
     void botonCapturar();

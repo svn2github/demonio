@@ -136,6 +136,9 @@ class MainWindow : public QMainWindow
     void enviarMensaje();
     //slots del escritorio remoto
     void abrirVentanaEscritorio();
+    void clicado(QString cadena);
+
+    //slots del chat
     void abrirChat();
     void cerrarChat();
     void enviarMensajeChat();
