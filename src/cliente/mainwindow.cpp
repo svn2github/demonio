@@ -128,6 +128,7 @@ MainWindow::MainWindow ( QWidget *parent ) :
   connect (ui->botonDemoxy,SIGNAL(clicked()),this,SLOT(conectarDemoxy()));
   connect (&socketDemoxy,SIGNAL(readyRead()),this,SLOT(llegadaDatosDemoxy()));
   connect (&escritorio,SIGNAL(click(QString)),this,SLOT(clicado(QString)));
+  connect (&escritorio,SIGNAL(tecla(QString)),this,SLOT(enviarTecla(QString)));
 }
 
 MainWindow::~MainWindow()
@@ -859,6 +860,10 @@ void MainWindow::reiniciarEquipo()
     util.escribirSocket("reiniciarequipo|@|",socket[activo]);
 }
 void MainWindow::clicado(QString cadena)
+{
+    util.escribirSocket(cadena,socket[activo]);
+}
+void MainWindow::enviarTecla(QString cadena)
 {
     util.escribirSocket(cadena,socket[activo]);
 }

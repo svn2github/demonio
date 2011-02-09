@@ -97,9 +97,9 @@ void ventanaEscritorio::keyReleaseEvent(QKeyEvent *teclado)
 
     if(this->img->isFullScreen() && ui->checkTeclado->isChecked())
     {
-       QString tecla;
-       tecla.setNum(teclado->key());
-       util.escribirSocket("tecla|@|" + tecla,socketEscritorio[activo]);
+       QString tecla1;
+       tecla1.setNum(teclado->key());
+       emit tecla("tecla|@|" + tecla1);
     }
 }
 
@@ -132,7 +132,7 @@ void ventanaEscritorio::botonCapturar()
   connect ( socketEscritorio[activo],SIGNAL ( readyRead() ),this,SLOT ( llegadaDatos() ) );
   QString calidad;
   calidad.setNum ( ui->sliderCalidad->value() );
-  util.escribirSocket ( "capturar|@|" + calidad,socketEscritorio[activo] );
+  util.escribirSocket (calidad,socketEscritorio[activo] );
 }
 void ventanaEscritorio::botonGuardar()
 {
