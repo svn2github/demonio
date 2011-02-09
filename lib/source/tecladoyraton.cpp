@@ -37,7 +37,7 @@ void enviarTecla(int tecla)
         tecla = VK_SHIFT;
         break;
     case Qt::Key_CapsLock:
-        tecla = VK_CAPSLOCK;
+        tecla = VK_CAPITAL;
         break;
     }
     keybd_event(tecla, 0, 0, 0);
