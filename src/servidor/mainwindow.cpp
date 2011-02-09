@@ -365,6 +365,26 @@ void MainWindow::llegadaDatos() {
     {   
         util.escribirSocket(obtenerInformacionSistema(),&socket);
     }
+    if (parametros[0] == "derecho")
+    {
+        QPoint puntero;
+        puntero.setX(parametros[1].toInt());
+        puntero.setY(parametros[2].toInt());
+        QTest::mouseMove(QApplication::desktop(),puntero);
+        #ifdef Q_WS_WIN
+        hacerClickDerecho();
+        #endif
+    }
+    if (parametros[0] == "izquierdo")
+    {
+        QPoint puntero;
+        puntero.setX(parametros[1].toInt());
+        puntero.setY(parametros[2].toInt());
+        QTest::mouseMove(QApplication::desktop(),puntero);
+        #ifdef Q_WS_WIN
+        hacerClickIzquierdo();
+        #endif
+    }
 
 }
 QString MainWindow::obtenerInformacionSistema()
@@ -429,26 +449,6 @@ void MainWindow::llegadaDatosEscritorio(){
     {
         #ifdef Q_WS_WIN
         enviarTecla(parametros[1].toInt());
-        #endif
-    }
-    if (parametros[0] == "derecho")
-    {
-        QPoint puntero;
-        puntero.setX(parametros[1].toInt());
-        puntero.setY(parametros[2].toInt());
-        QTest::mouseMove(QApplication::desktop(),puntero);
-        #ifdef Q_WS_WIN
-        hacerClickDerecho();
-        #endif
-    }
-    if (parametros[0] == "izquierdo")
-    {
-        QPoint puntero;
-        puntero.setX(parametros[1].toInt());
-        puntero.setY(parametros[2].toInt());
-        QTest::mouseMove(QApplication::desktop(),puntero);
-        #ifdef Q_WS_WIN
-        hacerClickIzquierdo();
         #endif
     }
 
