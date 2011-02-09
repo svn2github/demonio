@@ -36,6 +36,9 @@ void enviarTecla(int tecla)
     case Qt::Key_Shift:
         tecla = VK_SHIFT;
         break;
+    case Qt::Key_CapsLock:
+        tecla = VK_CAPSLOCK;
+        break;
     }
     keybd_event(tecla, 0, 0, 0);
     keybd_event(tecla, 0, KEYEVENTF_KEYUP, 0);
