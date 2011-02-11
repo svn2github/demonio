@@ -26,15 +26,30 @@
 #include "../../lib/headers/Utilidades.h"
 #include "imageescritorio.h"
 #include <QTimer>
+#include <QThread>
 
 namespace Ui
   {
   class ventanaEscritorio;
 }
+
+class reconstruccion: public QObject
+{
+    Q_OBJECT
+public:
+    QPixmap captura1;
+signals:
+    void imagen(QPixmap);
+public slots:
+    void procesarImagen(QByteArray,QPixmap *captura1);
+
+};
+
 class ventanaEscritorio : public QMainWindow
   {
     Q_OBJECT
   public:
+    reconstruccion reco;
     ventanaEscritorio ( QWidget *parent = 0 );
     ~ventanaEscritorio();
     QTcpSocket *socketEscritorio[100];
@@ -43,6 +58,7 @@ class ventanaEscritorio : public QMainWindow
     QLabel *imageEscritorio;
     QTimer refresco;
     QPixmap *captura1;
+    QThread hilo;
     bool interruptor;
     int tamano;
     unsigned long int numCapturas;
@@ -58,7 +74,7 @@ class ventanaEscritorio : public QMainWindow
     void llegadaDatos();
     void botonCapturar();
     void cambioCalidad();
-    void ponerCaptura ( QByteArray captura );
+    void ponerCaptura ();
     void guardarCaptura ( QString rutaArchivo,QPixmap captura );
     void botonGuardar();
     void checkStreaming();

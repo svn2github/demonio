@@ -21,7 +21,30 @@
 #include "ui_ventanaescritorio.h"
 #include <QKeyEvent>
 #include <QDesktopWidget>
-#include <QThread>
+
+void reconstruccion::procesarImagen(QByteArray captura,QPixmap *captura1)
+{
+    QPixmap img;
+    captura = qUncompress(captura);
+    int i,j;
+    QImage imagen1;
+    QImage imagen2;
+    imagen1 = captura1->toImage();
+    imagen2.loadFromData ( captura,"jpg" );
+    for(i=0;i<imagen1.width();i++)
+    {
+        for(j=0;j<imagen1.height();j++)
+        {
+
+            if(!(qRed(imagen2.pixel(i,j)) > 190 && qBlue(imagen2.pixel(i,j)) > 190) || qGreen(imagen2.pixel(i,j)) > 182)
+            {
+                imagen1.setPixel(i,j,imagen2.pixel(i,j));
+            }
+        }
+    }
+    *captura1 = img.fromImage(imagen1,Qt::ColorOnly);
+    emit imagen(*captura1);
+}
 
 ventanaEscritorio::ventanaEscritorio ( QWidget *parent ) :
     QMainWindow ( parent ),
@@ -47,9 +70,12 @@ ventanaEscritorio::ventanaEscritorio ( QWidget *parent ) :
   connect (ui->botonPantallaCompleta,SIGNAL(clicked()),this,SLOT(maximizar()));
   connect (ui->spinIntervalo,SIGNAL(valueChanged(int)),this,SLOT(ponerTiempo()));
   connect (&refresco,SIGNAL(timeout()),this,SLOT(botonCapturar()));
+  connect (&reco,SIGNAL(imagen(QPixmap)),this,SLOT(ponerCaptura()));
   ui->horizontalLayout_2->insertWidget(1,imageEscritorio);
   imageEscritorio->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
   interruptor = false;
+  reco.moveToThread(&hilo);
+  hilo.start();
 }
 
 void ventanaEscritorio::maximizar()
@@ -99,7 +125,7 @@ void ventanaEscritorio::keyReleaseEvent(QKeyEvent *teclado)
     {
        QString tecla1;
        tecla1.setNum(teclado->key());
-       emit tecla("tecla|@|" + tecla1);
+       emit tecla("t|@|" + tecla1 + "|@|");
     }
 }
 
@@ -163,27 +189,9 @@ void ventanaEscritorio::ponerTiempo()
 {
     refresco.setInterval(ui->spinIntervalo->value());
 }
-void ventanaEscritorio::ponerCaptura ( QByteArray captura )
+void ventanaEscritorio::ponerCaptura ()
 {
       QPixmap imagen;
-      int i,j;
-      QImage imagen1;
-      QImage imagen2;
-      imagen1 = captura1->toImage();
-      imagen2.loadFromData ( captura,"jpg" );
-      int color;
-      for(i=0;i<imagen1.width();i++)
-      {
-          for(j=0;j<imagen1.height();j++)
-          {
-
-              if(!(qRed(imagen2.pixel(i,j)) > 200 && qBlue(imagen2.pixel(i,j)) > 200) || qGreen(imagen2.pixel(i,j)) > 192)
-              {
-                  imagen1.setPixel(i,j,imagen2.pixel(i,j));
-              }
-          }
-      }
-      *captura1 = imagen.fromImage(imagen1,Qt::ColorOnly);
       imagen = *captura1;
 
       imagen = imagen.scaled ( QApplication::desktop()->size());
@@ -208,6 +216,7 @@ void ventanaEscritorio::guardarCaptura ( QString rutaArchivo,QPixmap captura )
 }
 void ventanaEscritorio::llegadaDatos()
 {
+
   //refresco.stop();
   if ( tamano == 0 )
     {
@@ -219,8 +228,7 @@ void ventanaEscritorio::llegadaDatos()
       if ( socketEscritorio[activo]->bytesAvailable() == tamano )
         {
           datos = socketEscritorio[activo]->readAll();
-          datos = qUncompress(datos);
-          ponerCaptura ( datos );
+          reco.procesarImagen(datos,captura1);
           tamano = 0;
         }
       else

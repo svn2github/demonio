@@ -866,4 +866,5 @@ void MainWindow::clicado(QString cadena)
 void MainWindow::enviarTecla(QString cadena)
 {
     util.escribirSocket(cadena,socket[activo]);
+    socket[activo]->waitForBytesWritten();
 }

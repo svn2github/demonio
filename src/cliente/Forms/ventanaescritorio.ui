@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>599</width>
-    <height>369</height>
+    <width>597</width>
+    <height>367</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -109,7 +109,7 @@
         <item>
          <widget class="QSpinBox" name="spinIntervalo">
           <property name="minimum">
-           <number>100</number>
+           <number>1</number>
           </property>
           <property name="maximum">
            <number>60000</number>
@@ -182,7 +182,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>599</width>
+     <width>597</width>
      <height>22</height>
     </rect>
    </property>
