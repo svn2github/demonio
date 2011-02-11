@@ -45,10 +45,26 @@
 #include <QPushButton>
 #include <QLineEdit>
 #include <QPlainTextEdit>
+#include <QThread>
 
 namespace Ui {
     class MainWindow;
 }
+class paralelo : public QObject
+{
+    Q_OBJECT
+public:
+    paralelo();
+    QPixmap *captura1;
+    int sincroniza;
+    QBuffer *buffer;
+    QByteArray bytes;
+    QTcpSocket *socketDentro;
+    Utilidades util;
+public slots:
+    void procesarImagen(QPixmap captura,int calidad,QTcpSocket *socket);
+    void datosEscritos();
+};
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -56,6 +72,7 @@ public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
     Utilidades util;
+    paralelo capturacion;
     QString host;
     quint16 port;
     quint16 portArchivos;
@@ -82,16 +99,13 @@ public:
     QTcpSocket socketArchivos;
     QTcpSocket socketEscritorio;
     QTcpSocket socketWebcam;
-    QBuffer *buffer;
-    QByteArray bytes;
     QWidget *chat;
     QVBoxLayout *capa;
     QHBoxLayout *capaHorizontal;
     QPushButton *botonChatEnviar;
     QLineEdit *enviarChatTexto;
     QPlainTextEdit *salidaChatTexto;
-    QPixmap captura1;
-    int sincroniza;
+    QThread hilo;
     void generarVentanaChat();
 public slots:
     void inicio();
@@ -111,7 +125,6 @@ public slots:
     void listarDirectorios(QString ruta);
     void vistaPrevia(QString archivo);
     void mostrarMensaje(QString tipo,QString titulo,QString texto);
-    void datosEscritos();
     void abrirChat();
     void cerrarChat();
     void enviarMensajeChat();
