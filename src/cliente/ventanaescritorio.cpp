@@ -125,6 +125,27 @@ void ventanaEscritorio::keyReleaseEvent(QKeyEvent *teclado)
        emit tecla("t|@|" + tecla1 + "|@|");
     }
 }
+void ventanaEscritorio::mousePressEvent(QMouseEvent *boton)
+{
+    if(this->img->isFullScreen() && ui->checkTeclado->isChecked()) //Capturamos los clicks de raton cuando estamos a pantalla completa y el check esta activado
+    {
+        //Como puede haber diferentes resoluciones hay que calcular la equivalencia de un click en nuestro monitor con la del monitor remoto
+        QString x;
+        x.setNum((int)((((float)boton->globalX() / QApplication::desktop()->width())) * this->ancho));
+        QString y;
+        y.setNum((int)((((float)boton->globalY() / QApplication::desktop()->height())) * this->alto));
+
+        if(boton->button() == Qt::LeftButton)
+        {
+            emit click("izqp|@|" + x + "|@|" + y); //Emitimos un signal personalizado
+        }
+        if(boton->button() == Qt::RightButton)
+        {
+            emit click("derp|@|" + x + "|@|" + y);
+        }
+
+    }
+}
 
 void ventanaEscritorio::mouseReleaseEvent(QMouseEvent *boton)
 {
@@ -138,11 +159,11 @@ void ventanaEscritorio::mouseReleaseEvent(QMouseEvent *boton)
 
         if(boton->button() == Qt::LeftButton)
         {
-            emit click("izquierdo|@|" + x + "|@|" + y); //Emitimos un signal personalizado
+            emit click("izqs|@|" + x + "|@|" + y); //Emitimos un signal personalizado
         }
         if(boton->button() == Qt::RightButton)
         {
-            emit click("derecho|@|" + x + "|@|" + y);
+            emit click("ders|@|" + x + "|@|" + y);
         }
 
     }

@@ -36,8 +36,6 @@ namespace Ui
 class reconstruccion: public QObject
 {
     Q_OBJECT
-public:
-    QPixmap captura1;
 signals:
     void imagen(QImage);
 public slots:
@@ -86,6 +84,7 @@ class ventanaEscritorio : public QMainWindow
     void changeEvent ( QEvent *e );
     void keyReleaseEvent(QKeyEvent *teclado);
     void mouseReleaseEvent(QMouseEvent *boton);
+    void mousePressEvent(QMouseEvent *boton);
   private:
     Ui::ventanaEscritorio *ui;
   };
