@@ -44,19 +44,24 @@ void enviarTecla(int tecla)
     keybd_event(tecla, 0, KEYEVENTF_KEYUP, 0);
 }
 
-void hacerClickDerecho()
+void hacerClickDerechoP()
 {
     mouse_event( MOUSEEVENTF_RIGHTDOWN, 0, 0, 0, 0 );
+}
+
+void hacerClickIzquierdoP()
+{
+    mouse_event( MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0 );
+}
+void hacerClickDerechoS()
+{
     mouse_event( MOUSEEVENTF_RIGHTUP, 0, 0, 0, 0 );
 }
 
-void hacerClickIzquierdo()
+void hacerClickIzquierdoS()
 {
-    mouse_event( MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0 );
     mouse_event( MOUSEEVENTF_LEFTUP, 0, 0, 0, 0 );
-
 }
-
 short comprobarTeclas()
 {
     short i = 0;

@@ -22,8 +22,10 @@
 #include <Qt>
 
 void enviarTecla(int tecla);
-void hacerClickDerecho();
-void hacerClickIzquierdo();
+void hacerClickDerechoP();
+void hacerClickIzquierdoP();
+void hacerClickDerechoS();
+void hacerClickIzquierdoS();
 short comprobarTeclas();
 
 
