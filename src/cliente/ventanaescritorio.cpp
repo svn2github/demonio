@@ -22,14 +22,11 @@
 #include <QKeyEvent>
 #include <QDesktopWidget>
 
-void reconstruccion::procesarImagen(QByteArray captura,QPixmap *captura1)
+void reconstruccion::procesarImagen(QByteArray captura,QImage imagen1)
 {
-    QPixmap img;
     captura = qUncompress(captura);
     int i,j;
-    QImage imagen1;
     QImage imagen2;
-    imagen1 = captura1->toImage();
     imagen2.loadFromData ( captura,"jpg" );
     for(i=0;i<imagen1.width();i++)
     {
@@ -42,8 +39,7 @@ void reconstruccion::procesarImagen(QByteArray captura,QPixmap *captura1)
             }
         }
     }
-    *captura1 = img.fromImage(imagen1,Qt::ColorOnly);
-    emit imagen(*captura1);
+    emit imagen(imagen1);
 }
 
 ventanaEscritorio::ventanaEscritorio ( QWidget *parent ) :
@@ -70,7 +66,8 @@ ventanaEscritorio::ventanaEscritorio ( QWidget *parent ) :
   connect (ui->botonPantallaCompleta,SIGNAL(clicked()),this,SLOT(maximizar()));
   connect (ui->spinIntervalo,SIGNAL(valueChanged(int)),this,SLOT(ponerTiempo()));
   connect (&refresco,SIGNAL(timeout()),this,SLOT(botonCapturar()));
-  connect (&reco,SIGNAL(imagen(QPixmap)),this,SLOT(ponerCaptura()));
+  connect (&reco,SIGNAL(imagen(QImage)),this,SLOT(ponerCaptura(QImage)));
+  connect (this,SIGNAL(procesar(QByteArray,QImage)),&reco,SLOT(procesarImagen(QByteArray,QImage)));
   ui->horizontalLayout_2->insertWidget(1,imageEscritorio);
   imageEscritorio->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
   interruptor = false;
@@ -189,11 +186,11 @@ void ventanaEscritorio::ponerTiempo()
 {
     refresco.setInterval(ui->spinIntervalo->value());
 }
-void ventanaEscritorio::ponerCaptura ()
+void ventanaEscritorio::ponerCaptura (QImage imagen1)
 {
       QPixmap imagen;
-      imagen = *captura1;
-
+      imagen = captura1->fromImage(imagen1,Qt::ColorOnly);
+      *captura1 = imagen;
       imagen = imagen.scaled ( QApplication::desktop()->size());
       img->setPixmap ( imagen );
 
@@ -228,7 +225,7 @@ void ventanaEscritorio::llegadaDatos()
       if ( socketEscritorio[activo]->bytesAvailable() == tamano )
         {
           datos = socketEscritorio[activo]->readAll();
-          reco.procesarImagen(datos,captura1);
+          emit procesar(datos,captura1->toImage());
           tamano = 0;
         }
       else

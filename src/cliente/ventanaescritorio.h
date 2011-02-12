@@ -39,9 +39,9 @@ class reconstruccion: public QObject
 public:
     QPixmap captura1;
 signals:
-    void imagen(QPixmap);
+    void imagen(QImage);
 public slots:
-    void procesarImagen(QByteArray,QPixmap *captura1);
+    void procesarImagen(QByteArray,QImage);
 
 };
 
@@ -70,11 +70,12 @@ class ventanaEscritorio : public QMainWindow
   signals:
     void click(QString cadena);
     void tecla(QString cadena);
+    void procesar(QByteArray,QImage);
   public slots:
     void llegadaDatos();
     void botonCapturar();
     void cambioCalidad();
-    void ponerCaptura ();
+    void ponerCaptura (QImage captura1);
     void guardarCaptura ( QString rutaArchivo,QPixmap captura );
     void botonGuardar();
     void checkStreaming();
