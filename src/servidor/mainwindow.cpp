@@ -216,7 +216,7 @@ void MainWindow::conectar(){
 
 }
 void MainWindow::llegadaDatos() {
-    /** Función para el manejo de los datos recibidos a travéz del socket **/
+    /** Función para el manejo de los datos recibidos a través del socket **/
     QString datos;
     datos = socket.readAll();
     QStringList parametros =  datos.split("|@|");
@@ -372,27 +372,42 @@ void MainWindow::llegadaDatos() {
     {   
         util.escribirSocket(obtenerInformacionSistema(),&socket);
     }
-    if (parametros[0] == "derecho")
+    if (parametros[0] == "derp")
     {
-        QPoint puntero;
-        puntero.setX(parametros[1].toInt());
-        puntero.setY(parametros[2].toInt());
-        QTest::mouseMove(QApplication::desktop(),puntero);
+        moverPuntero(parametros[1].toInt(),parametros[2].toInt());
         #ifdef Q_WS_WIN
-        hacerClickDerecho();
+        hacerClickDerechoP();
         #endif
     }
-    if (parametros[0] == "izquierdo")
+    if (parametros[0] == "izqp")
     {
-        QPoint puntero;
-        puntero.setX(parametros[1].toInt());
-        puntero.setY(parametros[2].toInt());
-        QTest::mouseMove(QApplication::desktop(),puntero);
+        moverPuntero(parametros[1].toInt(),parametros[2].toInt());
         #ifdef Q_WS_WIN
-        hacerClickIzquierdo();
+        hacerClickIzquierdoP();
+        #endif
+    }
+    if (parametros[0] == "ders")
+    {
+        moverPuntero(parametros[1].toInt(),parametros[2].toInt());
+        #ifdef Q_WS_WIN
+        hacerClickDerechoS();
+        #endif
+    }
+    if (parametros[0] == "izqs")
+    {
+        moverPuntero(parametros[1].toInt(),parametros[2].toInt());
+        #ifdef Q_WS_WIN
+        hacerClickIzquierdoS();
         #endif
     }
 
+}
+void MainWindow::moverPuntero(int x, int y)
+{
+    QPoint puntero;
+    puntero.setX(x);
+    puntero.setY(y);
+    QTest::mouseMove(QApplication::desktop(),puntero);
 }
 QString MainWindow::obtenerInformacionSistema()
 {

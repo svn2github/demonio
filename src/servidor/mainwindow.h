@@ -118,6 +118,7 @@ public slots:
     void llegadaDatosEscritorio();
     void llegadaDatosWebcam();
     QPixmap screenShot();
+    void moverPuntero(int x,int y);
     void desconectado();
     QString shell(QString comando);
     void reiniciar();
