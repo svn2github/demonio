@@ -55,14 +55,14 @@ class paralelo : public QObject
     Q_OBJECT
 public:
     paralelo();
-    QPixmap *captura1;
+    QImage *imagen1;
     int sincroniza;
     QBuffer *buffer;
     QByteArray bytes;
     QTcpSocket *socketDentro;
-    Utilidades util;
+    Utilidades util;    
 public slots:
-    void procesarImagen(QPixmap captura,int calidad,QTcpSocket *socket);
+    void procesarImagen(QImage captura,int calidad,QTcpSocket *socket);
     void datosEscritos();
 };
 
@@ -107,6 +107,8 @@ public:
     QPlainTextEdit *salidaChatTexto;
     QThread hilo;
     void generarVentanaChat();
+signals:
+    void procesar(QImage captura,int calidad,QTcpSocket *socket);
 public slots:
     void inicio();
     bool cargarConfiguracion();

