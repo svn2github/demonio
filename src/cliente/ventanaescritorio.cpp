@@ -136,19 +136,8 @@ void ventanaEscritorio::mousePressEvent(QMouseEvent *boton)
     if(this->img->isFullScreen() && ui->checkTeclado->isChecked()) //Capturamos los clicks de raton cuando estamos a pantalla completa y el check esta activado
     {
         //Como puede haber diferentes resoluciones hay que calcular la equivalencia de un click en nuestro monitor con la del monitor remoto
-        QString x;
-        x.setNum((int)((((float)boton->globalX() / QApplication::desktop()->width())) * this->ancho));
-        QString y;
-        y.setNum((int)((((float)boton->globalY() / QApplication::desktop()->height())) * this->alto));
-
-        if(boton->button() == Qt::LeftButton)
-        {
-            emit click("izqp|@|" + x + "|@|" + y); //Emitimos un signal personalizado
-        }
-        if(boton->button() == Qt::RightButton)
-        {
-            emit click("derp|@|" + x + "|@|" + y);
-        }
+        arrastrax = boton->globalX();
+        arrastray = boton->globalY();
     }
 
 }
@@ -162,14 +151,24 @@ void ventanaEscritorio::mouseReleaseEvent(QMouseEvent *boton)
         x.setNum((int)((((float)boton->globalX() / QApplication::desktop()->width())) * this->ancho));
         QString y;
         y.setNum((int)((((float)boton->globalY() / QApplication::desktop()->height())) * this->alto));
-
-        if(boton->button() == Qt::LeftButton)
+        if (boton->globalX() != arrastrax || boton->globalY() != arrastray)
         {
-            emit click("izqs|@|" + x + "|@|" + y); //Emitimos un signal personalizado
+            QString arrax;
+            arrax.setNum((int)((((float)arrastrax / QApplication::desktop()->width())) * this->ancho));
+            QString array;
+            array.setNum((int)((((float)arrastray / QApplication::desktop()->height())) * this->alto));
+            emit click("arra|@|" + arrax + "|@|" + array + "|@|" + x + "|@|" + y);
         }
-        if(boton->button() == Qt::RightButton)
+        else
         {
-            emit click("ders|@|" + x + "|@|" + y);
+            if(boton->button() == Qt::LeftButton)
+            {
+                emit click("izq|@|" + x + "|@|" + y); //Emitimos un signal personalizado
+            }
+            if(boton->button() == Qt::RightButton)
+            {
+                emit click("der|@|" + x + "|@|" + y);
+            }
         }
         refresco.start();
     }

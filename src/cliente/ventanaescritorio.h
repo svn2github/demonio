@@ -70,6 +70,8 @@ class ventanaEscritorio : public QMainWindow
     QPixmap *captura1;
     QThread hilo;
     QString teclas;
+    int arrastrax;
+    int arrastray;
     bool interruptor;
     int cont;
     unsigned long int numCapturas;
