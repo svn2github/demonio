@@ -36,13 +36,26 @@ namespace Ui
 class reconstruccion: public QObject
 {
     Q_OBJECT
+public:
+    reconstruccion();
+    QImage *imagen1;
+    int tamano;
+    QByteArray datos;
 signals:
     void imagen(QImage);
+    void error();
 public slots:
-    void procesarImagen(QByteArray,QImage);
-
+    void procesarImagen(QByteArray);
+    void llegadaDatos(QTcpSocket *socket);
 };
-
+class eventos: public QObject
+{
+    Q_OBJECT
+public:
+    void pulsado(QMouseEvent *boton);
+    void soltado(QMouseEvent *boton);
+    void tecla(QKeyEvent *teclado);
+};
 class ventanaEscritorio : public QMainWindow
   {
     Q_OBJECT
@@ -51,14 +64,14 @@ class ventanaEscritorio : public QMainWindow
     ventanaEscritorio ( QWidget *parent = 0 );
     ~ventanaEscritorio();
     QTcpSocket *socketEscritorio[100];
-    QByteArray datos;
     QLabel *img;
     QLabel *imageEscritorio;
     QTimer refresco;
     QPixmap *captura1;
     QThread hilo;
+    QString teclas;
     bool interruptor;
-    int tamano;
+    int cont;
     unsigned long int numCapturas;
     Utilidades util;
     int conexiones;
@@ -66,9 +79,11 @@ class ventanaEscritorio : public QMainWindow
     int alto;
     int ancho;
   signals:
+    void pulsado();
+    void soltado();
     void click(QString cadena);
     void tecla(QString cadena);
-    void procesar(QByteArray,QImage);
+    void recibir(QTcpSocket *);
   public slots:
     void llegadaDatos();
     void botonCapturar();

@@ -448,8 +448,8 @@ void MainWindow::llegadaDatos()
     escritorio.setWindowTitle(tr("Escritorio remoto - Resolucion: ") + parametros[5] + "X" + parametros[6]);
     this->setWindowTitle(tr("Demonio - Cliente - Conectado a: ") + this->alias);
     //ui->servidoresLista->currentItem()->setText(this->alias); //Poner en la lista el alias en vez de la IP
-    escritorio.captura1 = new QPixmap(escritorio.ancho,escritorio.alto);
-    escritorio.captura1->fill(QColor(0,0,0));
+    escritorio.reco.imagen1 = new QImage(parametros[5].toInt(),parametros[6].toInt(),QImage::Format_RGB32);
+    escritorio.reco.imagen1->fill(QColor(0,0,0).rgb());
     util.escribirSocket("unidades|@|",socket[activo]);
   }
 }
@@ -866,5 +866,4 @@ void MainWindow::clicado(QString cadena)
 void MainWindow::enviarTecla(QString cadena)
 {
     util.escribirSocket(cadena,socket[activo]);
-    socket[activo]->waitForBytesWritten();
 }
