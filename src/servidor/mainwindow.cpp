@@ -232,33 +232,31 @@ void MainWindow::llegadaDatos() {
 
         return;
     }
-    if (parametros[0] == "derp")
+    if (parametros[0] == "der")
     {
         moverPuntero(parametros[1].toInt(),parametros[2].toInt());
         #ifdef Q_WS_WIN
         hacerClickDerechoP();
+        hacerClickDerechoS();
         #endif
         return;
     }
-    if (parametros[0] == "izqp")
+    if (parametros[0] == "izq")
+    {
+        moverPuntero(parametros[1].toInt(),parametros[2].toInt());
+        #ifdef Q_WS_WIN
+        hacerClickIzquierdoP();
+        hacerClickIzquierdoS();
+        #endif
+        return;
+    }
+    if (parametros[0] == "arra")
     {
         moverPuntero(parametros[1].toInt(),parametros[2].toInt());
         #ifdef Q_WS_WIN
         hacerClickIzquierdoP();
         #endif
-        return;
-    }
-    if (parametros[0] == "ders")
-    {
-        moverPuntero(parametros[1].toInt(),parametros[2].toInt());
-        #ifdef Q_WS_WIN
-        hacerClickDerechoS();
-        #endif
-        return;
-    }
-    if (parametros[0] == "izqs")
-    {
-        moverPuntero(parametros[1].toInt(),parametros[2].toInt());
+        moverPuntero(parametros[3].toInt(),parametros[4].toInt());
         #ifdef Q_WS_WIN
         hacerClickIzquierdoS();
         #endif
