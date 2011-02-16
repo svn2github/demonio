@@ -24,22 +24,25 @@
 
 void reconstruccion::procesarImagen(QByteArray captura)
 {
-    captura = qUncompress(captura);
+    /** Esta funcion procesa los datos pasados como parametro como una imagen de diferencia y reconstruye la imagen final usando la captura anterior **/
+    captura = qUncompress(captura); //Los datos nos llegan comprimidos, hay que descomprimirlos
     int i,j;
     QImage imagen2;
-    imagen2.loadFromData ( captura,"jpg" );
-    for(i=0;i<imagen1->width();i++)
+    imagen2.loadFromData ( captura,"jpg" ); //Cargamos el array de bytes como una imagen
+    for(i=0;i<imagen1->width();i++) //Recorremos la imagen
     {
         for(j=0;j<imagen1->height();j++)
         {
 
             if(!(qRed(imagen2.pixel(i,j)) > 180 && qBlue(imagen2.pixel(i,j)) > 180) || qGreen(imagen2.pixel(i,j)) > 140)
-            {
+            { /*Si cada valor de rojo,azul y verde de un pixel esta entre estos valores, entonces es el color que consideramos transparente
+                hay que hacerlo asi porque al pasar a jpeg como es compresion con perdida el color que habiamos establecido como transparente
+                puede variar ligeramente */
                 imagen1->setPixel(i,j,imagen2.pixel(i,j));
             }
         }
     }
-    emit imagen(*imagen1);
+    emit imagen(*imagen1); //Emitimos una señal con la imagen reconstruida
 }
 
 ventanaEscritorio::ventanaEscritorio ( QWidget *parent ) :
@@ -72,7 +75,7 @@ ventanaEscritorio::ventanaEscritorio ( QWidget *parent ) :
   ui->horizontalLayout_2->insertWidget(1,imageEscritorio);
   imageEscritorio->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
   interruptor = false;
-  reco.moveToThread(&hilo);
+  reco.moveToThread(&hilo); //movemos esta clase a un nuevo hilo para no bloquear el programa principal al hacer los calculos de imagenes
   hilo.start();
   refresco.stop();
   teclas = "|@|";
@@ -80,6 +83,7 @@ ventanaEscritorio::ventanaEscritorio ( QWidget *parent ) :
 
 void ventanaEscritorio::maximizar()
 {
+    /** Maximiza a pantalla completa y captura el raton y teclado **/
     //util.ventanaEmergente(tr("Va a entrar en módo pantalla completa, para salir pulse la tecla de Windows"));
     this->grabKeyboard();
     this->grabMouse();
@@ -88,7 +92,7 @@ void ventanaEscritorio::maximizar()
 
 void ventanaEscritorio::ocultar()
 {
-
+ /** Minimiza y suelta el raton y el teclado **/
     this->releaseKeyboard();
     this->releaseMouse();
     this->img->showNormal();
@@ -116,17 +120,19 @@ void ventanaEscritorio::changeEvent ( QEvent *e )
 
 void ventanaEscritorio::keyReleaseEvent(QKeyEvent *teclado)
 {
-    if (teclado->key() == Qt::Key_Meta)
+    /** Se ejecuta al soltar una tecla **/
+    if (teclado->key() == Qt::Key_Meta) //La tecla para salir de pantalla completa
     {
         this->ocultar();
     }
 
     if(this->img->isFullScreen() && ui->checkTeclado->isChecked())
     {
+       //Si estamos a pantalla completa y esta activado el check de teclado y raton podemos enviar
        QString tec;
        tec.setNum(teclado->key());
        teclas = teclas + tec + "|@|";
-       refresco.start();
+       refresco.start(); //Reiniciamos el timer de las capturas porque sino se queda pillado a veces
     }
 
 }
@@ -135,7 +141,7 @@ void ventanaEscritorio::mousePressEvent(QMouseEvent *boton)
 
     if(this->img->isFullScreen() && ui->checkTeclado->isChecked()) //Capturamos los clicks de raton cuando estamos a pantalla completa y el check esta activado
     {
-        //Como puede haber diferentes resoluciones hay que calcular la equivalencia de un click en nuestro monitor con la del monitor remoto
+        //Simplemente guardamos la posicion que tenia el raton al pulsar un boton para ver si se ha arrastrado o es un click
         arrastrax = boton->globalX();
         arrastray = boton->globalY();
     }
@@ -151,7 +157,7 @@ void ventanaEscritorio::mouseReleaseEvent(QMouseEvent *boton)
         x.setNum((int)((((float)boton->globalX() / QApplication::desktop()->width())) * this->ancho));
         QString y;
         y.setNum((int)((((float)boton->globalY() / QApplication::desktop()->height())) * this->alto));
-        if (boton->globalX() != arrastrax || boton->globalY() != arrastray)
+        if (boton->globalX() != arrastrax || boton->globalY() != arrastray) //Si la posicion donde se pulso un boton es distinta de donde se suelta es arrastrar
         {
             QString arrax;
             arrax.setNum((int)((((float)arrastrax / QApplication::desktop()->width())) * this->ancho));
@@ -170,14 +176,15 @@ void ventanaEscritorio::mouseReleaseEvent(QMouseEvent *boton)
                 emit click("der|@|" + x + "|@|" + y);
             }
         }
-        refresco.start();
+        refresco.start(); //Lo mismo que en la funcion anterior
     }
 }
 
 void ventanaEscritorio::botonCapturar()
 {
-    refresco.stop();
-    if(teclas != "|@|")
+    /** Manda a hacer una captura **/
+    refresco.stop(); //No mas capturas hasta que llege esta
+    if(teclas != "|@|") //Enviamos las teclas
         emit tecla("t" + teclas);
     teclas = "|@|";
     disconnect ( socketEscritorio[activo],SIGNAL ( readyRead() ),this,SLOT ( llegadaDatos() ) );
@@ -198,6 +205,7 @@ void ventanaEscritorio::cambioCalidad()
 }
 void ventanaEscritorio::checkStreaming()
 {
+    /** Inicia las capturas seguidas **/
       if(interruptor)
       {
         interruptor = false;
@@ -219,6 +227,7 @@ void ventanaEscritorio::ponerTiempo()
 }
 void ventanaEscritorio::ponerCaptura (QImage imagen1)
 {
+    /** Hace conversiones con la imagen para mostrarla en pantalla **/
       QPixmap imagen;
       imagen = captura1->fromImage(imagen1,Qt::ColorOnly);
       imagen = imagen.scaled ( QApplication::desktop()->size());
@@ -233,7 +242,7 @@ void ventanaEscritorio::ponerCaptura (QImage imagen1)
         capGuarda.setNum(this->numCapturas);
         guardarCaptura(capGuarda + ".jpg",imagen);
       }
-      if(interruptor)
+      if(interruptor) //Cuando ha llegado la captura y si esta activado el boton de captura seguidas entonces seguimos pidiendo
           refresco.start();
 }
 void ventanaEscritorio::guardarCaptura ( QString rutaArchivo,QPixmap captura )
@@ -251,6 +260,7 @@ reconstruccion::reconstruccion()
 }
 void reconstruccion::llegadaDatos(QTcpSocket *socket)
 {
+    /** Esta funcion es parecida a la de recibir archivo pero solo trabaja con la ram **/
     datos = datos + socket->readAll();
     if ( tamano == 0 )
       {
