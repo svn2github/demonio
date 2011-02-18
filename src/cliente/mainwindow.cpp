@@ -337,6 +337,7 @@ void MainWindow::conectarDemoxy()
     ui->botonEscuchar->setEnabled(false); //No puede estar conectado a demoxy y escuchando conexiones a la vez (Por ahora)
     hostDemoxy = QInputDialog::getText ( &ventana,tr("Host"),tr("Introduce la direccion del host") );
     socketDemoxy.connectToHost(hostDemoxy,5555);
+    connect ( &mapa,SIGNAL ( mapped ( int ) ),this,SLOT ( desconectado ( int ) ) );
 }
 void MainWindow::nuevaConexionDemoxy()
 {
@@ -372,6 +373,8 @@ void MainWindow::nuevaConexionDemoxy()
     ventana.socketArchivos[ventana.conexiones]->waitForConnected();
     escritorio.socketEscritorio[escritorio.conexiones]->waitForConnected();
     webcam.socketWebcam[webcam.conexiones]->waitForConnected();
+    connect ( socket[conexiones],SIGNAL ( disconnected() ),&mapa,SLOT ( map() ) );
+    mapa.setMapping ( socket[conexiones],conexiones );
     conexiones++;
     ventana.conexiones++;
     escritorio.conexiones++;
