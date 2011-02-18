@@ -155,7 +155,7 @@ bool MainWindow::event(QEvent *event)
     switch ( event->type() )
     {
     case QEvent::Show:
-        util.ventanaEmergente(tr("Esta es una versiÃ³n BETA lo que significa que no estÃ¡ recomendada para uso diario y puede contener errores, Ãºsala bajo tu propio riesgo"));
+        util.ventanaEmergente(tr("Esta es una versión BETA lo que significa que no está recomendada para uso diario y puede contener errores, Úsala bajo tu propio riesgo"));
         break;
     case QEvent::Close:
         QApplication::exit();
@@ -335,13 +335,14 @@ void MainWindow::nuevaConexionWebcam()
 void MainWindow::conectarDemoxy()
 {
     ui->botonEscuchar->setEnabled(false); //No puede estar conectado a demoxy y escuchando conexiones a la vez (Por ahora)
+    ui->botonDemoxy->setEnabled(false);
     hostDemoxy = QInputDialog::getText ( &ventana,tr("Host"),tr("Introduce la direccion del host") );
     socketDemoxy.connectToHost(hostDemoxy,5555);
     connect ( &mapa,SIGNAL ( mapped ( int ) ),this,SLOT ( desconectado ( int ) ) );
 }
 void MainWindow::nuevaConexionDemoxy()
 {
-    /** sistema de conexiÃƒÂ³n Demoxy **/
+    /** sistema de conexión Demoxy **/
 
 
     socket[conexiones] = new QTcpSocket(this);
