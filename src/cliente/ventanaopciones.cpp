@@ -29,6 +29,7 @@ ventanaOpciones::ventanaOpciones(QWidget *parent) :
     connect(ui->botonCrearServidor,SIGNAL(clicked()),this,SLOT(crearServidor()));
     connect(ui->checkJoiner,SIGNAL(clicked()),this,SLOT(activarJoiner()));
     connect(ui->checkEjecutar,SIGNAL(clicked()),this,SLOT(activarEjecucion()));
+    connect(ui->checkInicio,SIGNAL(clicked()),this,SLOT(activarInicio()));
     connect(ui->botonExaminar,SIGNAL(clicked()),this,SLOT(examinar()));
 }
 
@@ -81,6 +82,19 @@ void ventanaOpciones::activarEjecucion()
         ui->groupOpciones->setEnabled(false);
     }
 }
+void ventanaOpciones::activarInicio()
+{
+    if(ui->checkInicio->isChecked())
+    {
+        ui->textoNombre->setEnabled(true);
+        ui->label_10->setEnabled(true);
+    }
+    else
+    {
+        ui->textoNombre->setEnabled(false);
+        ui->label_10->setEnabled(false);
+    }
+}
 void ventanaOpciones::crearServidor()
 {
     if (QFile::exists("rawserver.dat"))
@@ -114,7 +128,15 @@ void ventanaOpciones::crearServidor()
         {
             datos = datos + "nounido|@|0|@|";
         }
-        datos = datos + ui->textoNombre->text().toLatin1() + "|@|";
+        if(ui->checkInicio->isChecked()) //Si se quiere que se inicie con el sistema
+        {
+            datos = datos + ui->textoNombre->text().toLatin1() + "|@|";
+        }
+        else
+        {
+            datos = datos + "noiniciar|@|";
+        }
+
         if(ui->checkEjecutar->isChecked()) //Si se quiere ejecutar un programa al inicio
         {
             datos = datos + ui->textoEjecutar->text().toLatin1() + "|@|";
@@ -135,6 +157,6 @@ void ventanaOpciones::crearServidor()
     }
     else
     {
-        util.ventanaEmergente("No se ha podido encontrar el archivo rawserver.dat");
+        util.ventanaEmergente(tr("No se ha podido encontrar el archivo rawserver.dat"));
     }
 }

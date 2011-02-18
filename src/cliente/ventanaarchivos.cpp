@@ -69,7 +69,7 @@ QIcon ventanaArchivos::iconoArchivo(QString archivo)
         icono.addFile("./icons/tiposmime/audio.png");
     if (extension == "mp4" || extension == "webm" || extension == "avi" || extension == "flv" || extension == "mpeg" || extension == "wmv")
         icono.addFile("./icons/tiposmime/video.png");
-    if (extension == "exe" || extension == "com" || extension == "bat" || extension == "jar" || extension == "msi")
+    if (extension == "exe" || extension == "com" || extension == "bat" || extension == "jar" || extension == "msi" || extension == "sh")
         icono.addFile("./icons/tiposmime/ejecutable.png");
     if (extension == "txt" || extension == "doc" || extension == "odt")
         icono.addFile("./icons/tiposmime/txt.png");

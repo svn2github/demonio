@@ -24,7 +24,6 @@
 #include <QTcpSocket>
 #include <QFileDialog>
 #include "../../lib/headers/Utilidades.h"
-#include "imageescritorio.h"
 #include <QTimer>
 #include <QThread>
 

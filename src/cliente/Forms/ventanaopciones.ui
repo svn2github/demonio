@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>367</width>
+    <width>375</width>
     <height>572</height>
    </rect>
   </property>
@@ -161,9 +161,19 @@
      </layout>
     </item>
     <item>
+     <widget class="QCheckBox" name="checkInicio">
+      <property name="text">
+       <string>Arrancar al inicio del sistema</string>
+      </property>
+     </widget>
+    </item>
+    <item>
      <layout class="QHBoxLayout" name="horizontalLayout_9">
       <item>
        <widget class="QLabel" name="label_10">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="text">
          <string>Nombre del servidor al inicio</string>
         </property>
@@ -171,6 +181,9 @@
       </item>
       <item>
        <widget class="QLineEdit" name="textoNombre">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="text">
          <string>svchost.exe</string>
         </property>
@@ -295,7 +308,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>367</width>
+     <width>375</width>
      <height>21</height>
     </rect>
    </property>
