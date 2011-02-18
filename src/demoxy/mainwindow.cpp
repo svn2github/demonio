@@ -78,7 +78,45 @@ void MainWindow::conectadoPrincipal()
 }
 void MainWindow::desconectadoPrincipal()
 {
-   //A implementar
+    int j,indice = 0;
+    for(j=0;j<conexiones1;j++)
+    {
+        if(socketPrincipal[j]->state() != QAbstractSocket::ConnectedState)
+        {
+            indice = j;
+        }
+    }
+    socketPrincipal[indice]->close();
+    socketArchivos[indice]->close();
+    socketEscritorio[indice]->close();
+    socketWebcam[indice]->close();
+    socketPrincipalCliente[indice]->close();
+    socketArchivosCliente[indice]->close();
+    socketEscritorioCliente[indice]->close();
+    socketWebcamCliente[indice]->close();
+
+    //socket[indice]->~QTcpSocket(); //Da fallo de segmentaciÃ³n al intentar liberar la memoria del socket
+    for ( j=indice;conexiones1 - 1 > j;j++ )
+      {
+        socketPrincipal[j] = socketPrincipal[j + 1];
+        socketArchivos[j] = socketArchivos[j + 1];
+        socketEscritorio[j] = socketEscritorio[j + 1];
+        socketWebcam[j] = socketWebcam[j + 1];
+        socketPrincipalCliente[j] = socketPrincipalCliente[j + 1];
+        socketArchivosCliente[j] = socketArchivosCliente[j + 1];
+        socketEscritorioCliente[j] = socketEscritorioCliente[j + 1];
+        socketWebcamCliente[j] = socketWebcamCliente[j + 1];
+      }
+    //Disminuimos los contadores de conexiones
+    conexiones1--;
+    conexionesEscritorio1--;
+    conexionesArchivos1--;
+    conexionesWebcam1--;
+    conexiones2--;
+    conexionesEscritorio2--;
+    conexionesArchivos2--;
+    conexionesWebcam2--;
+
 }
 void MainWindow::conectadoEscritorio()
 {
