@@ -24,7 +24,7 @@
 
 void reconstruccion::procesarImagen(QByteArray captura)
 {
-    /** Esta funcion procesa los datos pasados como parametro como una imagen de diferencia y reconstruye la imagen final usando la captura anterior **/
+    /** Esta función procesa los datos pasados como parametro como una imagen de diferencia y reconstruye la imagen final usando la captura anterior **/
     captura = qUncompress(captura); //Los datos nos llegan comprimidos, hay que descomprimirlos
     int i,j;
     QImage imagen2;
@@ -42,7 +42,7 @@ void reconstruccion::procesarImagen(QByteArray captura)
             }
         }
     }
-    emit imagen(*imagen1); //Emitimos una se�al con la imagen reconstruida
+    emit imagen(*imagen1); //Emitimos una señal con la imagen reconstruida
 }
 
 ventanaEscritorio::ventanaEscritorio ( QWidget *parent ) :
@@ -84,7 +84,7 @@ ventanaEscritorio::ventanaEscritorio ( QWidget *parent ) :
 void ventanaEscritorio::maximizar()
 {
     /** Maximiza a pantalla completa y captura el raton y teclado **/
-    //util.ventanaEmergente(tr("Va a entrar en m�do pantalla completa, para salir pulse la tecla de Windows"));
+    //util.ventanaEmergente(tr("Va a entrar en módo pantalla completa, para salir pulse la tecla de Windows"));
     this->grabKeyboard();
     this->grabMouse();
     this->img->showFullScreen();
@@ -201,6 +201,7 @@ void ventanaEscritorio::botonGuardar()
 }
 void ventanaEscritorio::cambioCalidad()
 {
+  /** Establece la calidad  de las capturas segun esté la barra de calidad **/
   ui->lcdCalidad->display ( ui->sliderCalidad->value() );
 }
 void ventanaEscritorio::checkStreaming()
@@ -223,6 +224,7 @@ void ventanaEscritorio::checkStreaming()
 
 void ventanaEscritorio::ponerTiempo()
 {
+    /** Lee la caja de valores y pone el tiempo del timer**/
     refresco.setInterval(ui->spinIntervalo->value());
 }
 void ventanaEscritorio::ponerCaptura (QImage imagen1)
@@ -247,10 +249,12 @@ void ventanaEscritorio::ponerCaptura (QImage imagen1)
 }
 void ventanaEscritorio::guardarCaptura ( QString rutaArchivo,QPixmap captura )
 {
+    /** Guarda la captura pasada como parámetro en la ruta también pasada como parámetro **/
     captura.save(rutaArchivo,"jpeg",100);
 }
 void ventanaEscritorio::llegadaDatos()
 {
+    /** Cuando llegan datos por el socket de escritorio **/
     emit recibir(socketEscritorio[activo]);
 }
 reconstruccion::reconstruccion()

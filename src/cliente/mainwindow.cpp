@@ -16,7 +16,7 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor,
  *  Boston, MA 02110-1301, USA.
  */
-
+/** Ventana principal del programa, las demás ventanas serán hijas de esta **/
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QTranslator>
@@ -138,7 +138,7 @@ MainWindow::~MainWindow()
 }
 void MainWindow::changeEvent ( QEvent *e )
 {
-  /** En esta funcion vemos cuando llega el evento LanguageChange y retraducimos la interfaz **/
+  /** En esta función vemos cuando llega el evento LanguageChange y retraducimos la interfaz **/
   QMainWindow::changeEvent ( e );
   switch ( e->type() )
     {
@@ -155,7 +155,7 @@ bool MainWindow::event(QEvent *event)
     switch ( event->type() )
     {
     case QEvent::Show:
-        util.ventanaEmergente(tr("Esta es una versi�n BETA lo que significa que no est� recomendada para uso diario y puede contener errores, �sala bajo tu propio riesgo"));
+        util.ventanaEmergente(tr("Esta es una versión BETA lo que significa que no está recomendada para uso diario y puede contener errores, úsala bajo tu propio riesgo"));
         break;
     case QEvent::Close:
         QApplication::exit();
@@ -340,7 +340,7 @@ void MainWindow::conectarDemoxy()
 }
 void MainWindow::nuevaConexionDemoxy()
 {
-    /** sistema de conexión Demoxy **/
+    /** sistema de conexiÃ³n Demoxy **/
 
 
     socket[conexiones] = new QTcpSocket(this);
@@ -399,7 +399,7 @@ void MainWindow::llegadaDatos()
     }
   if (parametros[0] == "tamano")
   {
-    util.ventanaEmergente(tr("Tama�o: ") + parametros[1] + "B");
+    util.ventanaEmergente(tr("Tamaño: ") + parametros[1] + "B");
   }
   if (parametros[0] == "unidades") //Si llega la lista de unidades
   {
@@ -457,7 +457,7 @@ void MainWindow::llegadaDatosDemoxy()
 {
     QString datos = socketDemoxy.readAll(); //Leemos los datos
     QStringList parametros = datos.split ( "|@|" ); //Separamos los parametros por |@|
-    if( parametros[0] == "conectado") //Si la conexión proviene a traves de Demoxy
+    if( parametros[0] == "conectado") //Si la conexiÃ³n proviene a traves de Demoxy
     {
       this->nuevaConexionDemoxy();
     }
@@ -473,7 +473,7 @@ void MainWindow::llegadaDatosDemoxy()
 }
 void MainWindow::seleccionarServidor()
 {
-  /** se utiliza el indice de la lista para salecionar un socket del array y desbloquearle las señales **/
+  /** se utiliza el indice de la lista para salecionar un socket del array y desbloquearle las seÃ±ales **/
   socket[activo]->blockSignals ( true );
   //El socket activo sera el mismo que el del indice elegido en la lista de servidores conectados
   activo = ui->servidoresLista->currentIndex().row();
@@ -514,7 +514,7 @@ void MainWindow::desconectado ( int indice )
   socket[indice]->close();
   ventana.socketArchivos[indice]->close();
   escritorio.socketEscritorio[indice]->close();
-  //socket[indice]->~QTcpSocket(); //Da fallo de segmentación al intentar liberar la memoria del socket
+  //socket[indice]->~QTcpSocket(); //Da fallo de segmentaciÃ³n al intentar liberar la memoria del socket
   for ( j=indice;conexiones - 1 > j;j++ )
     {
       socket[j] = socket[j + 1];
@@ -661,10 +661,10 @@ void MainWindow::archivosBorrar()
 {
     /** Manda borrar un archivo **/
     if( ventana.archivosLista()->currentRow() >= 0) {
-        //Crear una ventana de confirmaci�n
+        //Crear una ventana de confirmación
         QMessageBox confirmacion(&ventana);
-        confirmacion.setWindowTitle(tr("Confirmaci�n"));
-        confirmacion.setText(tr("�Est� seguro de que desea borrar el archivo?"));
+        confirmacion.setWindowTitle(tr("Confirmación"));
+        confirmacion.setText(tr("¿Está seguro de que desea borrar el archivo?"));
         confirmacion.addButton(tr("No"),QMessageBox::NoRole);
         confirmacion.addButton(tr("Si"),QMessageBox::YesRole);
         if(confirmacion.exec())
@@ -741,10 +741,10 @@ void MainWindow::archivosPrevia()
 }
 void MainWindow::archivosBorrarCarpeta()
 {
-    //Crear una ventana de confirmaci�n
+    //Crear una ventana de confirmación
     QMessageBox confirmacion(&ventana);
-    confirmacion.setWindowTitle(tr("Confirmaci�n"));
-    confirmacion.setText(tr("�Est� seguro de que desea borrar la carpeta actual?"));
+    confirmacion.setWindowTitle(tr("Confirmación"));
+    confirmacion.setText(tr("¿Está seguro de que desea borrar la carpeta actual?"));
     confirmacion.addButton(tr("No"),QMessageBox::NoRole);
     confirmacion.addButton(tr("Si"),QMessageBox::YesRole);
     if(confirmacion.exec())
