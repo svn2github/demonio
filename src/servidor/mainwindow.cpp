@@ -109,7 +109,7 @@ void MainWindow::inicio(){
 bool MainWindow::cargarConfiguracion(){
     /** Cargar la configuración del servidor guardada en el último KB del ejecutable **/
     //valores por defecto
-    this->host = "10.0.2.2";
+    this->host = "localhost";
     this->port = 1234;
     this->portArchivos = 2345;
     this->portEscritorio = 3456;
