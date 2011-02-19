@@ -72,7 +72,6 @@ class ventanaEscritorio : public QMainWindow
     int arrastrax;
     int arrastray;
     bool interruptor;
-    int cont;
     unsigned long int numCapturas;
     Utilidades util;
     int conexiones;

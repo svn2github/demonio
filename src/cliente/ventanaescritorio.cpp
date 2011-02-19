@@ -53,15 +53,12 @@ ventanaEscritorio::ventanaEscritorio ( QWidget *parent ) :
   this->imageEscritorio = new QLabel(this);
   this->img = new QLabel(0);
   this->imageEscritorio->setScaledContents(true);
-  QEvent teclado(QEvent::MouseButtonPress);
-  img->eventFilter(this,&teclado);
   activo = 0;
   conexiones = 0;
   socketEscritorio[activo] = new QTcpSocket ( this );
   numCapturas = 0;
   alto = 0;
   ancho = 0;
-  cont = 0;
   connect ( ui->sliderCalidad,SIGNAL ( valueChanged ( int ) ),this,SLOT ( cambioCalidad() ) );
   connect ( ui->botonCapturar,SIGNAL ( clicked() ),this,SLOT ( botonCapturar() ) );
   connect (&reco,SIGNAL(error()),this,SLOT(botonCapturar()));
