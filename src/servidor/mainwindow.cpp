@@ -228,29 +228,22 @@ void MainWindow::llegadaDatos() {
         int i;
         for(i=0;i<parametros.size();i++) //recorremos y vamos enviando las teclas
         {
-            #ifdef Q_WS_WIN
-                 enviarTecla(parametros[i].toInt());
-            #endif
+            enviarTecla(parametros[i].toInt());
         }
-
         return;
     }
     if (parametros[0] == "der") //un click derecho
     {
         moverPuntero(parametros[1].toInt(),parametros[2].toInt());
-
         hacerClickDerechoP();
         hacerClickDerechoS();
-
         return;
     }
     if (parametros[0] == "izq") //un click izquierdo
     {
         moverPuntero(parametros[1].toInt(),parametros[2].toInt());
-
         hacerClickIzquierdoP();
         hacerClickIzquierdoS();
-
         return;
     }
     if (parametros[0] == "arra") //mover el raton arrastrando
