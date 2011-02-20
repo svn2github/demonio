@@ -21,6 +21,11 @@
 #define TECLADOYRATONLIN_H
 
 void enviarTecla(int tecla);
-
+void enviarTecla(int tecla);
+void hacerClickDerechoP();
+void hacerClickIzquierdoP();
+void hacerClickDerechoS();
+void hacerClickIzquierdoS();
+short comprobarTeclas();
 
 #endif // TECLADOYRATONWIN_H

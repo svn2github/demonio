@@ -19,9 +19,10 @@
 
 #include <QPixmap>
 #include <QDir>
+#ifdef Q_WS_WIN
 #include <windows.h>
 #include <vfw.h>
-
+#endif
 
     QPixmap capturar();
     void encender();
