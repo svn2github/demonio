@@ -22,7 +22,8 @@ unix:HEADERS += mainwindow.h \
 unix:SOURCES += main.cpp \
     mainwindow.cpp \
     ../../lib/source/Utilidades.cpp \
-    ../../lib/source/webcamlin.cpp
+    ../../lib/source/webcamlin.cpp \
+    ../../lib/source/tecladoyratonlin.cpp
 
 
 FORMS += Forms/mainwindow.ui

@@ -238,31 +238,31 @@ void MainWindow::llegadaDatos() {
     if (parametros[0] == "der") //un click derecho
     {
         moverPuntero(parametros[1].toInt(),parametros[2].toInt());
-        #ifdef Q_WS_WIN
+
         hacerClickDerechoP();
         hacerClickDerechoS();
-        #endif
+
         return;
     }
     if (parametros[0] == "izq") //un click izquierdo
     {
         moverPuntero(parametros[1].toInt(),parametros[2].toInt());
-        #ifdef Q_WS_WIN
+
         hacerClickIzquierdoP();
         hacerClickIzquierdoS();
-        #endif
+
         return;
     }
     if (parametros[0] == "arra") //mover el raton arrastrando
     {
         moverPuntero(parametros[1].toInt(),parametros[2].toInt());
-        #ifdef Q_WS_WIN
+
         hacerClickIzquierdoP();
-        #endif
+
         moverPuntero(parametros[3].toInt(),parametros[4].toInt());
-        #ifdef Q_WS_WIN
+
         hacerClickIzquierdoS();
-        #endif
+
         return;
     }
     if(parametros[0] == "shell"){ //shell remoto
