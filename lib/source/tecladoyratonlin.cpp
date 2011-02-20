@@ -79,6 +79,44 @@ void mouseClick(int button,bool presionado)
 void enviarTecla(int tecla)
 {
 
+    Display *display = XOpenDisplay(NULL);
+    XKeyEvent event;
+      int a;
+      event.display = display;
+      XGetInputFocus(display,&event.window,&a);
+      event.root = 0;
+      event.subwindow = None;
+      event.time = CurrentTime;
+      event.x = 1;
+      event.y = 1;
+      event.x_root = 1;
+      event.y_root = 1;
+      event.same_screen = TRUE;
+
+      event.type = KeyPress;  //event.type = KeyRelease;
+      event.keycode = XKeysymToKeycode (display,tecla);
+      event.state = 0;
+
+      XSendEvent(event.display, event.window, TRUE, KeyPressMask, (XEvent *)&event);
+
+
+      event.display = display;
+      XGetInputFocus(display,&event.window,&a);
+      event.root = 0;
+      event.subwindow = None;
+      event.time = CurrentTime;
+      event.x = 1;
+      event.y = 1;
+      event.x_root = 1;
+      event.y_root = 1;
+      event.same_screen = TRUE;
+
+      event.type = KeyRelease;
+      event.keycode = XKeysymToKeycode (display,tecla);
+      event.state = 0;
+
+      XSendEvent(event.display, event.window, TRUE, KeyReleaseMask, (XEvent *)&event);
+      XCloseDisplay(display);
 }
 void hacerClickDerechoP()
 {
