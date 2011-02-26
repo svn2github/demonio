@@ -25,6 +25,7 @@ MainWindow::MainWindow ( QWidget *parent ) :
     QMainWindow ( parent ),
     ui ( new Ui::MainWindow )
 {
+  QDir::setCurrent(QApplication::applicationDirPath());
   ui->setupUi ( this );
   conexiones = 0;
   activo = 0;
