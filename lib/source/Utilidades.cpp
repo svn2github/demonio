@@ -42,10 +42,13 @@ QString Utilidades::leerSocket(QTcpSocket *socket){
 }
 void Utilidades::escribirSocket(QString cadena,QTcpSocket *socket){
     /** Escribe datos en un socket **/
-    const char *datos = new char[cadena.size()];
-    datos = cadena.toLatin1().constData();
-    QDataStream salida(socket);
-    salida.writeRawData(datos,cadena.size());
+    if(socket->state() == QTcpSocket::ConnectedState)
+    {
+        const char *datos = new char[cadena.size()];
+        datos = cadena.toLatin1().constData();
+        QDataStream salida(socket);
+        salida.writeRawData(datos,cadena.size());
+    }
 }
 QString Utilidades::obtenerRutaAnterior(QString rutaActual){
     /** Obtiene la ruta anterior de una ruta pasada como parámetro **/

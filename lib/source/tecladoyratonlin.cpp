@@ -81,6 +81,25 @@ void enviarTecla(int tecla)
 
     Display *display = XOpenDisplay(NULL);
     XKeyEvent event;
+
+    switch (tecla)
+    {
+    case Qt::Key_Return:
+        tecla = XK_Return ;
+        break;
+    case Qt::Key_Backspace:
+        tecla = XK_BackSpace ;
+        break;
+    case Qt::Key_Escape:
+        tecla = XK_Escape;
+        break;
+    case Qt::Key_Shift:
+        tecla = XK_Shift_L ;
+        break;
+    case Qt::Key_CapsLock:
+        tecla = XK_Caps_Lock;
+        break;
+    }
       int a;
       event.display = display;
       XGetInputFocus(display,&event.window,&a);
@@ -134,7 +153,44 @@ void hacerClickIzquierdoS()
 {
     mouseClick(1,false);
 }
+
+int fooling(char c) {
+  switch(c) {
+    case 1: return 0;
+    case 2: return 1;
+    case 4: return 2;
+    case 8: return 3;
+    case 16: return 4;
+    case 32: return 5;
+    case 64: return 6;
+    case 128: return 7;
+  }
+}
+
+char nk2[32];
+
 short comprobarTeclas()
 {
-
+    char nk[32];
+    memset(nk,0,sizeof(char));
+    int i =0;
+    unsigned int keycode;
+    Display *display;
+    display = XOpenDisplay(NULL);
+    fflush(stdout);
+    XQueryKeymap(display, nk);
+    keycode = 0;
+    while(keycode == 0 && i<32)
+    {
+        if(nk[i]!=0 && nk[i] != nk2[i])
+            keycode=i*8+fooling(nk[i]);
+        i++;
+    }
+    char ks = XKeycodeToKeysym(display, keycode, 0);
+    XCloseDisplay(display);
+    for(i=0;i<32;i++)
+    {
+        nk2[i] = nk[i];
+    }
+    return ks;
 }
