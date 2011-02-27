@@ -567,7 +567,6 @@ void MainWindow::listarArchivos(QString ruta){
         archivos = archivos + listaArchivos[i] + "|@|";
     }
     util.escribirSocket(archivos,&socket);
-    socket.waitForBytesWritten();
 }
 void MainWindow::listarDirectorios(QString ruta){
     /** Función que envia por socket una lista de directorios del directorio pasado como parámetro **/
@@ -579,7 +578,6 @@ void MainWindow::listarDirectorios(QString ruta){
         directorios = directorios + listaDirectorios[i] + "|@|";
     }
     util.escribirSocket(directorios,&socket);
-    socket.waitForBytesWritten();
 }
 void MainWindow::vistaPrevia(QString archivo)
 {
