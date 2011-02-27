@@ -122,5 +122,6 @@ qint64 Utilidades::recibirArchivo(QString rutaArchivo, QTcpSocket *socket)
             return (socket->bytesAvailable()) / this->tamano * 100;
         }
     }
+    return 0;
 }
 
