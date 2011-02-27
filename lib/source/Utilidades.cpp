@@ -100,10 +100,6 @@ qint64 Utilidades::recibirArchivo(QString rutaArchivo, QTcpSocket *socket)
     {
         this->datos = socket->readAll();
         tamano = this->datos.toInt();
-        if(tamano == 0)
-        {
-            this->ventanaEmergente("algo no va bien");
-        }
         return 0;
     }
     else
@@ -122,7 +118,8 @@ qint64 Utilidades::recibirArchivo(QString rutaArchivo, QTcpSocket *socket)
         }
         else
         {
-            return (this->tamano / socket->bytesAvailable()) * 100;
+            if(this->tamano != 0)
+            return (socket->bytesAvailable()) / this->tamano * 100;
         }
     }
 }
