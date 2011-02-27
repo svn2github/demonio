@@ -44,10 +44,7 @@ void Utilidades::escribirSocket(QString cadena,QTcpSocket *socket){
     /** Escribe datos en un socket **/
     if(socket->state() == QTcpSocket::ConnectedState)
     {
-        const char *datos = new char[cadena.size()];
-        datos = cadena.toLatin1().constData();
-        QDataStream salida(socket);
-        salida.writeRawData(datos,cadena.size());
+        socket->write(cadena.toLatin1(),cadena.toLatin1().length());
     }
 }
 QString Utilidades::obtenerRutaAnterior(QString rutaActual){
