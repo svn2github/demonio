@@ -129,6 +129,7 @@ void ventanaArchivos::llegadaDatos()
         QPixmap imagen;
         imagen.load("mini.jpg");
         ui->labelMiniatura->setPixmap(imagen);
+        rutaArchivo = "";
     }
 }
 

@@ -30,6 +30,7 @@ MainWindow::MainWindow ( QWidget *parent ) :
   conexiones = 0;
   activo = 0;
   ventana.activo = 0;
+  socket[activo] = new QTcpSocket(0);
   esconderFrames();
   ui->frameConexion->show();
   // Poner los iconos a la lista de opciones
