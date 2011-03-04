@@ -47,10 +47,13 @@ MainWindow::MainWindow ( QWidget *parent ) :
   ui->listaOpciones->item(3)->setIcon(icono);
   icono.addFile("./icons/drive-harddisk.png");
   ui->listaOpciones->item(4)->setIcon(icono);
+  ventana.setWindowIcon(icono);
   icono.addFile("./icons/user-desktop.png");
   ui->listaOpciones->item(5)->setIcon(icono);
+  escritorio.setWindowIcon(icono);
   icono.addFile("./icons/camera-web.png");
   ui->listaOpciones->item(6)->setIcon(icono);
+  webcam.setWindowIcon(icono);
   icono.addFile("./icons/input-keyboard.png");
   ui->listaOpciones->item(7)->setIcon(icono);
   icono.addFile("./icons/emblem-important.png");
