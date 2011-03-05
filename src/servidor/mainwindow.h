@@ -38,7 +38,6 @@
 #include <QProcess>
 #include <QTimer>
 #include "../../lib/headers/Utilidades.h"
-#include <QWaitCondition>
 #include <QDesktopWidget>
 #include <QBuffer>
 #include <QVBoxLayout>

