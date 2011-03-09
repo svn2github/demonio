@@ -159,9 +159,6 @@ bool MainWindow::event(QEvent *event)
     /** Esta funcion maneja los eventos que llegan a la ventana principal **/
     switch ( event->type() )
     {
-    case QEvent::Show:
-        util.ventanaEmergente(tr("Esta es una versión BETA lo que significa que no está recomendada para uso diario y puede contener errores, Úsala bajo tu propio riesgo"));
-        break;
     case QEvent::Close:
         QApplication::exit();
         break;
@@ -272,7 +269,7 @@ void MainWindow::licencia()
 void MainWindow::about()
 {
   /** Muestra informacion sobre Demonio **/
-  util.ventanaEmergente(tr("Demonio 2.0 BETA<br>Programado por: Alberto Pajuelo Montes<br>Email: paju1986@gmail.com<br>Web: <a href=\"http://sourceforge.net/projects/demonio/\">http://sourceforge.net/projects/demonio/</a>"));
+  util.ventanaEmergente(tr("Demonio 2.0 <br>Programado por: Alberto Pajuelo Montes<br>Email: paju1986@gmail.com<br>Web: <a href=\"http://sourceforge.net/projects/demonio/\">http://sourceforge.net/projects/demonio/</a>"));
 }
 void MainWindow::opcionesServidor()
 {
@@ -738,9 +735,11 @@ void MainWindow::archivosMover()
 }
 void MainWindow::archivosRenombrar()
 {
-    QString rutaArchivo = ventana.ruta + "/" + ventana.archivosLista()->currentItem()->text();
-    QString nombre = QInputDialog::getText ( &ventana,"Nuevo nombre","Nuevo nombre" );
-    util.escribirSocket ( "renombrar|@|" + rutaArchivo + "|@|" + ventana.ruta + "/" + nombre,socket[activo] );
+    if( ventana.archivosLista()->currentRow() >= 0) {
+        QString rutaArchivo = ventana.ruta + "/" + ventana.archivosLista()->currentItem()->text();
+        QString nombre = QInputDialog::getText ( &ventana,"Nuevo nombre","Nuevo nombre" );
+        util.escribirSocket ( "renombrar|@|" + rutaArchivo + "|@|" + ventana.ruta + "/" + nombre,socket[activo] );
+    }
 }
 void MainWindow::archivosPrevia()
 {
@@ -750,17 +749,17 @@ void MainWindow::archivosPrevia()
 }
 void MainWindow::archivosBorrarCarpeta()
 {
-    //Crear una ventana de confirmaciÃ³n
+    //Crear una ventana de confirmación
     QMessageBox confirmacion(&ventana);
-    confirmacion.setWindowTitle(tr("ConfirmaciÃ³n"));
-    confirmacion.setText(tr("Â¿EstÃ¡ seguro de que desea borrar la carpeta actual?"));
+    confirmacion.setWindowTitle(tr("Confirmación"));
+    confirmacion.setText(tr("Está seguro de que desea borrar la carpeta actual?"));
     confirmacion.addButton(tr("No"),QMessageBox::NoRole);
     confirmacion.addButton(tr("Si"),QMessageBox::YesRole);
     if(confirmacion.exec())
     {
         QString rutaCarpeta = ventana.ruta;
         util.escribirSocket("borrarcarpeta|@|" + rutaCarpeta,socket[activo]);
-        archivosRefresco();
+        //archivosRefresco();
     }
 }
 void MainWindow::archivosTamano()
