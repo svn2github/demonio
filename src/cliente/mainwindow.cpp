@@ -851,12 +851,13 @@ void MainWindow::traducir(QAction *idioma)
         traductor.load("cliente_en.qm");
     if(idioma->text() == ui->actionPortugu_s->text())
         traductor.load("cliente_pt.qm");
-    if(idioma->text() == ui->actionFran_aise->text())
+   /* if(idioma->text() == ui->actionFran_aise->text())
         traductor.load("cliente_fr.qm");
     if(idioma->text() == ui->actionItaliano->text())
         traductor.load("cliente_it.qm");
     if(idioma->text() == ui->actionAlem_n->text())
         traductor.load("cliente_de.qm");
+   */
     QApplication::installTranslator(&traductor);
 }
 void MainWindow::apagarEquipo()
