@@ -647,7 +647,7 @@ void MainWindow::archivosDescargar()
         QFileDialog dialogo;
         QString dir;
         dir = QDir::homePath() + "/" + ventana.archivosLista()->currentItem()->text();
-        ventana.rutaArchivo = dialogo.getSaveFileName ( this,"Guardar archivo",dir );
+        ventana.rutaArchivo = dialogo.getSaveFileName (&ventana,"Guardar archivo",dir );
         dialogo.show();
         QString rutaArchivo = ventana.ruta + "/" + ventana.archivosLista()->currentItem()->text();
         util.escribirSocket ( "get|@|" + rutaArchivo,socket[activo] );
@@ -657,7 +657,7 @@ void MainWindow::archivosSubir()
 {
   /** Manda subir un archivo **/
   QFileDialog archivo;
-  QString nombreArchivo = archivo.getOpenFileName ( this,"Abrir archivo",QDir::homePath() );
+  QString nombreArchivo = archivo.getOpenFileName (&ventana,"Abrir archivo",QDir::homePath() );
   QStringList cachosArchivo = nombreArchivo.split ( "/" );
   util.escribirSocket ( "put|@|" + cachosArchivo[cachosArchivo.size() - 1],socket[activo] );
   ventana.subirArchivo ( nombreArchivo );

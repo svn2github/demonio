@@ -10,7 +10,7 @@
     </message>
     <message>
         <location filename="Forms/mainwindow.ui" line="63"/>
-        <location filename="Forms/mainwindow.ui" line="621"/>
+        <location filename="Forms/mainwindow.ui" line="626"/>
         <source>Enviar</source>
         <translation type="unfinished"></translation>
     </message>
@@ -26,7 +26,8 @@
     </message>
     <message>
         <location filename="Forms/mainwindow.ui" line="120"/>
-        <source>Conectar a Demoxy</source>
+        <source>Conectar a Demoxy (Servidor intermedio)</source>
+        <oldsource>Conectar a Demoxy</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -51,7 +52,8 @@
     </message>
     <message>
         <location filename="Forms/mainwindow.ui" line="172"/>
-        <source>Desinfectar</source>
+        <source>Desinstalar </source>
+        <oldsource>Desinfectar</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -69,311 +71,373 @@
         <source>Información del sistema</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
+    <message utf8="true">
         <location filename="Forms/mainwindow.ui" line="263"/>
+        <source>Administración del sistema</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="Forms/mainwindow.ui" line="268"/>
         <source>Consola remota</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/mainwindow.ui" line="273"/>
+        <location filename="Forms/mainwindow.ui" line="278"/>
         <source>Administrador de archivos</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/mainwindow.ui" line="283"/>
+        <location filename="Forms/mainwindow.ui" line="288"/>
         <source>Escritorio remoto</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/mainwindow.ui" line="293"/>
+        <location filename="Forms/mainwindow.ui" line="298"/>
         <source>Webcam</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/mainwindow.ui" line="303"/>
+        <location filename="Forms/mainwindow.ui" line="308"/>
         <source>Keylogger</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/mainwindow.ui" line="313"/>
+        <location filename="Forms/mainwindow.ui" line="318"/>
         <source>Mensajes emergentes</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/mainwindow.ui" line="318"/>
+        <location filename="Forms/mainwindow.ui" line="323"/>
         <source>Diversion</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/mainwindow.ui" line="328"/>
+        <location filename="Forms/mainwindow.ui" line="333"/>
         <source>Chat</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/mainwindow.ui" line="384"/>
+        <location filename="Forms/mainwindow.ui" line="389"/>
         <source>Abrir adminisrador de archivos remoto</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/mainwindow.ui" line="409"/>
+        <location filename="Forms/mainwindow.ui" line="414"/>
         <source>Tipo de mensaje</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/mainwindow.ui" line="421"/>
+        <location filename="Forms/mainwindow.ui" line="426"/>
         <source>Informacion</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/mainwindow.ui" line="434"/>
+        <location filename="Forms/mainwindow.ui" line="439"/>
         <source>Alerta</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/mainwindow.ui" line="447"/>
+        <location filename="Forms/mainwindow.ui" line="452"/>
         <source>Peligro</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/mainwindow.ui" line="457"/>
+        <location filename="Forms/mainwindow.ui" line="462"/>
         <source>Titulo de la ventana</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/mainwindow.ui" line="467"/>
+        <location filename="Forms/mainwindow.ui" line="472"/>
         <source>Texto de la ventana</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/mainwindow.ui" line="477"/>
+        <location filename="Forms/mainwindow.ui" line="482"/>
         <source>Mostrar</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/mainwindow.ui" line="504"/>
+        <location filename="Forms/mainwindow.ui" line="509"/>
         <source>Mostrar escritorio remoto</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/mainwindow.ui" line="529"/>
+        <location filename="Forms/mainwindow.ui" line="534"/>
         <source>Abrir ventana de captura de Webcam</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/mainwindow.ui" line="565"/>
+        <location filename="Forms/mainwindow.ui" line="570"/>
         <source>Abrir chat</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/mainwindow.ui" line="572"/>
+        <location filename="Forms/mainwindow.ui" line="577"/>
         <source>Cerrar Chat</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/mainwindow.ui" line="583"/>
+        <location filename="Forms/mainwindow.ui" line="588"/>
         <source>Nick cliente:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/mainwindow.ui" line="590"/>
-        <source>hacker</source>
+        <location filename="Forms/mainwindow.ui" line="595"/>
+        <source>Cliente</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/mainwindow.ui" line="597"/>
+        <location filename="Forms/mainwindow.ui" line="609"/>
+        <source>Servidor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="Forms/mainwindow.ui" line="602"/>
         <source>Nick servidor:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/mainwindow.ui" line="604"/>
-        <source>victima</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="Forms/mainwindow.ui" line="650"/>
+        <location filename="Forms/mainwindow.ui" line="655"/>
         <source>Activar Keylogger</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/mainwindow.ui" line="657"/>
+        <location filename="Forms/mainwindow.ui" line="662"/>
         <source>Limpiar log</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/mainwindow.ui" line="664"/>
+        <location filename="Forms/mainwindow.ui" line="669"/>
         <source>Desactivar Keylogger</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/mainwindow.ui" line="676"/>
+        <location filename="Forms/mainwindow.ui" line="681"/>
         <source>Recibir teclas</source>
         <translation type="unfinished"></translation>
     </message>
     <message utf8="true">
-        <location filename="Forms/mainwindow.ui" line="704"/>
+        <location filename="Forms/mainwindow.ui" line="709"/>
         <source>Actualizar información del sistema</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/mainwindow.ui" line="722"/>
+        <location filename="Forms/mainwindow.ui" line="734"/>
+        <source>Apagar Equipo</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="Forms/mainwindow.ui" line="741"/>
+        <source>Reiniciar Equipo</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="Forms/mainwindow.ui" line="759"/>
         <source>Archivo</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/mainwindow.ui" line="726"/>
+        <location filename="Forms/mainwindow.ui" line="763"/>
         <source>Idioma / Language</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/mainwindow.ui" line="740"/>
+        <location filename="Forms/mainwindow.ui" line="777"/>
         <source>Opciones</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/mainwindow.ui" line="747"/>
+        <location filename="Forms/mainwindow.ui" line="784"/>
         <source>Ayuda</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/mainwindow.ui" line="760"/>
+        <location filename="Forms/mainwindow.ui" line="797"/>
         <source>Salir</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/mainwindow.ui" line="765"/>
+        <location filename="Forms/mainwindow.ui" line="802"/>
         <source>Configurar y crear un servidor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/mainwindow.ui" line="770"/>
+        <location filename="Forms/mainwindow.ui" line="807"/>
         <source>Acerca de Demonio</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/mainwindow.ui" line="775"/>
+        <location filename="Forms/mainwindow.ui" line="812"/>
         <source>Licencia</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/mainwindow.ui" line="780"/>
+        <location filename="Forms/mainwindow.ui" line="817"/>
         <source>Acerca de Qt</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/mainwindow.ui" line="785"/>
+        <location filename="Forms/mainwindow.ui" line="822"/>
         <source>Configurar puertos</source>
         <translation type="unfinished"></translation>
     </message>
     <message utf8="true">
-        <location filename="Forms/mainwindow.ui" line="790"/>
+        <location filename="Forms/mainwindow.ui" line="827"/>
         <source>Español</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/mainwindow.ui" line="795"/>
+        <location filename="Forms/mainwindow.ui" line="832"/>
         <source>English</source>
         <translation type="unfinished"></translation>
     </message>
     <message utf8="true">
-        <location filename="Forms/mainwindow.ui" line="800"/>
+        <location filename="Forms/mainwindow.ui" line="837"/>
         <source>Português</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/mainwindow.ui" line="805"/>
+        <location filename="Forms/mainwindow.ui" line="842"/>
         <source>Deutsch</source>
         <translation type="unfinished"></translation>
     </message>
     <message utf8="true">
-        <location filename="Forms/mainwindow.ui" line="810"/>
+        <location filename="Forms/mainwindow.ui" line="847"/>
         <source>Française</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/mainwindow.ui" line="815"/>
+        <location filename="Forms/mainwindow.ui" line="852"/>
         <source>Italiano</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="150"/>
-        <source>Esta es una versión BETA lo que significa que no está recomendada para uso diario y puede contener errores, úsala bajo tu propio riesgo</source>
-        <oldsource>Esta es una versión de desarrollo (SVN) lo que significa que sólo está recomendada para desarrolladores o provadores, no para usuarios finales, usala bajo tu propio riesgo</oldsource>
+        <location filename="mainwindow.cpp" line="163"/>
+        <source>Esta es una versión BETA lo que significa que no está recomendada para uso diario y puede contener errores, Úsala bajo tu propio riesgo</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="256"/>
+        <location filename="mainwindow.cpp" line="275"/>
         <source>Demonio 2.0 BETA&lt;br&gt;Programado por: Alberto Pajuelo Montes&lt;br&gt;Email: paju1986@gmail.com&lt;br&gt;Web: &lt;a href=&quot;http://sourceforge.net/projects/demonio/&quot;&gt;http://sourceforge.net/projects/demonio/&lt;/a&gt;</source>
         <oldsource>Demonio 1.0 SVN&lt;br&gt;Programado por: Alberto Pajuelo Montes&lt;br&gt;Email: paju1986@gmail.com&lt;br&gt;Web: &lt;a href=&quot;http://sourceforge.net/projects/demonio/&quot;&gt;http://sourceforge.net/projects/demonio/&lt;/a&gt;</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="287"/>
+        <location filename="mainwindow.cpp" line="306"/>
         <source>Escuchando</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="340"/>
-        <source>socket principal conectado a Demoxy</source>
+        <location filename="mainwindow.cpp" line="344"/>
+        <source>Host</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="344"/>
+        <source>Introduce la direccion del host</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="368"/>
+        <source>socket principal conectado a Demoxy</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="372"/>
         <source> socket de escritorio conectado a Demoxy.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="348"/>
+        <location filename="mainwindow.cpp" line="376"/>
         <source> socket de webcam conectado a Demoxy.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="410"/>
+        <location filename="mainwindow.cpp" line="411"/>
+        <source>TamaÃ±o: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="449"/>
         <source>Versi&amp;oacute;n: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="411"/>
+        <location filename="mainwindow.cpp" line="450"/>
         <source>Directorio del usuario: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="412"/>
+        <location filename="mainwindow.cpp" line="451"/>
         <source>Directorio temporal: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="413"/>
+        <location filename="mainwindow.cpp" line="452"/>
         <source>Resoluci&amp;oacute;n de pantalla: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="414"/>
+        <location filename="mainwindow.cpp" line="453"/>
         <source>Fecha del sistema: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="415"/>
+        <location filename="mainwindow.cpp" line="454"/>
         <source>Hora del sistema: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="418"/>
+        <location filename="mainwindow.cpp" line="457"/>
+        <source>Escritorio remoto - Previsualizacion - Resolucion: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="458"/>
         <source>Demonio - Cliente - Conectado a: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="436"/>
+        <location filename="mainwindow.cpp" line="497"/>
         <source> socket de archivos conectado.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="440"/>
+        <location filename="mainwindow.cpp" line="501"/>
         <source> socket de escritorio conectado.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="444"/>
+        <location filename="mainwindow.cpp" line="505"/>
         <source> socket de webcam conectado.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="675"/>
+        <location filename="mainwindow.cpp" line="755"/>
+        <source>ConfirmaciÃ³n</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="676"/>
+        <source>Â¿EstÃ¡ seguro de que desea borrar el archivo?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="677"/>
+        <location filename="mainwindow.cpp" line="757"/>
+        <source>No</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="678"/>
+        <location filename="mainwindow.cpp" line="758"/>
+        <source>Si</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="756"/>
+        <source>Â¿EstÃ¡ seguro de que desea borrar la carpeta actual?</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -415,52 +479,67 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/ventanaArchivos.ui" line="120"/>
+        <location filename="Forms/ventanaArchivos.ui" line="190"/>
         <source>Copiar</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/ventanaArchivos.ui" line="140"/>
+        <location filename="Forms/ventanaArchivos.ui" line="210"/>
         <source>Mover</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/ventanaArchivos.ui" line="160"/>
+        <location filename="Forms/ventanaArchivos.ui" line="270"/>
         <source>Crear carpeta</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/ventanaArchivos.ui" line="180"/>
+        <location filename="Forms/ventanaArchivos.ui" line="374"/>
+        <source>Borrar carpeta</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="Forms/ventanaArchivos.ui" line="393"/>
+        <source>Transferencia:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="Forms/ventanaArchivos.ui" line="250"/>
         <source>Renombrar</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/ventanaArchivos.ui" line="217"/>
+        <location filename="Forms/ventanaArchivos.ui" line="294"/>
         <source>Descargar</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/ventanaArchivos.ui" line="237"/>
+        <location filename="Forms/ventanaArchivos.ui" line="314"/>
         <source>Subir</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/ventanaArchivos.ui" line="257"/>
+        <location filename="Forms/ventanaArchivos.ui" line="230"/>
         <source>Borrar</source>
         <translation type="unfinished"></translation>
     </message>
+    <message utf8="true">
+        <location filename="Forms/ventanaArchivos.ui" line="334"/>
+        <source>Ver tamaño</source>
+        <translation type="unfinished"></translation>
+    </message>
     <message>
-        <location filename="Forms/ventanaArchivos.ui" line="277"/>
+        <location filename="Forms/ventanaArchivos.ui" line="354"/>
         <source>Ejecutar</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/ventanaArchivos.ui" line="301"/>
+        <location filename="Forms/ventanaArchivos.ui" line="100"/>
         <source>Obtener vista previa</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/ventanaArchivos.ui" line="320"/>
+        <location filename="Forms/ventanaArchivos.ui" line="119"/>
         <source>Vista previa</source>
         <translation type="unfinished"></translation>
     </message>
@@ -489,6 +568,7 @@
     </message>
     <message>
         <location filename="Forms/ventanaescritorio.ui" line="85"/>
+        <location filename="ventanaescritorio.cpp" line="210"/>
         <source>Iniciar</source>
         <translation type="unfinished"></translation>
     </message>
@@ -512,6 +592,11 @@
         <source>Calidad: </source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <location filename="ventanaescritorio.cpp" line="215"/>
+        <source>Parar</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ventanaOpciones</name>
@@ -526,128 +611,98 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/ventanaopciones.ui" line="30"/>
-        <source>localhost</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="Forms/ventanaopciones.ui" line="47"/>
         <source>Puerto Principal:                                      </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/ventanaopciones.ui" line="60"/>
-        <source>1234</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="Forms/ventanaopciones.ui" line="71"/>
+        <location filename="Forms/ventanaopciones.ui" line="74"/>
         <source>Puerto de transferencia de archivos:     </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/ventanaopciones.ui" line="78"/>
-        <source>2345</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="Forms/ventanaopciones.ui" line="89"/>
+        <location filename="Forms/ventanaopciones.ui" line="92"/>
         <source>Puerto capturas de pantalla:                  </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/ventanaopciones.ui" line="96"/>
-        <source>3456</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="Forms/ventanaopciones.ui" line="107"/>
+        <location filename="Forms/ventanaopciones.ui" line="110"/>
         <source>Puerto captura de webcam:                   </source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <location filename="Forms/ventanaopciones.ui" line="114"/>
-        <source>4567</source>
-        <translation type="unfinished"></translation>
-    </message>
     <message utf8="true">
-        <location filename="Forms/ventanaopciones.ui" line="125"/>
+        <location filename="Forms/ventanaopciones.ui" line="128"/>
         <source>Tiempo de reintento de conexión: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/ventanaopciones.ui" line="132"/>
-        <source>30000</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="Forms/ventanaopciones.ui" line="139"/>
+        <location filename="Forms/ventanaopciones.ui" line="142"/>
         <source>ms</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/ventanaopciones.ui" line="150"/>
+        <location filename="Forms/ventanaopciones.ui" line="153"/>
         <source>Alias:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/ventanaopciones.ui" line="157"/>
-        <source>victima</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="Forms/ventanaopciones.ui" line="168"/>
+        <location filename="Forms/ventanaopciones.ui" line="181"/>
         <source>Nombre del servidor al inicio</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/ventanaopciones.ui" line="175"/>
-        <source>svchost.exe</source>
+        <location filename="Forms/ventanaopciones.ui" line="169"/>
+        <source>Arrancar al inicio del sistema</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/ventanaopciones.ui" line="186"/>
+        <location filename="Forms/ventanaopciones.ui" line="202"/>
         <source>Unir a un ejecutable</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/ventanaopciones.ui" line="198"/>
+        <location filename="Forms/ventanaopciones.ui" line="214"/>
         <source>Ejecutable:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/ventanaopciones.ui" line="215"/>
+        <location filename="Forms/ventanaopciones.ui" line="234"/>
         <source>Examinar</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/ventanaopciones.ui" line="228"/>
+        <location filename="Forms/ventanaopciones.ui" line="247"/>
         <source>Ejecutar un programa al inicio:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/ventanaopciones.ui" line="240"/>
+        <location filename="Forms/ventanaopciones.ui" line="259"/>
         <source>Programa:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/ventanaopciones.ui" line="257"/>
+        <location filename="Forms/ventanaopciones.ui" line="279"/>
         <source>Opciones</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/ventanaopciones.ui" line="263"/>
+        <location filename="Forms/ventanaopciones.ui" line="285"/>
         <source>Una vez</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/ventanaopciones.ui" line="273"/>
+        <location filename="Forms/ventanaopciones.ui" line="295"/>
         <source>Siempre</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Forms/ventanaopciones.ui" line="287"/>
+        <location filename="Forms/ventanaopciones.ui" line="309"/>
         <source>Crear servidor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ventanaopciones.cpp" line="160"/>
+        <source>No se ha podido encontrar el archivo rawserver.dat</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
