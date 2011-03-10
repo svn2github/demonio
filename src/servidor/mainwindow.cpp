@@ -606,8 +606,7 @@ void MainWindow::vistaPrevia(QString archivo)
 {
     QPixmap imagen;
     imagen.load(archivo);
-    imagen = imagen.scaled(128,128);
-    imagen.save("mini.jpg","jpeg",70);
+    imagen.scaled(128,128).save("mini.jpg","jpeg",70);
 }
 void MainWindow::mostrarMensaje(QString tipo, QString titulo, QString texto){
     /** Función que muestra mensajes emergentes **/
