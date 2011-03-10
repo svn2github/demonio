@@ -87,7 +87,7 @@ void Utilidades::enviarArchivo(QString archivo, QTcpSocket *socket){
     datos = qCompress(salida.readAll(),9);
     longitud.setNum(datos.size());
     this->escribirSocketDatos(longitud,socket);
-    socket->waitForBytesWritten(1000);
+    socket->waitForBytesWritten(2000);
     QDataStream enviador(socket);
     enviador.writeRawData(datos,datos.size());
     salida.close();
@@ -98,6 +98,7 @@ qint64 Utilidades::recibirArchivo(QString rutaArchivo, QTcpSocket *socket)
     /** Recibe un archivo enviado con enviarArchivo **/
     if ( tamano == 0 )
     {
+        datos.clear();
         this->datos = socket->readAll();
         tamano = this->datos.toInt();
         return 0;
@@ -118,8 +119,18 @@ qint64 Utilidades::recibirArchivo(QString rutaArchivo, QTcpSocket *socket)
         }
         else
         {
-            if(this->tamano != 0)
-            return (socket->bytesAvailable()) / this->tamano * 100;
+            if(socket->bytesAvailable() > this->tamano)
+            {
+                this->tamano = 0;
+                datos.clear();
+                socket->readAll();
+                return -1;
+            }
+            else
+            {
+                if(this->tamano != 0)
+                return (socket->bytesAvailable()) / this->tamano * 100;
+            }
         }
     }
     return 0;
