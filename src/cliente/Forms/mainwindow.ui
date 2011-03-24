@@ -265,6 +265,11 @@
     </item>
     <item>
      <property name="text">
+      <string>Administrador de procesos</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
       <string>Consola remota</string>
      </property>
      <property name="icon">
@@ -751,7 +756,7 @@
      <x>0</x>
      <y>0</y>
      <width>769</width>
-     <height>18</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuArchivo">

@@ -43,25 +43,27 @@ MainWindow::MainWindow ( QWidget *parent ) :
   ui->listaOpciones->item(1)->setIcon(icono);
   icono.addFile("./icons/preferencias.png");
   ui->listaOpciones->item(2)->setIcon(icono);
-  icono.addFile("./icons/shell.png");
+  icono.addFile("./icons/utilities-system-monitor.png");
   ui->listaOpciones->item(3)->setIcon(icono);
-  icono.addFile("./icons/drive-harddisk.png");
+  icono.addFile("./icons/shell.png");
   ui->listaOpciones->item(4)->setIcon(icono);
+  icono.addFile("./icons/drive-harddisk.png");
+  ui->listaOpciones->item(5)->setIcon(icono);
   ventana.setWindowIcon(icono);
   icono.addFile("./icons/user-desktop.png");
-  ui->listaOpciones->item(5)->setIcon(icono);
+  ui->listaOpciones->item(6)->setIcon(icono);
   escritorio.setWindowIcon(icono);
   icono.addFile("./icons/camera-web.png");
-  ui->listaOpciones->item(6)->setIcon(icono);
+  ui->listaOpciones->item(7)->setIcon(icono);
   webcam.setWindowIcon(icono);
   icono.addFile("./icons/input-keyboard.png");
-  ui->listaOpciones->item(7)->setIcon(icono);
-  icono.addFile("./icons/emblem-important.png");
   ui->listaOpciones->item(8)->setIcon(icono);
-  icono.addFile("./icons/face-smile-big.png");
+  icono.addFile("./icons/emblem-important.png");
   ui->listaOpciones->item(9)->setIcon(icono);
-  icono.addFile("./icons/im-user.png");
+  icono.addFile("./icons/face-smile-big.png");
   ui->listaOpciones->item(10)->setIcon(icono);
+  icono.addFile("./icons/im-user.png");
+  ui->listaOpciones->item(11)->setIcon(icono);
 
   //Ordenar los frmase en un Layout, frames a la derecha y menu de opciones a la izquierda
   layoutPrincipal = new QGridLayout ( ui->centralWidget );
