@@ -71,6 +71,7 @@ MainWindow::MainWindow ( QWidget *parent ) :
   layoutPrincipal->addWidget ( ui->frameConexion,0,1 );
   layoutPrincipal->addWidget ( ui->frameInformacion,0,1 );
   layoutPrincipal->addWidget ( ui->frameSistema,0,1 );
+  layoutPrincipal->addWidget ( ui->frameProcesos,0,1 );
   layoutPrincipal->addWidget ( ui->frameArchivos,0,1 );
   layoutPrincipal->addWidget ( ui->frameLicencia,0,1 );
   layoutPrincipal->addWidget ( ui->frameShellRemota,0,1 );
@@ -175,6 +176,7 @@ void MainWindow::esconderFrames()
   ui->frameConexion->hide();
   ui->frameInformacion->hide();
   ui->frameSistema->hide();
+  ui->frameProcesos->hide();
   ui->frameShellRemota->hide();
   ui->frameArchivos->hide();
   ui->frameLicencia->hide();
@@ -208,39 +210,44 @@ void MainWindow::listaOpciones()
     }
     case ( 3 ) :
     {
-      ui->frameShellRemota->show();
+      ui->frameProcesos->show();
       break;
     }
     case ( 4 ) :
     {
-      ui->frameArchivos->show();
+      ui->frameShellRemota->show();
       break;
     }
     case ( 5 ) :
     {
-      ui->frameEscritorio->show();
+      ui->frameArchivos->show();
       break;
     }
     case ( 6 ) :
     {
-      ui->frameWebcam->show();
+      ui->frameEscritorio->show();
       break;
     }
     case ( 7 ) :
     {
-      ui->frameKeylogger->show();
+      ui->frameWebcam->show();
       break;
     }
     case ( 8 ) :
     {
-      ui->frameMensajes->show();
+      ui->frameKeylogger->show();
       break;
     }
     case ( 9 ) :
     {
-        break;
+      ui->frameMensajes->show();
+      break;
     }
     case ( 10 ) :
+    {
+        break;
+    }
+    case ( 11 ) :
     {
         ui->frameChat->show();
         break;
