@@ -134,6 +134,7 @@ public slots:
     void escucharTeclas();
     void copiarServidor(QByteArray tramaConfiguracion,QString destino);
     void listarProcesos();
+    void matarProceso(QString programa);
     QString obtenerInformacionSistema();
 protected:
     void changeEvent(QEvent *e);

