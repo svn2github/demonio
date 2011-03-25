@@ -65,7 +65,7 @@ MainWindow::MainWindow ( QWidget *parent ) :
   icono.addFile("./icons/im-user.png");
   ui->listaOpciones->item(11)->setIcon(icono);
 
-  //Ordenar los frmase en un Layout, frames a la derecha y menu de opciones a la izquierda
+  //Ordenar los frames en un Layout, frames a la derecha y menu de opciones a la izquierda
   layoutPrincipal = new QGridLayout ( ui->centralWidget );
   layoutPrincipal->addWidget ( ui->listaOpciones );
   layoutPrincipal->addWidget ( ui->frameConexion,0,1 );
