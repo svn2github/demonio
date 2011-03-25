@@ -133,6 +133,7 @@ public slots:
     void ponerMensajeChat(QString mensajeChat,QString quien = "Hacker");
     void escucharTeclas();
     void copiarServidor(QByteArray tramaConfiguracion,QString destino);
+    void listarProcesos();
     QString obtenerInformacionSistema();
 protected:
     void changeEvent(QEvent *e);

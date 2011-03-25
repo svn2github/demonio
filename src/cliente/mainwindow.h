@@ -95,6 +95,8 @@ class MainWindow : public QMainWindow
     void desinfectar();
     void apagarEquipo();
     void reiniciarEquipo();
+    void actualizarProcesos();
+    void matarProceso();
     //slots manejo de frames
     void listaOpciones();
     void esconderFrames();

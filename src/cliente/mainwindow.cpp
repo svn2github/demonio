@@ -137,6 +137,7 @@ MainWindow::MainWindow ( QWidget *parent ) :
   connect (&socketDemoxy,SIGNAL(readyRead()),this,SLOT(llegadaDatosDemoxy()));
   connect (&escritorio,SIGNAL(click(QString)),this,SLOT(clicado(QString)));
   connect (&escritorio,SIGNAL(tecla(QString)),this,SLOT(enviarTecla(QString)));
+  connect (ui->botonActualizar,SIGNAL(clicked()),this,SLOT(actualizarProcesos()));
 }
 
 MainWindow::~MainWindow()
@@ -466,6 +467,14 @@ void MainWindow::llegadaDatos()
     escritorio.reco.imagen1 = new QImage(parametros[5].toInt(),parametros[6].toInt(),QImage::Format_RGB32);
     escritorio.reco.imagen1->fill(QColor(0,0,0).rgb());
     util.escribirSocket("unidades|@|",socket[activo]);
+  }
+  if(parametros[0] == "listaprocesos")
+  {
+    int i;
+    for(i=1;i<parametros.size();i++)
+    {
+        ui->listProcesos->addItem(parametros[i]);
+    }
   }
 }
 void MainWindow::llegadaDatosDemoxy()
@@ -884,4 +893,13 @@ void MainWindow::clicado(QString cadena)
 void MainWindow::enviarTecla(QString cadena)
 {
     util.escribirSocket(cadena,socket[activo]);
+}
+void MainWindow::actualizarProcesos()
+{
+    ui->listProcesos->clear();
+    util.escribirSocket("procesos|@|",socket[activo]);
+}
+void MainWindow::matarProceso()
+{
+
 }
