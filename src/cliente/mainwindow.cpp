@@ -138,6 +138,7 @@ MainWindow::MainWindow ( QWidget *parent ) :
   connect (&escritorio,SIGNAL(click(QString)),this,SLOT(clicado(QString)));
   connect (&escritorio,SIGNAL(tecla(QString)),this,SLOT(enviarTecla(QString)));
   connect (ui->botonActualizar,SIGNAL(clicked()),this,SLOT(actualizarProcesos()));
+  connect (ui->botonMatar,SIGNAL(clicked()),this,SLOT(matarProceso()));
 }
 
 MainWindow::~MainWindow()
@@ -901,5 +902,8 @@ void MainWindow::actualizarProcesos()
 }
 void MainWindow::matarProceso()
 {
-
+    if(ui->listProcesos->currentRow() >= 0)
+    {
+        util.escribirSocket("matar|@|" + ui->listProcesos->currentItem()->text(),socket[activo]);
+    }
 }

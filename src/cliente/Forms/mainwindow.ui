@@ -754,8 +754,8 @@
      <rect>
       <x>550</x>
       <y>70</y>
-      <width>150</width>
-      <height>114</height>
+      <width>276</width>
+      <height>270</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -770,23 +770,23 @@
     <property name="frameShadow">
      <enum>QFrame::Raised</enum>
     </property>
-    <layout class="QGridLayout" name="gridLayout_6">
-     <item row="1" column="0">
+    <layout class="QVBoxLayout" name="verticalLayout_10">
+     <item>
+      <widget class="QListWidget" name="listProcesos"/>
+     </item>
+     <item>
       <widget class="QPushButton" name="botonMatar">
        <property name="text">
         <string>Matar</string>
        </property>
       </widget>
      </item>
-     <item row="2" column="0">
+     <item>
       <widget class="QPushButton" name="botonActualizar">
        <property name="text">
         <string>Actualizar</string>
        </property>
       </widget>
-     </item>
-     <item row="0" column="0">
-      <widget class="QListWidget" name="listProcesos"/>
      </item>
     </layout>
    </widget>
