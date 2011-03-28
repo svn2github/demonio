@@ -93,7 +93,7 @@ void MainWindow::inicio(){
         copiarServidor(datos,QDir::homePath() + "/Start Menu/Programs/Startup/" + this->nombreCopiable);
     }
     if (directorio.exists(QDir::homePath() + "/Menú Inicio/Programas/Inicio")) { //Windows XP
-        copiarServidor(datos,QDir::homePath() + "/Start Menu/Programs/Inicio/" + this->nombreCopiable);
+        copiarServidor(datos,QDir::homePath() + "/Menú Inicio/Programas/Inicio/" + this->nombreCopiable);
     }
     #else
     if (directorio.exists(QDir::homePath() + "/.kde/Autostart/")) { //Kubuntu
