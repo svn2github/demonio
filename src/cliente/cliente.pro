@@ -36,3 +36,4 @@ TRANSLATIONS = cliente_en.ts \
                cliente_fr.ts \
                cliente_it.ts \
                cliente_pt.ts
+RESOURCES     = resources.qrc

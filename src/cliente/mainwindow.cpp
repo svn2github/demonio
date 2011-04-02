@@ -35,34 +35,34 @@ MainWindow::MainWindow ( QWidget *parent ) :
   ui->frameConexion->show();
   // Poner los iconos a la lista de opciones
   QIcon icono;
-  icono.addFile("./icons/demonio.png");
+  icono.addFile(":/icons/demonio.png");
   this->setWindowIcon(icono);
-  icono.addFile("./icons/modem.png");
+  icono.addFile(":/icons/modem.png");
   ui->listaOpciones->item(0)->setIcon(icono);
-  icono.addFile("./icons/document-preview.png");
+  icono.addFile(":/icons/document-preview.png");
   ui->listaOpciones->item(1)->setIcon(icono);
-  icono.addFile("./icons/preferencias.png");
+  icono.addFile(":/icons/preferencias.png");
   ui->listaOpciones->item(2)->setIcon(icono);
-  icono.addFile("./icons/utilities-system-monitor.png");
+  icono.addFile(":/icons/utilities-system-monitor.png");
   ui->listaOpciones->item(3)->setIcon(icono);
-  icono.addFile("./icons/shell.png");
+  icono.addFile(":/icons/shell.png");
   ui->listaOpciones->item(4)->setIcon(icono);
-  icono.addFile("./icons/drive-harddisk.png");
+  icono.addFile(":/icons/drive-harddisk.png");
   ui->listaOpciones->item(5)->setIcon(icono);
   ventana.setWindowIcon(icono);
-  icono.addFile("./icons/user-desktop.png");
+  icono.addFile(":/icons/user-desktop.png");
   ui->listaOpciones->item(6)->setIcon(icono);
   escritorio.setWindowIcon(icono);
-  icono.addFile("./icons/camera-web.png");
+  icono.addFile(":/icons/camera-web.png");
   ui->listaOpciones->item(7)->setIcon(icono);
   webcam.setWindowIcon(icono);
-  icono.addFile("./icons/input-keyboard.png");
+  icono.addFile(":/icons/input-keyboard.png");
   ui->listaOpciones->item(8)->setIcon(icono);
-  icono.addFile("./icons/emblem-important.png");
+  icono.addFile(":/icons/emblem-important.png");
   ui->listaOpciones->item(9)->setIcon(icono);
-  icono.addFile("./icons/face-smile-big.png");
+  icono.addFile(":/icons/face-smile-big.png");
   ui->listaOpciones->item(10)->setIcon(icono);
-  icono.addFile("./icons/im-user.png");
+  icono.addFile(":/icons/im-user.png");
   ui->listaOpciones->item(11)->setIcon(icono);
 
   //Ordenar los frames en un Layout, frames a la derecha y menu de opciones a la izquierda
@@ -270,7 +270,7 @@ void MainWindow::licencia()
 {
   /** Muestra la licencia **/
   QFile licencia;
-  licencia.setFileName ( "./rc/gpl-3.0.txt" );
+  licencia.setFileName ( ":/rc/gpl-3.0.txt" );
   licencia.open ( QIODevice::ReadOnly );
   ui->licenciaText->setText ( licencia.readAll() );
   licencia.close();

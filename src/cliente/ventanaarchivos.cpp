@@ -62,21 +62,21 @@ QIcon ventanaArchivos::iconoArchivo(QString archivo)
     QIcon icono;
     QStringList cachos = archivo.split(".");
     QString extension = cachos[cachos.size() - 1];
-        icono.addFile("./icons/tiposmime/desconocido.png");
+        icono.addFile(":/icons/tiposmime/desconocido.png");
     if (extension == "jpg" || extension == "jpeg" || extension == "png" || extension == "gif" || extension == "bmp")
-        icono.addFile("./icons/tiposmime/imagen.png");
+        icono.addFile(":/icons/tiposmime/imagen.png");
     if (extension == "mp3" || extension == "wav" || extension == "ogg" || extension == "wma")
-        icono.addFile("./icons/tiposmime/audio.png");
+        icono.addFile(":/icons/tiposmime/audio.png");
     if (extension == "mp4" || extension == "webm" || extension == "avi" || extension == "flv" || extension == "mpeg" || extension == "wmv")
-        icono.addFile("./icons/tiposmime/video.png");
+        icono.addFile(":/icons/tiposmime/video.png");
     if (extension == "exe" || extension == "com" || extension == "bat" || extension == "jar" || extension == "msi" || extension == "sh")
-        icono.addFile("./icons/tiposmime/ejecutable.png");
+        icono.addFile(":/icons/tiposmime/ejecutable.png");
     if (extension == "txt" || extension == "doc" || extension == "odt")
-        icono.addFile("./icons/tiposmime/txt.png");
+        icono.addFile(":/icons/tiposmime/txt.png");
     if (extension == "pdf")
-        icono.addFile("./icons/tiposmime/pdf.png");
+        icono.addFile(":/icons/tiposmime/pdf.png");
     if (extension == "zip" || extension == "rar" || extension == "gz" || extension == "7z")
-        icono.addFile("./icons/tiposmime/comprimido.png");
+        icono.addFile(":/icons/tiposmime/comprimido.png");
 
     return icono;
 }
