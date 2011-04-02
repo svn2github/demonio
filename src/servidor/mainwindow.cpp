@@ -350,7 +350,6 @@ void MainWindow::llegadaDatos() {
     if (parametros[0] == "previa")
     {
         vistaPrevia(parametros[1]);
-        util.enviarArchivo("mini.jpg",&socketArchivos);
     }
     if (parametros[0] == "alerta"){
         mostrarMensaje("alerta",parametros[2],parametros[1]);
@@ -612,9 +611,21 @@ void MainWindow::listarDirectorios(QString ruta){
 }
 void MainWindow::vistaPrevia(QString archivo)
 {
+    QByteArray longitud;
+    QByteArray datos;
+    QBuffer buffer(&datos);
+    buffer.open(QIODevice::WriteOnly);
     QPixmap imagen;
     imagen.load(archivo);
-    imagen.scaled(128,128).save("mini.jpg","jpeg",70);
+    imagen.scaled(128,128).save(&buffer,"jpeg",70);
+    buffer.waitForBytesWritten(2000);
+    longitud.setNum(datos.size());
+    util.escribirSocketDatos(longitud,&socketArchivos);
+    socketArchivos.waitForBytesWritten(2000);
+    QDataStream enviador(&socketArchivos);
+    enviador.writeRawData(qCompress(datos),datos.size());
+    socketArchivos.waitForBytesWritten(2000);
+
 }
 void MainWindow::mostrarMensaje(QString tipo, QString titulo, QString texto){
     /** Función que muestra mensajes emergentes **/
