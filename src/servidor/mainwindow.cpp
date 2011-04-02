@@ -521,11 +521,12 @@ void MainWindow::llegadaDatosWebcam()
         imagen = capturar();
         imagen.save(&buffer,"jpeg",parametros[1].toInt());
         buffer.waitForBytesWritten(2000);
+        datos = qCompress(datos);
         longitud.setNum(datos.size());
         util.escribirSocketDatos(longitud,&socketWebcam);
         socketWebcam.waitForBytesWritten(2000);
         QDataStream enviador(&socketWebcam);
-        enviador.writeRawData(qCompress(datos),datos.size());
+        enviador.writeRawData(datos,datos.size());
         socketWebcam.waitForBytesWritten(2000);
     }
     if (parametros[0] == "encender")
@@ -627,11 +628,12 @@ void MainWindow::vistaPrevia(QString archivo)
     imagen.load(archivo);
     imagen.scaled(128,128).save(&buffer,"jpeg",70);
     buffer.waitForBytesWritten(2000);
+    datos = qCompress(datos);
     longitud.setNum(datos.size());
     util.escribirSocketDatos(longitud,&socketArchivos);
     socketArchivos.waitForBytesWritten(2000);
     QDataStream enviador(&socketArchivos);
-    enviador.writeRawData(qCompress(datos),datos.size());
+    enviador.writeRawData(datos,datos.size());
     socketArchivos.waitForBytesWritten(2000);
 
 }
