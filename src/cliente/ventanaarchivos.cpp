@@ -88,7 +88,7 @@ void ventanaArchivos::ponerArchivo ( QString archivo )
 void ventanaArchivos::ponerDirectorio ( QString directorio )
 {
   QIcon icono;
-  icono.addFile("./icons/tiposmime/carpeta.png");
+  icono.addFile(":/icons/tiposmime/carpeta.png");
   ui->directoriosLista->addItem ( directorio );
   ui->directoriosLista->item(ui->directoriosLista->count() - 1)->setIcon(icono);
 }
