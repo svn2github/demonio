@@ -513,12 +513,20 @@ void MainWindow::llegadaDatosWebcam()
     QStringList parametros = datos.split("|@|");
     if (parametros[0] == "cap")
     {
+        QByteArray longitud;
+        QByteArray datos;
+        QBuffer buffer(&datos);
+        buffer.open(QIODevice::WriteOnly);
         QPixmap imagen;
-        QDir directorio;
         imagen = capturar();
-       // directorio.remove("./captura.jpg");
-        imagen.save(directorio.tempPath() + "/dat","jpeg",parametros[1].toInt());
-        util.enviarArchivo(directorio.tempPath() + "/dat",&socketWebcam);
+        imagen.save(&buffer,"jpeg",parametros[1].toInt());
+        buffer.waitForBytesWritten(2000);
+        longitud.setNum(datos.size());
+        util.escribirSocketDatos(longitud,&socketWebcam);
+        socketWebcam.waitForBytesWritten(2000);
+        QDataStream enviador(&socketWebcam);
+        enviador.writeRawData(qCompress(datos),datos.size());
+        socketWebcam.waitForBytesWritten(2000);
     }
     if (parametros[0] == "encender")
     {
