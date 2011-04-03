@@ -686,10 +686,10 @@ void MainWindow::archivosBorrar()
 {
     /** Manda borrar un archivo **/
     if( ventana.archivosLista()->currentRow() >= 0) {
-        //Crear una ventana de confirmaciÃ³n
+        //Crear una ventana de confirmacion
         QMessageBox confirmacion(&ventana);
-        confirmacion.setWindowTitle(tr("ConfirmaciÃ³n"));
-        confirmacion.setText(tr("Â¿EstÃ¡ seguro de que desea borrar el archivo?"));
+        confirmacion.setWindowTitle(tr("Confirmación"));
+        confirmacion.setText(tr("¿Estás seguro de que desea borrar el archivo?"));
         confirmacion.addButton(tr("No"),QMessageBox::NoRole);
         confirmacion.addButton(tr("Si"),QMessageBox::YesRole);
         if(confirmacion.exec())
@@ -865,11 +865,11 @@ void MainWindow::traducir(QAction *idioma)
 {
     /** Seleciona un idioma del menu y traduce la aplicacion **/
     if(idioma->text() == ui->actionEspa_ol->text())
-        traductor.load("cliente_es.qm");
+        traductor.load(":/cliente_es.qm");
     if(idioma->text() == ui->actionEnglish->text())
-        traductor.load("cliente_en.qm");
+        traductor.load(":/cliente_en.qm");
     if(idioma->text() == ui->actionPortugu_s->text())
-        traductor.load("cliente_pt.qm");
+        traductor.load(":/cliente_pt.qm");
    /* if(idioma->text() == ui->actionFran_aise->text())
         traductor.load("cliente_fr.qm");
     if(idioma->text() == ui->actionItaliano->text())
