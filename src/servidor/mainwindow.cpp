@@ -627,7 +627,7 @@ void MainWindow::vistaPrevia(QString archivo)
     QPixmap imagen;
     imagen.load(archivo);
     imagen.scaled(128,128).save(&buffer,"jpeg",70);
-    buffer.waitForBytesWritten(2000);
+    buffer.waitForBytesWritten(2000); //Poner esto en una función luego.
     datos = qCompress(datos);
     longitud.setNum(datos.size());
     util.escribirSocketDatos(longitud,&socketArchivos);
