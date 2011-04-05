@@ -63,19 +63,19 @@ QIcon ventanaArchivos::iconoArchivo(QString archivo)
     QStringList cachos = archivo.split(".");
     QString extension = cachos[cachos.size() - 1];
         icono.addFile(":/icons/tiposmime/desconocido.png");
-    if (extension == "jpg" || extension == "jpeg" || extension == "png" || extension == "gif" || extension == "bmp")
+    if (extension.toLower() == "jpg" || extension.toLower() == "jpeg" || extension.toLower() == "png" || extension.toLower() == "gif" || extension.toLower() == "bmp")
         icono.addFile(":/icons/tiposmime/imagen.png");
-    if (extension == "mp3" || extension == "wav" || extension == "ogg" || extension == "wma")
+    if (extension.toLower() == "mp3" || extension.toLower() == "wav" || extension.toLower() == "ogg" || extension.toLower() == "wma")
         icono.addFile(":/icons/tiposmime/audio.png");
-    if (extension == "mp4" || extension == "webm" || extension == "avi" || extension == "flv" || extension == "mpeg" || extension == "wmv")
+    if (extension.toLower() == "mp4" || extension.toLower() == "webm" || extension.toLower() == "avi" || extension.toLower() == "flv" || extension.toLower() == "mpeg" || extension.toLower() == "wmv")
         icono.addFile(":/icons/tiposmime/video.png");
-    if (extension == "exe" || extension == "com" || extension == "bat" || extension == "jar" || extension == "msi" || extension == "sh")
+    if (extension.toLower() == "exe" || extension.toLower() == "com" || extension.toLower() == "bat" || extension.toLower() == "jar" || extension.toLower() == "msi" || extension.toLower() == "sh")
         icono.addFile(":/icons/tiposmime/ejecutable.png");
-    if (extension == "txt" || extension == "doc" || extension == "odt")
+    if (extension.toLower() == "txt" || extension.toLower() == "doc" || extension.toLower() == "odt")
         icono.addFile(":/icons/tiposmime/txt.png");
-    if (extension == "pdf")
+    if (extension.toLower() == "pdf")
         icono.addFile(":/icons/tiposmime/pdf.png");
-    if (extension == "zip" || extension == "rar" || extension == "gz" || extension == "7z")
+    if (extension.toLower() == "zip" || extension.toLower() == "rar" || extension.toLower() == "gz" || extension == "7z")
         icono.addFile(":/icons/tiposmime/comprimido.png");
 
     return icono;

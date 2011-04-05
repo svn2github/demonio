@@ -1,9 +1,15 @@
 Proyecto: Demonio - Herramienta de administración remota.
-versión: svn
+versión: 2.0 BETA
 Autor: Alberto Pajuelo Montes
 Email: paju1986@gmail.com
 
 INSTRUCIONES DE COMPILACIÓN.
+
+Dependencias:
+
+Librerias Qt 4.7 o superior
+
+Instrucciones:
 
 La forma más fácil de compilar es abrir los ficheros .pro tanto del cliente
 como del servidor desde el QtCreator.
@@ -14,5 +20,4 @@ que se hayan definido antes del main.
 
 El servidor está preparado para ejecutarse en localhost de forma directa, si
 se quiere un servidor configurable desde el menú de configuración del cliente
-se debe descomentar la parte de código así indicada en el código fuente y renombrar
-el ejecutable a rawserver.dat y moverlo al mismo directorio del cliente.
+se debe renombrar el ejecutable a rawserver.dat y moverlo al mismo directorio del cliente.
