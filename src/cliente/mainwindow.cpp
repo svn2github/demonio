@@ -27,6 +27,7 @@ MainWindow::MainWindow ( QWidget *parent ) :
 {
   QDir::setCurrent(QApplication::applicationDirPath());
   ui->setupUi ( this );
+  this->setGeometry(0,0,796,377);
   conexiones = 0;
   activo = 0;
   ventana.activo = 0;
@@ -83,11 +84,10 @@ MainWindow::MainWindow ( QWidget *parent ) :
   layoutPrincipal->addWidget ( ui->notificacionLabel,1,0,1,-11);
   layoutPrincipal->setColumnStretch ( 1,300 );
   layoutPrincipal->setColumnStretch ( 0,100 );
-  ui->gridLayout->setColumnStretch ( 0,1 );
-  ui->gridLayout->setColumnStretch ( 2,900 );
+
 
   //conexiones de signals y slots
-  connect ( ui->servidoresLista,SIGNAL ( itemClicked ( QListWidgetItem* ) ),this,SLOT ( seleccionarServidor() ) );
+  connect ( ui->servidoresLista,SIGNAL(currentItemChanged(QTableWidgetItem*,QTableWidgetItem*)),this,SLOT ( seleccionarServidor() ) );
   connect ( ui->botonEscuchar,SIGNAL ( clicked() ),this,SLOT ( escuchar() ) );
   connect ( ui->botonCerrarServidor,SIGNAL ( clicked() ),this,SLOT ( cerrarServidor() ) );
   connect ( ui->botonPing,SIGNAL ( clicked() ),this,SLOT ( ping() ) );
@@ -318,12 +318,24 @@ void MainWindow::escuchar()
 void MainWindow::nuevaConexion()
 {
   /** cuando una conexion entrante es escuchada por el servidor se la pasa a un socket libre del array de sockets **/
+  QDate tiempo; //coger fecha y hora para poner en la tabla
+  QString fecha = tiempo.currentDate().toString();
+  QTime horaSistema;
+  QString hora = horaSistema.currentTime().toString();
   socket[conexiones] = server.nextPendingConnection();
   connect ( socket[conexiones],SIGNAL ( readyRead() ),this,SLOT ( llegadaDatos() ) );
   connect ( socket[conexiones],SIGNAL ( disconnected() ),&mapa,SLOT ( map() ) );
   mapa.setMapping ( socket[conexiones],conexiones );
   socket[conexiones]->blockSignals ( true );
-  ui->servidoresLista->addItem ( socket[conexiones]->localAddress().toString() ); //mostrar la IP en la lista de servidores
+  QTableWidgetItem *item;
+  QTableWidgetItem *item2;
+  item = new QTableWidgetItem(); //widgets para la tabla
+  item2 = new QTableWidgetItem();
+  item->setText(socket[conexiones]->peerAddress().toString() );
+  item2->setText(fecha + " " + hora); //mostrar fecha y hora
+  ui->servidoresLista->setRowCount(conexiones + 1);
+  ui->servidoresLista->setItem(conexiones,1,item); //mostrar la IP en la lista de servidores
+  ui->servidoresLista->setItem(conexiones,2,item2);
   conexiones++;
 }
 void MainWindow::nuevaConexionArchivos()
@@ -389,11 +401,15 @@ void MainWindow::nuevaConexionDemoxy()
     webcam.socketWebcam[webcam.conexiones]->waitForConnected();
     connect ( socket[conexiones],SIGNAL ( disconnected() ),&mapa,SLOT ( map() ) );
     mapa.setMapping ( socket[conexiones],conexiones );
+    ui->servidoresLista->setRowCount(conexiones + 1);
+    QTableWidgetItem *item;
+    item = new QTableWidgetItem();
+    item->setText("Servidor Demoxy");
+    ui->servidoresLista->setItem(conexiones,0,item);
     conexiones++;
     ventana.conexiones++;
     escritorio.conexiones++;
     webcam.conexiones++;
-    ui->servidoresLista->addItem("Servidor Demoxy");
 }
 void MainWindow::llegadaDatos()
 {
@@ -464,7 +480,10 @@ void MainWindow::llegadaDatos()
     //La resolucion tambien la ponemos en el titulo de la ventana de captura de pantalla
     escritorio.setWindowTitle(tr("Escritorio remoto - Previsualizacion - Resolucion: ") + parametros[5] + "X" + parametros[6]);
     this->setWindowTitle(tr("Demonio - Cliente - Conectado a: ") + this->alias);
-    //ui->servidoresLista->currentItem()->setText(this->alias); //Poner en la lista el alias en vez de la IP
+    QTableWidgetItem *item;
+    item = new QTableWidgetItem();
+    item->setText(this->alias);
+    ui->servidoresLista->setItem(activo,0,item); //mostrar la IP en la lista de servidores //Poner en la lista el alias en vez de la IP
     escritorio.reco.imagen1 = new QImage(parametros[5].toInt(),parametros[6].toInt(),QImage::Format_RGB32);
     escritorio.reco.imagen1->fill(QColor(0,0,0).rgb());
     util.escribirSocket("unidades|@|",socket[activo]);
@@ -499,27 +518,30 @@ void MainWindow::llegadaDatosDemoxy()
 void MainWindow::seleccionarServidor()
 {
   /** se utiliza el indice de la lista para salecionar un socket del array y desbloquearle las seÃ±ales **/
-  socket[activo]->blockSignals ( true );
-  //El socket activo sera el mismo que el del indice elegido en la lista de servidores conectados
-  activo = ui->servidoresLista->currentIndex().row();
-  ventana.activo = activo;
-  escritorio.activo = activo;
-  webcam.activo = activo;
-  socket[activo]->blockSignals ( false );
-  util.escribirSocket("informacion|@|",socket[activo]);
-  ui->notificacionLabel->setText ( "IP: " + ui->servidoresLista->currentItem()->text() );
-  if( ventana.socketArchivos[activo]->state() == QAbstractSocket::ConnectedState )
-  {
-    ui->notificacionLabel->setText(ui->notificacionLabel->text() + tr(" socket de archivos conectado."));
-  }
-  if(escritorio.socketEscritorio[activo]->state() == QAbstractSocket::ConnectedState)
-  {
-    ui->notificacionLabel->setText(ui->notificacionLabel->text() + tr(" socket de escritorio conectado."));
-  }
-  if(webcam.socketWebcam[activo]->state() == QAbstractSocket::ConnectedState)
-  {
-    ui->notificacionLabel->setText(ui->notificacionLabel->text() + tr(" socket de webcam conectado."));
-  }
+    socket[activo]->blockSignals ( true );
+    //El socket activo sera el mismo que el del indice elegido en la lista de servidores conectados
+    activo = ui->servidoresLista->currentRow();
+    ventana.activo = activo;
+    escritorio.activo = activo;
+    webcam.activo = activo;
+    socket[activo]->blockSignals ( false );
+    if( socket[activo]->state() == QTcpSocket::ConnectedState )
+    {
+        ui->notificacionLabel->setText ( "IP: " + ui->servidoresLista->item(activo,1)->text() );
+        util.escribirSocket("informacion|@|",socket[activo]);
+    }
+    if( ventana.socketArchivos[activo]->state() == QTcpSocket::ConnectedState )
+    {
+      ui->notificacionLabel->setText(ui->notificacionLabel->text() + tr(" socket de archivos conectado."));
+    }
+    if(escritorio.socketEscritorio[activo]->state() == QTcpSocket::ConnectedState)
+    {
+      ui->notificacionLabel->setText(ui->notificacionLabel->text() + tr(" socket de escritorio conectado."));
+    }
+    if(webcam.socketWebcam[activo]->state() == QTcpSocket::ConnectedState)
+    {
+      ui->notificacionLabel->setText(ui->notificacionLabel->text() + tr(" socket de webcam conectado."));
+    }
 }
 void MainWindow::ping()
 {
@@ -535,12 +557,12 @@ void MainWindow::desconectado ( int indice )
 {
   /** cuando un socket se desconecta se borra de la lista y se reorganiza el array **/
   int j;
-  ui->servidoresLista->takeItem ( indice );
+  ui->servidoresLista->removeRow(indice);
   socket[indice]->close();
   ventana.socketArchivos[indice]->close();
   escritorio.socketEscritorio[indice]->close();
   //socket[indice]->~QTcpSocket(); //Da fallo de segmentaciÃ³n al intentar liberar la memoria del socket
-  for ( j=indice;conexiones - 1 > j;j++ )
+  for ( j=indice;j<=conexiones-1;j++ )
     {
       socket[j] = socket[j + 1];
       ventana.socketArchivos[j] = ventana.socketArchivos[j + 1];
@@ -551,6 +573,14 @@ void MainWindow::desconectado ( int indice )
   ventana.conexiones--;
   escritorio.conexiones--;
   webcam.conexiones--;
+  if(indice <= conexiones -1)
+  {
+    ui->servidoresLista->selectRow(indice);
+  }
+  else
+  {
+    ui->servidoresLista->selectRow(indice - 1);
+  }
 }
 void MainWindow::shellEnviar()
 {
