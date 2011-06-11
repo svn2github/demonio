@@ -27,9 +27,8 @@ FORMS += Forms/mainwindow.ui \
     Forms/ventanaPuertos.ui
 
 win32 {
-win32-mingw32:QMAKE_LFLAGS += -static-libgcc
+QMAKE_LFLAGS += -static-libgcc
 QTPLUGIN += qjpeg
-win32-msvc2010:LIBS += -lqjpeg
 RC_FILE = demonio.rc
 }
 TRANSLATIONS = cliente_en.ts \

@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>960</width>
-    <height>983</height>
+    <width>769</width>
+    <height>377</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -72,10 +72,10 @@
    <widget class="QFrame" name="frameConexion">
     <property name="geometry">
      <rect>
-      <x>0</x>
-      <y>700</y>
-      <width>536</width>
-      <height>245</height>
+      <x>229</x>
+      <y>126</y>
+      <width>306</width>
+      <height>185</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -90,12 +90,9 @@
     <property name="frameShadow">
      <enum>QFrame::Raised</enum>
     </property>
-    <layout class="QHBoxLayout" name="horizontalLayout_2">
-     <item>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="0" rowspan="2">
       <layout class="QVBoxLayout" name="verticalLayout_2">
-       <property name="sizeConstraint">
-        <enum>QLayout::SetMaximumSize</enum>
-       </property>
        <item>
         <widget class="QLabel" name="label">
          <property name="text">
@@ -104,40 +101,12 @@
         </widget>
        </item>
        <item>
-        <widget class="QTableWidget" name="servidoresLista">
-         <property name="columnCount">
-          <number>3</number>
-         </property>
-         <attribute name="horizontalHeaderCascadingSectionResizes">
-          <bool>false</bool>
-         </attribute>
-         <attribute name="horizontalHeaderStretchLastSection">
-          <bool>false</bool>
-         </attribute>
-         <column>
-          <property name="text">
-           <string>Alias</string>
-          </property>
-         </column>
-         <column>
-          <property name="text">
-           <string>Host</string>
-          </property>
-         </column>
-         <column>
-          <property name="text">
-           <string>Fecha y hora de conexión</string>
-          </property>
-         </column>
-        </widget>
+        <widget class="QListWidget" name="servidoresLista"/>
        </item>
       </layout>
      </item>
-     <item>
+     <item row="0" column="2">
       <layout class="QVBoxLayout" name="verticalLayout_3">
-       <property name="sizeConstraint">
-        <enum>QLayout::SetMinimumSize</enum>
-       </property>
        <item>
         <widget class="QPushButton" name="botonEscuchar">
          <property name="text">
@@ -159,6 +128,10 @@
          </property>
         </widget>
        </item>
+      </layout>
+     </item>
+     <item row="1" column="2">
+      <layout class="QVBoxLayout" name="verticalLayout">
        <item>
         <spacer name="verticalSpacer">
          <property name="orientation">
@@ -173,46 +146,65 @@
         </spacer>
        </item>
        <item>
-        <layout class="QVBoxLayout" name="verticalLayout">
-         <item>
-          <widget class="QLabel" name="label_2">
-           <property name="text">
-            <string>   Opciones del servidor</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="botonCerrarServidor">
-           <property name="text">
-            <string>Cerrar servidor</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="botonReiniciar">
-           <property name="text">
-            <string>Reiniciar servidor</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="botonDesinfectar">
-           <property name="text">
-            <string>Desinstalar </string>
-           </property>
-          </widget>
-         </item>
-        </layout>
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>   Opciones del servidor</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="botonCerrarServidor">
+         <property name="text">
+          <string>Cerrar servidor</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="botonReiniciar">
+         <property name="text">
+          <string>Reiniciar servidor</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="botonDesinfectar">
+         <property name="text">
+          <string>Desinstalar </string>
+         </property>
+        </widget>
        </item>
       </layout>
      </item>
+     <item row="1" column="1">
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Fixed</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="1" column="3">
+      <spacer name="horizontalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
     </layout>
-    <zorder></zorder>
-    <zorder>botonCerrarServidor</zorder>
-    <zorder>botonReiniciar</zorder>
-    <zorder>botonDesinfectar</zorder>
-    <zorder>label_2</zorder>
-    <zorder></zorder>
    </widget>
    <widget class="QLabel" name="notificacionLabel">
     <property name="geometry">
@@ -399,7 +391,7 @@
      <item row="0" column="0">
       <widget class="QPushButton" name="botonArchivos">
        <property name="text">
-        <string>Abrir administrador de archivos remoto</string>
+        <string>Abrir adminisrador de archivos remoto</string>
        </property>
       </widget>
      </item>
@@ -804,7 +796,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>960</width>
+     <width>769</width>
      <height>21</height>
     </rect>
    </property>
