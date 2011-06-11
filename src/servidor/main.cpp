@@ -24,8 +24,18 @@
 Q_IMPORT_PLUGIN(qjpeg);
 #endif
 
+#ifdef _MSC_VER
+int WINAPI WinMain(HINSTANCE hInstance,
+                   HINSTANCE hPrevInstance,
+                   LPSTR lpCmdLine,
+                   int nCmdShow)
+{
+    int argc = 0;
+    char *argv[1];
+#else
 int main(int argc, char *argv[])
 {
+#endif
     QApplication a(argc, argv);
     MainWindow w;
     //w.show();
