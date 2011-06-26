@@ -2,7 +2,7 @@
 # Project created by QtCreator 2010-05-30T21:33:58
 # -------------------------------------------------
 CONFIG += static
-QT += network
+QT += network xml
 TARGET = cliente
 SOURCES += main.cpp \
     mainwindow.cpp \
@@ -10,21 +10,18 @@ SOURCES += main.cpp \
     ../../lib/source/Utilidades.cpp \
     ventanaescritorio.cpp \
     ventanaopciones.cpp \
-    ventanawebcam.cpp \
-    ventanapuertos.cpp
+    ventanawebcam.cpp
 HEADERS += mainwindow.h \
     ventanaarchivos.h \
     ventanaescritorio.h \
     Forms/ventanaopciones.h \
     ventanaopciones.h \
-    ventanawebcam.h \
-    ventanapuertos.h
+    ventanawebcam.h
 FORMS += Forms/mainwindow.ui \
     Forms/ventanaArchivos.ui \
     Forms/ventanaescritorio.ui \
     Forms/ventanaopciones.ui \
-    Forms/ventanawebcam.ui \
-    Forms/ventanaPuertos.ui
+    Forms/ventanawebcam.ui
 
 win32 {
 win32-mingw32:QMAKE_LFLAGS += -static-libgcc
@@ -38,3 +35,4 @@ TRANSLATIONS = cliente_en.ts \
                cliente_it.ts \
                cliente_pt.ts
 RESOURCES     = resources.qrc
+LIBS += -lqxmpp

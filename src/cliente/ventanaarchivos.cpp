@@ -25,10 +25,6 @@ ventanaArchivos::ventanaArchivos ( QWidget *parent ) :
     ui ( new Ui::ventanaArchivos )
 {
   ui->setupUi ( this );
-  activo = 0;
-  conexiones = 0;
-  socketArchivos[activo] = new QTcpSocket ( this );
-
 }
 ventanaArchivos::~ventanaArchivos()
 {
@@ -100,17 +96,16 @@ bool ventanaArchivos::event ( QEvent *event )
     {
       ui->archivosLista->clear();
       ui->directoriosLista->clear();
-      disconnect ( socketArchivos[activo],SIGNAL ( readyRead() ),this,SLOT ( llegadaDatos() ) );
       break;
     }
     case QEvent::Show:
     {
-      connect ( socketArchivos[activo],SIGNAL ( readyRead() ),this,SLOT ( llegadaDatos() ) );
       ui->botonHome->click();
       // break;
     }
     default:
     {
+
       QMainWindow::event ( event );
       break;
     }
@@ -121,19 +116,6 @@ void ventanaArchivos::nuevaConexion()
 {
 
 }
-void ventanaArchivos::llegadaDatos()
-{
-    ui->progresoTransferencia->setValue(util.recibirArchivo(rutaArchivo,socketArchivos[activo]));
-    if (rutaArchivo == "mini.jpg" && ui->progresoTransferencia->value() == 100)
-    {
-        QPixmap imagen;
-        imagen.load("mini.jpg");
-        ui->labelMiniatura->setPixmap(imagen);
-        rutaArchivo = "";
-        ui->progresoTransferencia->setValue(0);
-    }
-}
-
 
 QListWidget *ventanaArchivos::directoriosLista()
 {
@@ -211,9 +193,13 @@ QComboBox *ventanaArchivos::comboUnidad()
 {
     return ui->comboUnidad;
 }
-void ventanaArchivos::subirArchivo ( QString archivo )
+QLabel *ventanaArchivos::labelMiniatura()
 {
-  util.enviarArchivo ( archivo,socketArchivos[activo] );
+    return ui->labelMiniatura;
+}
+QProgressBar *ventanaArchivos::barraProgresoTransferencia()
+{
+    return ui->progresoTransferencia;
 }
 void ventanaArchivos::limpiarArchivos()
 {

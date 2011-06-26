@@ -35,6 +35,7 @@ public:
     ~ventanaOpciones();
     Utilidades util;
 public slots:
+    void mostrarContrasena();
     void examinar();
     void activarJoiner();
     void activarEjecucion();

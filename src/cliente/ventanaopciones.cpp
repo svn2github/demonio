@@ -25,7 +25,9 @@ ventanaOpciones::ventanaOpciones(QWidget *parent) :
     ui(new Ui::ventanaOpciones)
 {
     ui->setupUi(this);
+    ui->textoContrasena->setEchoMode(QLineEdit::Password);
     this->setGeometry(100,100,this->width(),this->minimumHeight());
+    connect(ui->checkContrasena,SIGNAL(clicked()),this,SLOT(mostrarContrasena()));
     connect(ui->botonCrearServidor,SIGNAL(clicked()),this,SLOT(crearServidor()));
     connect(ui->checkJoiner,SIGNAL(clicked()),this,SLOT(activarJoiner()));
     connect(ui->checkEjecutar,SIGNAL(clicked()),this,SLOT(activarEjecucion()));
@@ -47,6 +49,17 @@ void ventanaOpciones::changeEvent(QEvent *e)
         break;
     default:
         break;
+    }
+}
+void ventanaOpciones::mostrarContrasena()
+{
+    if(ui->checkContrasena->isChecked())
+    {
+        ui->textoContrasena->setEchoMode(QLineEdit::Normal);
+    }
+    else
+    {
+        ui->textoContrasena->setEchoMode(QLineEdit::Password);
     }
 }
 void ventanaOpciones::examinar()
@@ -102,12 +115,8 @@ void ventanaOpciones::crearServidor()
         QByteArray datos;
         QFile rawserver;
         QFile server;
-        datos = "|@|" + ui->textoHost->text().toLatin1() + "|@|";
-        datos = datos + ui->textoPuerto->text().toLatin1() + "|@|";
-        datos = datos + ui->textoPuertoArchivos->text().toLatin1() + "|@|";
-        datos = datos + ui->textoPuertoEscritorio->text().toLatin1() + "|@|";
-        datos = datos + ui->textoPuertoWebcam->text().toLatin1() + "|@|";
-        datos = datos + ui->textoTiempo->text().toLatin1() + "|@|";
+        datos = "|@|" + ui->textoCuentaXmpp->text().toLatin1() + "|@|";
+        datos = datos + ui->textoContrasena->text().toLatin1() + "|@|";
         datos = datos + ui->textoAlias->text().toLatin1() + "|@|";
         rawserver.setFileName("rawserver.dat");
         server.setFileName(QFileDialog::getSaveFileName(this,"Nombre del servidor"));

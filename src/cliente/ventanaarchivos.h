@@ -27,7 +27,7 @@
 #include <QFile>
 #include <QFileDialog>
 #include <QComboBox>
-
+#include <QProgressBar>
 namespace Ui
   {
   class ventanaArchivos;
@@ -40,13 +40,11 @@ class ventanaArchivos : public QMainWindow
     ventanaArchivos ( QWidget *parent = 0 );
     ~ventanaArchivos();
     Utilidades util;
-    int conexiones;
-    int activo;
+    QString servidor;
     QSignalMapper mapa;
     QString ruta;
     QString rutaAnterior;
     QString rutaArchivo;
-    QTcpSocket *socketArchivos[100];
     QListWidget *directoriosLista();
     QListWidget *archivosLista();
     QLineEdit *rutaTexto();
@@ -66,22 +64,19 @@ class ventanaArchivos : public QMainWindow
     QPushButton *botonBorrarCarpeta();
     QPushButton *botonTamano();
     QComboBox *comboUnidad();
+    QLabel *labelMiniatura();
+    QProgressBar *barraProgresoTransferencia();
     void establecerRuta ( QString ruta );
     void ponerUnidad(QString unidad);
     void ponerArchivo ( QString archivo );
     void ponerDirectorio ( QString directorio );
     void limpiarArchivos();
     void nuevaConexion();
-    void subirArchivo ( QString archivo );
-  public slots:
-    void llegadaDatos();
-
   protected:
     QIcon iconoArchivo(QString archivo);
     void changeEvent ( QEvent *e );
     bool event ( QEvent *event );
-
-  private:
+private:
     Ui::ventanaArchivos *ui;
   };
 

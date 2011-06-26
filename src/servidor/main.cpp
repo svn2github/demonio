@@ -18,6 +18,7 @@
  */
 
 #include <QtGui/QApplication>
+#include <qxmpp/QXmppLogger.h>
 #include "mainwindow.h"
 #ifndef Q_WS_X11
 #include <QtPlugin>
@@ -38,6 +39,7 @@ int main(int argc, char *argv[])
 #endif
     QApplication a(argc, argv);
     MainWindow w;
+    QXmppLogger::getLogger()->setLoggingType(QXmppLogger::StdoutLogging);
     //w.show();
     return a.exec();
 }

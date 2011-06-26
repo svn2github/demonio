@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>375</width>
-    <height>572</height>
+    <height>387</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,15 +19,21 @@
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
        <widget class="QLabel" name="label">
+        <property name="minimumSize">
+         <size>
+          <width>100</width>
+          <height>0</height>
+         </size>
+        </property>
         <property name="text">
-         <string>Host:</string>
+         <string>Cuenta XMPP:</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="textoHost">
+       <widget class="QLineEdit" name="textoCuentaXmpp">
         <property name="text">
-         <string notr="true">localhost</string>
+         <string notr="true">miusuario@servidor</string>
         </property>
        </widget>
       </item>
@@ -38,18 +44,24 @@
       <item>
        <widget class="QLabel" name="label_2">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
+        <property name="minimumSize">
+         <size>
+          <width>100</width>
+          <height>0</height>
+         </size>
+        </property>
         <property name="text">
-         <string>Puerto Principal:                                      </string>
+         <string>Contraseña</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="textoPuerto">
+       <widget class="QLineEdit" name="textoContrasena">
         <property name="enabled">
          <bool>true</bool>
         </property>
@@ -60,95 +72,29 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string notr="true">1234</string>
+         <string notr="true"/>
         </property>
        </widget>
       </item>
      </layout>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_3">
-      <item>
-       <widget class="QLabel" name="label_3">
-        <property name="text">
-         <string>Puerto de transferencia de archivos:     </string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLineEdit" name="textoPuertoArchivos">
-        <property name="text">
-         <string notr="true">2345</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
-    <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_4">
-      <item>
-       <widget class="QLabel" name="label_4">
-        <property name="text">
-         <string>Puerto capturas de pantalla:                  </string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLineEdit" name="textoPuertoEscritorio">
-        <property name="text">
-         <string notr="true">3456</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
-    <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_5">
-      <item>
-       <widget class="QLabel" name="label_5">
-        <property name="text">
-         <string>Puerto captura de webcam:                   </string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLineEdit" name="textoPuertoWebcam">
-        <property name="text">
-         <string notr="true">4567</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
-    <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_6">
-      <item>
-       <widget class="QLabel" name="label_6">
-        <property name="text">
-         <string>Tiempo de reintento de conexión: </string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLineEdit" name="textoTiempo">
-        <property name="text">
-         <string notr="true">30000</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="label_7">
-        <property name="text">
-         <string>ms</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
+     <widget class="QCheckBox" name="checkContrasena">
+      <property name="text">
+       <string>Mostrar contraseña</string>
+      </property>
+     </widget>
     </item>
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_7">
       <item>
        <widget class="QLabel" name="label_8">
+        <property name="minimumSize">
+         <size>
+          <width>100</width>
+          <height>0</height>
+         </size>
+        </property>
         <property name="text">
          <string>Alias:</string>
         </property>

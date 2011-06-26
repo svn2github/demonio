@@ -21,11 +21,13 @@
 #define VENTANAESCRITORIO_H
 
 #include <QMainWindow>
-#include <QTcpSocket>
 #include <QFileDialog>
 #include "../../lib/headers/Utilidades.h"
 #include <QTimer>
 #include <QThread>
+#include <qxmpp/QXmppClient.h>
+#include <qxmpp/QXmppTransferManager.h>
+#include <QBuffer>
 
 namespace Ui
   {
@@ -38,14 +40,12 @@ class reconstruccion: public QObject
 public:
     reconstruccion();
     QImage *imagen1;
-    int tamano;
-    QByteArray datos;
+    Utilidades util;
 signals:
     void imagen(QImage);
     void error();
 public slots:
     void procesarImagen(QByteArray);
-    void llegadaDatos(QTcpSocket *socket);
 };
 class eventos: public QObject
 {
@@ -62,7 +62,8 @@ class ventanaEscritorio : public QMainWindow
     reconstruccion reco;
     ventanaEscritorio ( QWidget *parent = 0 );
     ~ventanaEscritorio();
-    QTcpSocket *socketEscritorio[100];
+    QXmppClient *cliente;
+    QString servidor;
     QLabel *img;
     QLabel *imageEscritorio;
     QTimer refresco;
@@ -74,8 +75,6 @@ class ventanaEscritorio : public QMainWindow
     bool interruptor;
     unsigned long int numCapturas;
     Utilidades util;
-    int conexiones;
-    int activo;
     int alto;
     int ancho;
   signals:
@@ -83,9 +82,7 @@ class ventanaEscritorio : public QMainWindow
     void soltado();
     void click(QString cadena);
     void tecla(QString cadena);
-    void recibir(QTcpSocket *);
   public slots:
-    void llegadaDatos();
     void botonCapturar();
     void cambioCalidad();
     void ponerCaptura (QImage captura1);

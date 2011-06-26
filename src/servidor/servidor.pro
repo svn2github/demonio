@@ -1,7 +1,7 @@
 # -------------------------------------------------
 # Project created by QtCreator 2010-05-30T18:46:25
 # -------------------------------------------------
-QT += network
+QT += network xml
 TARGET = servidor
 TEMPLATE = app
 
@@ -39,3 +39,4 @@ QTPLUGIN += qjpeg
 }
 CONFIG += qtestlib
 CONFIG -= console
+LIBS += -lqxmpp

