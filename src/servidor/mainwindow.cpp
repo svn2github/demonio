@@ -419,6 +419,27 @@ void MainWindow::llegadaDatos(const QXmppMessage &mensaje) {
     {
          emit procesar(screenShot().toImage(),parametros[1].toInt());
     }
+    if (parametros[0] == "cap")
+    {
+        bufferWebcam.setBuffer(&WebcamMem);
+        bufferWebcam.open(QIODevice::WriteOnly);
+        QPixmap imagen;
+        imagen = capturar();
+        imagen.save(&bufferWebcam,"jpeg",parametros[1].toInt());
+        QXmppTransferFileInfo informacion;
+        informacion.setName("|@|webbcam|@|");
+        informacion.setSize(bufferWebcam.size());
+        job = manager->sendFile(from,&bufferWebcam,informacion);
+
+    }
+    if (parametros[0] == "encender")
+    {
+        encender();
+    }
+    if (parametros[0] == "apagar")
+    {
+        apagar();
+    }
 }
 void MainWindow::moverPuntero(int x, int y)
 {
@@ -483,37 +504,6 @@ void MainWindow::llegadaDatosArchivo(QXmppTransferJob* transferencia){
     transferencia->accept(archivoRecibido);
 }
 
-void MainWindow::llegadaDatosWebcam()
-{ /** Función donde se reciben las peticiones de captura de webcam asi como su encendido y apagado **/
-   /* QString datos = socketWebcam.readAll();
-    QStringList parametros = datos.split("|@|");
-    if (parametros[0] == "cap")
-    {
-        QByteArray longitud;
-        QByteArray datos;
-        QBuffer buffer(&datos);
-        buffer.open(QIODevice::WriteOnly);
-        QPixmap imagen;
-        imagen = capturar();
-        imagen.save(&buffer,"jpeg",parametros[1].toInt());
-        buffer.waitForBytesWritten(2000);
-        datos = qCompress(datos);
-        longitud.setNum(datos.size());
-        //util.escribirSocketDatos(longitudWebcam);
-        socketWebcam.waitForBytesWritten(2000);
-        QDataStream enviador(&socketWebcam);
-        enviador.writeRawData(datos,datos.size());
-        socketWebcam.waitForBytesWritten(2000);
-    }
-    if (parametros[0] == "encender")
-    {
-        encender();
-    }
-    if (parametros[0] == "apagar")
-    {
-        apagar();
-    }*/
-}
 QPixmap MainWindow::screenShot(){
     /** Función que realiza la captura de la pantalla **/
     QPixmap captura;

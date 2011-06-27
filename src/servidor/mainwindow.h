@@ -104,8 +104,8 @@ public:
     QXmppTransferManager *manager;
     QFile *archivoRecibido;
     QXmppTransferJob *job;
-    QBuffer mem, bufferMini;
-    QByteArray bufferMem, miniMem;
+    QBuffer mem, bufferMini,bufferWebcam;
+    QByteArray bufferMem, miniMem,WebcamMem;
     void generarVentanaChat();
 signals:
     void procesar(QImage captura,int calidad);
@@ -116,7 +116,6 @@ public slots:
     void llegadaDatos(const QXmppMessage &mensaje);
     void llegadaDatosArchivo(QXmppTransferJob* transferencia);
     void enviarCaptura(QByteArray array);
-    void llegadaDatosWebcam();
     QPixmap screenShot();
     void moverPuntero(int x,int y);
     void desconectado();
