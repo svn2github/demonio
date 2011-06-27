@@ -34,6 +34,7 @@ MainWindow::MainWindow ( QWidget *parent ) :
   manager = new QXmppTransferManager;
   cliente.addExtension(manager);
   escritorio.cliente = &cliente;
+  webcam.cliente = &cliente;
   esconderFrames();
   ui->frameLogin->show();
   logado = false;
@@ -355,6 +356,7 @@ void MainWindow::elegirServidor()
         servidor = ui->arbolConectados->currentItem()->parent()->text(0) + "/" + ui->arbolConectados->currentItem()->text(0);
         ventana.servidor = servidor;
         escritorio.servidor = servidor;
+        webcam.servidor = servidor;
         pedirInformacion();
         ui->notificacionLabel->setText("Conectado a: " + servidor);
     }
@@ -509,10 +511,20 @@ void MainWindow::recibirArchivo(QXmppTransferJob* transferencia)
         }
         else
         {
-            archivoRecibido = new QFile(ventana.rutaArchivo);
-            archivoRecibido->open(QFile::WriteOnly);
-            connect(transferencia,SIGNAL(progress(qint64,qint64)),this,SLOT(progreso(qint64,qint64 )));
-            transferencia->accept(archivoRecibido);
+            if(transferencia->fileInfo().name() == "|@|webcam|@|")
+            {
+                datosWebcam.clear();
+                bufferWebcam.setBuffer(&datosWebcam);
+                bufferWebcam.open(QIODevice::WriteOnly);
+                transferencia->accept(&bufferWebcam);
+            }
+            else
+            {
+                archivoRecibido = new QFile(ventana.rutaArchivo);
+                archivoRecibido->open(QFile::WriteOnly);
+                connect(transferencia,SIGNAL(progress(qint64,qint64)),this,SLOT(progreso(qint64,qint64 )));
+                transferencia->accept(archivoRecibido);
+            }
         }
     }
 }
@@ -535,8 +547,32 @@ void MainWindow::transferenciaCompleta(QXmppTransferJob *transferencia)
         }
         else
         {
-            archivoRecibido->close();
-            delete archivoRecibido;
+            if(transferencia->fileInfo().name() == "|@|webcam|@|")
+            {
+                QPixmap imagen;
+                imagen.load(bufferWebcam.buffer());
+                webcam.imagenWebcam()->setPixmap(imagen);
+                if (webcam.guardarAutomaticamente()->isChecked())
+                {
+                    QString capGuarda;
+                    this->numCapturas++;
+                    capGuarda.setNum(this->numCapturas);
+                    QFile guardar;
+                    guardar.setFileName(capGuarda + ".jpg");
+                    guardar.open(QFile::WriteOnly);
+                    guardar.write(bufferWebcam.buffer());
+                    guardar.close();
+                }
+                if(webcam.capturasAutomaticas()->isChecked())
+                {
+                   webcam.capturar();
+                }
+            }
+            else
+            {
+                archivoRecibido->close();
+                delete archivoRecibido;
+            }
         }
     }
 }

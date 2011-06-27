@@ -21,9 +21,9 @@
 #define VENTANAWEBCAM_H
 
 #include <QMainWindow>
-#include <QTcpSocket>
 #include "../../lib/headers/Utilidades.h"
-
+#include <qxmpp/QXmppClient.h>
+#include <QCheckBox>
 namespace Ui {
     class ventanawebcam;
 }
@@ -35,21 +35,19 @@ class ventanawebcam : public QMainWindow
 public:
     explicit ventanawebcam(QWidget *parent = 0);
     ~ventanawebcam();
-     QTcpSocket *socketWebcam[100];
+     QXmppClient *cliente;
      Utilidades util;
-     int conexiones;
-     int activo;
+     QString servidor;
      int calidad;
-     bool activar;
-     unsigned long int numCapturas;
  public slots:
-     void llegadaDatos();
      void capturar();
      void cambioCalidad();
      void encender();
      void apagar();
      void guardarCaptura();
-
+     QCheckBox *guardarAutomaticamente();
+     QCheckBox *capturasAutomaticas();
+     QLabel *imagenWebcam();
 private:
     Ui::ventanawebcam *ui;
 };

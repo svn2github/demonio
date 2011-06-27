@@ -26,12 +26,7 @@ ventanawebcam::ventanawebcam(QWidget *parent) :
     ui(new Ui::ventanawebcam)
 {
     ui->setupUi(this);
-    activo = 0;
-    conexiones = 0;
     calidad = 100;
-    activar = true;
-    numCapturas = 0;
-    socketWebcam[activo] = new QTcpSocket ( this );
     connect (ui->barraCalidad,SIGNAL(valueChanged(int)),this,SLOT(cambioCalidad()));
     connect (ui->botonCapturarwebcam,SIGNAL(clicked()),this,SLOT(capturar()));
     connect (ui->botonEncenderWebcam,SIGNAL(clicked()),this,SLOT(encender()));
@@ -52,52 +47,37 @@ void ventanawebcam::cambioCalidad()
 
 void ventanawebcam::capturar()
 {
-    if (activar)
-    {
-      connect ( socketWebcam[activo],SIGNAL ( readyRead() ),this,SLOT ( llegadaDatos() ) );
-      activar = false;
-    }
     QString tramaCaptura;
     QString cadenaCalidad;
     cadenaCalidad.setNum(this->calidad);
     tramaCaptura = "cap|@|" + cadenaCalidad;
-    util.escribirSocket (tramaCaptura,socketWebcam[activo] );
+    cliente->sendMessage(servidor,tramaCaptura);
 }
 
 void ventanawebcam::encender()
 {
-    util.escribirSocket ("encender",socketWebcam[activo] );
+    cliente->sendMessage(servidor,"encender|@|");
 }
 void ventanawebcam::apagar()
 {
-    util.escribirSocket ("apagar",socketWebcam[activo] );
-}
-void ventanawebcam::llegadaDatos()
-{
-    int porcentaje;
-    porcentaje = util.recibirArchivo("./captura.jpg",socketWebcam[activo]);
-    if (porcentaje == 100)
-    {
-        QPixmap imagen;
-        imagen.load("./captura.jpg");
-        ui->imagenWebcam->setPixmap(imagen);
-        if (ui->checkGuardarAutomaticamente->isChecked())
-        {
-            QString capGuarda;
-            this->numCapturas++;
-            capGuarda.setNum(this->numCapturas);
-            QFile::copy("./captura.jpg",capGuarda + ".jpg");
-        }
-        if(ui->checkCapturaAutomatica->isChecked())
-        {
-            capturar();
-        }
-    }
+    cliente->sendMessage(servidor,"apagar|@|");
 }
 
 void ventanawebcam::guardarCaptura()
 {
-    QFile::copy("./captura.jpg",QFileDialog::getSaveFileName(this,"Guardar como"));
+    ui->imagenWebcam->pixmap()->save(QFileDialog::getSaveFileName(this,"Guardar como"),"jpeg",100);
+}
 
+QCheckBox *ventanawebcam::guardarAutomaticamente()
+{
+    return ui->checkGuardarAutomaticamente;
+}
+QCheckBox *ventanawebcam::capturasAutomaticas()
+{
+    return ui->checkCapturaAutomatica;
+}
+QLabel *ventanawebcam::imagenWebcam()
+{
+    return ui->imagenWebcam;
 }
 

@@ -70,8 +70,9 @@ class MainWindow : public QMainWindow
     QFile *archivoRecibido;
     QXmppTransferManager *manager;
     QXmppTransferJob *job;
-    QByteArray datos,datosMini;
-    QBuffer buffer,bufferMini;
+    QByteArray datos,datosMini,datosWebcam;
+    QBuffer buffer,bufferMini,bufferWebcam;
+    unsigned long int numCapturas;
   public slots:
     //slost de conexion
     void conectar();
