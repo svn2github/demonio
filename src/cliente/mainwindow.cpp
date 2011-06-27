@@ -280,16 +280,17 @@ void MainWindow::listaOpciones()
 void MainWindow::conectar()
 {
     cliente.connectToServer(ui->textoUsuario->text(),ui->textoContrasena->text());
-    logado = true;
-    ui->frameLogin->hide();
-    ui->frameConexion->show();
+    ui->notificacionLabel->setText(tr("conectando..."));
 }
 void MainWindow::confirmarConectado()
 {
-    ui->notificacionLabel->setText("conectado");
+    ui->notificacionLabel->setText(tr("conectado"));
 }
 void MainWindow::rosterRecibido()
 {
+    logado = true; //cuando recibimos el roster ya mostramos el frame con la lista de conectados
+    ui->frameLogin->hide();
+    ui->frameConexion->show();
     int i,j;
     QStringList contactos = cliente.rosterManager().getRosterBareJids();
     for(i=0;i<contactos.length();i++)
@@ -499,10 +500,20 @@ void MainWindow::recibirArchivo(QXmppTransferJob* transferencia)
     }
     else
     {
-        archivoRecibido = new QFile(ventana.rutaArchivo);
-        archivoRecibido->open(QFile::WriteOnly);
-        connect(transferencia,SIGNAL(progress(qint64,qint64)),this,SLOT(progreso(qint64,quint64 )));
-        transferencia->accept(archivoRecibido);
+        if(transferencia->fileInfo().name() == "|@|mini|@|")
+        {
+            datosMini.clear();
+            bufferMini.setBuffer(&datosMini);
+            bufferMini.open(QIODevice::WriteOnly);
+            transferencia->accept(&bufferMini);
+        }
+        else
+        {
+            archivoRecibido = new QFile(ventana.rutaArchivo);
+            archivoRecibido->open(QFile::WriteOnly);
+            connect(transferencia,SIGNAL(progress(qint64,qint64)),this,SLOT(progreso(qint64,qint64 )));
+            transferencia->accept(archivoRecibido);
+        }
     }
 }
 void MainWindow::transferenciaCompleta(QXmppTransferJob *transferencia)
@@ -513,21 +524,24 @@ void MainWindow::transferenciaCompleta(QXmppTransferJob *transferencia)
     }
     else
     {
-        if (ventana.rutaArchivo == "mini.jpg")
+        if(transferencia->fileInfo().name() == "|@|mini|@|")
         {
             QPixmap imagen;
-            imagen.load("mini.jpg");
+            imagen.loadFromData(bufferMini.buffer());
             ventana.labelMiniatura()->setPixmap(imagen);
             ventana.rutaArchivo = "";
             ventana.barraProgresoTransferencia()->setValue(0);
-
+            bufferMini.close();
         }
-        archivoRecibido->close();
-        delete archivoRecibido;
+        else
+        {
+            archivoRecibido->close();
+            delete archivoRecibido;
+        }
     }
 }
 
-void MainWindow::progreso(qint64 hecho,quint64 total)
+void MainWindow::progreso(qint64 hecho,qint64 total)
 {
     if(total != 0)
     {

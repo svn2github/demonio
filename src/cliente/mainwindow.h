@@ -70,8 +70,8 @@ class MainWindow : public QMainWindow
     QFile *archivoRecibido;
     QXmppTransferManager *manager;
     QXmppTransferJob *job;
-    QByteArray datos;
-    QBuffer buffer;
+    QByteArray datos,datosMini;
+    QBuffer buffer,bufferMini;
   public slots:
     //slost de conexion
     void conectar();
@@ -125,7 +125,7 @@ class MainWindow : public QMainWindow
     void archivosTamano();
     void recibirArchivo(QXmppTransferJob* transferencia);
     void transferenciaCompleta(QXmppTransferJob* transferencia);
-    void progreso(qint64 hecho,quint64 total);
+    void progreso(qint64 hecho,qint64 total);
     //slots de mensajes
     void enviarMensaje();
     //slots del escritorio remoto
