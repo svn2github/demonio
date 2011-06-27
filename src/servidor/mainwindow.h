@@ -104,8 +104,8 @@ public:
     QXmppTransferManager *manager;
     QFile *archivoRecibido;
     QXmppTransferJob *job;
-    QBuffer mem;
-    QByteArray bufferMem;
+    QBuffer mem, bufferMini;
+    QByteArray bufferMem, miniMem;
     void generarVentanaChat();
 signals:
     void procesar(QImage captura,int calidad);

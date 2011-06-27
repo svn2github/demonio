@@ -596,10 +596,17 @@ void MainWindow::listarDirectorios(QString ruta){
 }
 void MainWindow::vistaPrevia(QString archivo)
 {
+    bufferMini.setBuffer(&miniMem);
     QPixmap imagen;
     imagen.load(archivo);
-    imagen.scaled(128,128).save("mini.jpg","jpeg",70);
-    job = manager->sendFile(from,"mini.jpg");
+    bufferMini.open(QIODevice::WriteOnly);
+    imagen.scaled(128,128).save(&bufferMini,"jpeg",70);
+    bufferMini.close();
+    QXmppTransferFileInfo informacion;
+    informacion.setName("|@|mini|@|");
+    informacion.setSize(bufferMini.size());
+    bufferMini.open(QIODevice::ReadOnly);
+    job = manager->sendFile(from,&bufferMini,informacion);
 }
 void MainWindow::mostrarMensaje(QString tipo, QString titulo, QString texto){
     /** Función que muestra mensajes emergentes **/
