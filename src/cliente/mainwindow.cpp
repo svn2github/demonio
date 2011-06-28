@@ -31,6 +31,7 @@ MainWindow::MainWindow ( QWidget *parent ) :
   QDir::setCurrent(QApplication::applicationDirPath());
   ui->setupUi ( this );
   ui->textoContrasena->setEchoMode(QLineEdit::Password);
+  numCapturas = 0;
   manager = new QXmppTransferManager;
   cliente.addExtension(manager);
   escritorio.cliente = &cliente;
