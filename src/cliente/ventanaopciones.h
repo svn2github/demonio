@@ -23,7 +23,7 @@
 #include <QMainWindow>
 #include <QFile>
 #include <QFileDialog>
-#include "../../lib/headers/Utilidades.h"
+#include <QMessageBox>
 namespace Ui {
     class ventanaOpciones;
 }
@@ -33,7 +33,7 @@ class ventanaOpciones : public QMainWindow {
 public:
     ventanaOpciones(QWidget *parent = 0);
     ~ventanaOpciones();
-    Utilidades util;
+    QMessageBox mensaje;
 public slots:
     void mostrarContrasena();
     void examinar();

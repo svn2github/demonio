@@ -7,7 +7,6 @@ TARGET = cliente
 SOURCES += main.cpp \
     mainwindow.cpp \
     ventanaarchivos.cpp \
-    ../../lib/source/Utilidades.cpp \
     ventanaescritorio.cpp \
     ventanaopciones.cpp \
     ventanawebcam.cpp

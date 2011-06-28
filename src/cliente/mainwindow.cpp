@@ -398,7 +398,8 @@ void MainWindow::licencia()
 void MainWindow::about()
 {
   /** Muestra informacion sobre Demonio **/
-  util.ventanaEmergente(tr("Demonio SVN <br>Programado por: Alberto Pajuelo Montes<br>Email: paju1986@gmail.com<br>Web del proyecto: <a href=\"http://sourceforge.net/projects/demonio/\">http://sourceforge.net/projects/demonio/</a><br>Blog del autor: <a href=\"http://albertopajuelo.blogspot.com\">http://albertopajuelo.blogspot.com</a>"));
+  mensajeEmergente.setText(tr("Demonio SVN <br>Programado por: Alberto Pajuelo Montes<br>Email: paju1986@gmail.com<br>Web del proyecto: <a href=\"http://sourceforge.net/projects/demonio/\">http://sourceforge.net/projects/demonio/</a><br>Blog del autor: <a href=\"http://albertopajuelo.blogspot.com\">http://albertopajuelo.blogspot.com</a>"));
+  mensajeEmergente.show();
 }
 void MainWindow::opcionesServidor()
 {
@@ -414,7 +415,8 @@ void MainWindow::llegadaDatos(const QXmppMessage &mensaje)
 
   if( datos == "pong") //Si recibe respuesta de un ping
   {
-    util.ventanaEmergente("responde");
+    mensajeEmergente.setText("responde");
+    mensajeEmergente.show();
   }
   if ( parametros[0] == "shell" ) //Si llegan datos de una shell remota
     {
@@ -427,7 +429,8 @@ void MainWindow::llegadaDatos(const QXmppMessage &mensaje)
     }
   if (parametros[0] == "tamano")
   {
-    util.ventanaEmergente(tr("TamaÃ±o: ") + parametros[1] + "B");
+    mensajeEmergente.setText(tr("Tamaño: ") + parametros[1] + "B");
+    mensajeEmergente.show();
   }
   if (parametros[0] == "unidades") //Si llega la lista de unidades
   {
@@ -653,13 +656,25 @@ void MainWindow::ponerDirectorios ( QStringList directorios )
       ventana.ponerDirectorio ( directorios[i] );
     }
 }
+QString MainWindow::obtenerRutaAnterior(QString rutaActual){
+    /** Obtiene la ruta anterior de una ruta pasada como parámetro **/
+    int i;
+    QString rutaAnterior;
+    rutaActual.replace("\\","/");
+    QStringList cachosRuta = rutaActual.split("/");
+    rutaAnterior = cachosRuta[0];
+    for (i=1;i< cachosRuta.size() - 1;i++){
+        rutaAnterior = rutaAnterior + "/" + cachosRuta[i];
+    }
+    return rutaAnterior;
+}
 void MainWindow::directorioCambio()
 {
   /**Esta funcion se ejecuta cuando se seleciona un directorio en la lista de directorios del administrador de archivos **/
   QString nuevoDirectorio = ventana.directoriosLista()->currentItem()->text();
   if ( nuevoDirectorio == ".." ) //Si el directorio es .. significa volver atras
     {
-      ventana.rutaAnterior = util.obtenerRutaAnterior ( ventana.ruta );
+      ventana.rutaAnterior = obtenerRutaAnterior ( ventana.ruta );
       ventana.establecerRuta ( ventana.rutaAnterior );
       ventana.limpiarArchivos();
      cliente.sendMessage(servidor, "archivos|@|" + ventana.rutaAnterior );
@@ -682,7 +697,7 @@ void MainWindow::archivosIr()
 void MainWindow::archivosAtras()
 {
   /** Envia la ruta anterios a la que estabamos **/
-  ventana.rutaAnterior = util.obtenerRutaAnterior ( ventana.ruta );
+  ventana.rutaAnterior = obtenerRutaAnterior ( ventana.ruta );
   ventana.establecerRuta ( ventana.rutaAnterior );
   ventana.limpiarArchivos();
  cliente.sendMessage(servidor, "archivos|@|" + ventana.rutaAnterior );

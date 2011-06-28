@@ -22,12 +22,12 @@
 
 #include <QMainWindow>
 #include <QFileDialog>
-#include "../../lib/headers/Utilidades.h"
 #include <QTimer>
 #include <QThread>
 #include <qxmpp/QXmppClient.h>
 #include <qxmpp/QXmppTransferManager.h>
 #include <QBuffer>
+#include <QLabel>
 
 namespace Ui
   {
@@ -40,7 +40,6 @@ class reconstruccion: public QObject
 public:
     reconstruccion();
     QImage *imagen1;
-    Utilidades util;
 signals:
     void imagen(QImage);
     void error();
@@ -74,7 +73,6 @@ class ventanaEscritorio : public QMainWindow
     int arrastray;
     bool interruptor;
     unsigned long int numCapturas;
-    Utilidades util;
     int alto;
     int ancho;
   signals:

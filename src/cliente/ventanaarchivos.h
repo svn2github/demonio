@@ -21,13 +21,13 @@
 #define VENTANAARCHIVOS_H
 
 #include <QMainWindow>
-#include "../../lib/headers/Utilidades.h"
 #include <QListWidget>
 #include <QSignalMapper>
 #include <QFile>
 #include <QFileDialog>
 #include <QComboBox>
 #include <QProgressBar>
+#include <QLabel>
 namespace Ui
   {
   class ventanaArchivos;
@@ -39,7 +39,6 @@ class ventanaArchivos : public QMainWindow
   public:
     ventanaArchivos ( QWidget *parent = 0 );
     ~ventanaArchivos();
-    Utilidades util;
     QString servidor;
     QSignalMapper mapa;
     QString ruta;

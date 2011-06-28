@@ -166,6 +166,7 @@ void ventanaOpciones::crearServidor()
     }
     else
     {
-        util.ventanaEmergente(tr("<p>No se ha podido encontrar el archivo <b>rawserver.dat</b></p><p>Este archivo es una imágen del servidor compilado sin configurar,<br>es posible que <b>no se haya compilado el servidor</b> o que no esté en el mismo directorio del cliente con el nombre rawserver.dat</p>"));
+        mensaje.setText(tr("<p>No se ha podido encontrar el archivo <b>rawserver.dat</b></p><p>Este archivo es una imágen del servidor compilado sin configurar,<br>es posible que <b>no se haya compilado el servidor</b> o que no esté en el mismo directorio del cliente con el nombre rawserver.dat</p>"));
+        mensaje.show();
     }
 }

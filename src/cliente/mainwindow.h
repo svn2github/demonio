@@ -24,7 +24,6 @@
 #include <QMessageBox>
 #include <QInputDialog>
 #include <QDataStream>
-#include "../../lib/headers/Utilidades.h"
 #include <QSignalMapper>
 #include <ventanaarchivos.h>
 #include <ventanaescritorio.h>
@@ -59,7 +58,6 @@ class MainWindow : public QMainWindow
     QString copiaRuta;
     QString copiaNombre;
     QThread hilo;
-    Utilidades util;
     ventanaArchivos ventana;
     ventanaEscritorio escritorio;
     ventanawebcam webcam;
@@ -73,6 +71,7 @@ class MainWindow : public QMainWindow
     QByteArray datos,datosMini,datosWebcam;
     QBuffer buffer,bufferMini,bufferWebcam;
     unsigned long int numCapturas;
+    QMessageBox mensajeEmergente;
   public slots:
     //slost de conexion
     void conectar();
@@ -109,6 +108,7 @@ class MainWindow : public QMainWindow
     void ponerArchivos ( QStringList archivos );
     void ponerDirectorios ( QStringList directorios );
     void directorioCambio();
+    QString obtenerRutaAnterior(QString rutaActual);
     void archivosIr();
     void archivosAtras();
     void archivosHome();

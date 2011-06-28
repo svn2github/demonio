@@ -21,9 +21,9 @@
 #define VENTANAWEBCAM_H
 
 #include <QMainWindow>
-#include "../../lib/headers/Utilidades.h"
 #include <qxmpp/QXmppClient.h>
 #include <QCheckBox>
+#include <QLabel>
 namespace Ui {
     class ventanawebcam;
 }
@@ -36,7 +36,6 @@ public:
     explicit ventanawebcam(QWidget *parent = 0);
     ~ventanawebcam();
      QXmppClient *cliente;
-     Utilidades util;
      QString servidor;
      int calidad;
  public slots:
