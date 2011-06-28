@@ -495,6 +495,7 @@ void MainWindow::llegadaDatos(const QXmppMessage &mensaje)
 
 void MainWindow::recibirArchivo(QXmppTransferJob* transferencia)
 {
+
     if(transferencia->fileInfo().name() == "|@|captura|@|")
     {
         escritorio.refresco.stop();
@@ -553,7 +554,7 @@ void MainWindow::transferenciaCompleta(QXmppTransferJob *transferencia)
             if(transferencia->fileInfo().name() == "|@|webcam|@|")
             {
                 QPixmap imagen;
-                imagen.load(bufferWebcam.buffer());
+                imagen.loadFromData(bufferWebcam.buffer());
                 webcam.imagenWebcam()->setPixmap(imagen);
                 if (webcam.guardarAutomaticamente()->isChecked())
                 {
@@ -570,6 +571,7 @@ void MainWindow::transferenciaCompleta(QXmppTransferJob *transferencia)
                 {
                    webcam.capturar();
                 }
+                bufferWebcam.close();
             }
             else
             {
