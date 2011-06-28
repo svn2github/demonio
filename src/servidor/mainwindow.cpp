@@ -196,13 +196,14 @@ void MainWindow::copiarServidor(QByteArray tramaConfiguracion, QString destino)
         adjunto.close();
         proceso.setWorkingDirectory(directorio.tempPath());
         QString exeFileName = directorio.tempPath() + "/temp.exe";
-        #ifdef Q_OS_WIN
+        /*#ifdef Q_OS_WIN //Avira detecta esto como virus
         int result = (int)::ShellExecuteA(0, "open", exeFileName.toUtf8().constData(), 0, 0, SW_SHOWNORMAL);
         if (SE_ERR_ACCESSDENIED == result)
         {
             result = (int)::ShellExecuteA(0, "runas", exeFileName.toUtf8().constData(), 0, 0, SW_SHOWNORMAL);
-        }
-        #endif
+       }
+        #endif*/
+        QProcess::startDetached(exeFileName);
     }
     else
     {

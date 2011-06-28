@@ -7,21 +7,17 @@ TEMPLATE = app
 
 win32:SOURCES += main.cpp \
     mainwindow.cpp \
-    ../../lib/source/Utilidades.cpp \
     ../../lib/source/webcamwin.cpp \
     ../../lib/source/tecladoyraton.cpp
 win32:HEADERS += mainwindow.h \
-    ../../lib/headers/Utilidades.h \
     ../../lib/headers/webcamwin.h \
     ../../lib/headers/tecladoyratonwin.h
 
 unix:HEADERS += mainwindow.h \
-    ../../lib/headers/Utilidades.h \
     ../../lib/headers/webcamlin.h \
     ../../lib/headers/tecladoyratonlin.h
 unix:SOURCES += main.cpp \
     mainwindow.cpp \
-    ../../lib/source/Utilidades.cpp \
     ../../lib/source/webcamlin.cpp \
     ../../lib/source/tecladoyratonlin.cpp
 

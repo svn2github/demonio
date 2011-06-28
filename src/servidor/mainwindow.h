@@ -36,7 +36,6 @@
 #include <QMessageBox>
 #include <QProcess>
 #include <QTimer>
-#include "../../lib/headers/Utilidades.h"
 #include <QDesktopWidget>
 #include <QBuffer>
 #include <QVBoxLayout>
@@ -59,7 +58,6 @@ public:
     int sincroniza;
     QBuffer *buffer;
     QByteArray bytes;
-    Utilidades util;
 public slots:
     void procesarImagen(QImage captura,int calidad);
 signals:
@@ -71,7 +69,6 @@ class MainWindow : public QMainWindow {
 public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
-    Utilidades util;
     paralelo capturacion;
     int tiempoConexion;
     QString cuentaXmpp;
