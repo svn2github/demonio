@@ -124,8 +124,8 @@ void MainWindow::inicio(){
 bool MainWindow::cargarConfiguracion(){
     /** Cargar la configuración del servidor guardada en el último KB del ejecutable **/
     //valores por defecto
-    this->cuentaXmpp = "cuentadeprueba2@jabber.org";
-    this->contrasena = "aspire";
+    this->cuentaXmpp = "";
+    this->contrasena = "";
     this->alias = "servidor";
     QString appPath = QApplication::applicationFilePath(); //ruta absoluta a la aplicaciÃ³n
     this->nombreCopiable = "noiniciar"; //Nombre del ejecutable
