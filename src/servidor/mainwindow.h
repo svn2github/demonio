@@ -28,7 +28,6 @@
 #include "../../lib/headers/tecladoyratonwin.h"
 #endif
 
-#include <QMainWindow>
 #include <QFile>
 #include <QFileInfo>
 #include <QDataStream>
@@ -64,10 +63,10 @@ signals:
     void enviar(QByteArray);
 };
 
-class MainWindow : public QMainWindow {
+class MainWindow : public QObject {
     Q_OBJECT
 public:
-    MainWindow(QWidget *parent = 0);
+    MainWindow();
     ~MainWindow();
     paralelo capturacion;
     int tiempoConexion;
@@ -131,10 +130,6 @@ public slots:
     void listarProcesos();
     void matarProceso(QString programa);
     QString obtenerInformacionSistema();
-protected:
-    void changeEvent(QEvent *e);
-private:
-    Ui::MainWindow *ui;
 };
 
 

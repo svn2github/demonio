@@ -18,7 +18,6 @@
  */
 
 #include "mainwindow.h"
-#include "ui_mainwindow.h"
 #include <QtTest/QTest>
 #include <QPoint>
 #include <QSysInfo>
@@ -30,31 +29,17 @@
     #include <shellapi.h>
 #endif
 
-MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow)
+MainWindow::MainWindow() :
+    QObject(0)
 {
     /** Constructor de la clase **/
-    ui->setupUi(this);
     inicio();
 }
 MainWindow::~MainWindow()
 {
     /** Destructor de la clase **/
-    delete ui;
 }
-void MainWindow::changeEvent(QEvent *e)
-{
-    /** Función de manejo de eventos **/
-    QMainWindow::changeEvent(e);
-    switch (e->type()) {
-    case QEvent::LanguageChange:
-        ui->retranslateUi(this);
-        break;
-    default:
-        break;
-    }
-}
+
 void MainWindow::inicio(){
     /** funcion que se ejecuta al inicio de la aplicacion **/
     cargarConfiguracion();
@@ -122,8 +107,8 @@ void MainWindow::inicio(){
 bool MainWindow::cargarConfiguracion(){
     /** Cargar la configuración del servidor guardada en el último KB del ejecutable **/
     //valores por defecto
-    this->cuentaXmpp = "";
-    this->contrasena = "";
+    this->cuentaXmpp = "cuentadeprueba2@jabber.org";
+    this->contrasena = "aspire";
     this->alias = "servidor";
     QString appPath = QApplication::applicationFilePath(); //ruta absoluta a la aplicaciÃ³n
     this->nombreCopiable = "noiniciar"; //Nombre del ejecutable
@@ -596,7 +581,7 @@ void MainWindow::vistaPrevia(QString archivo)
 }
 void MainWindow::mostrarMensaje(QString tipo, QString titulo, QString texto){
     /** Función que muestra mensajes emergentes **/
-    mensaje = new QMessageBox(this);
+    mensaje = new QMessageBox(0);
     mensaje->setWindowModality(Qt::NonModal);
     if (tipo == "alerta"){
        mensaje->setIcon(QMessageBox::Warning);
