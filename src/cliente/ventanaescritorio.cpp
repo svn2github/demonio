@@ -54,6 +54,7 @@ ventanaEscritorio::ventanaEscritorio ( QWidget *parent ) :
   this->imageEscritorio = new QLabel(this);
   this->img = new QLabel(0);
   this->imageEscritorio->setScaledContents(true);
+  captura1 = new QPixmap();
   numCapturas = 0;
   alto = 0;
   ancho = 0;
@@ -187,7 +188,7 @@ void ventanaEscritorio::botonCapturar()
 }
 void ventanaEscritorio::botonGuardar()
 {
-  guardarCaptura ( QFileDialog::getSaveFileName ( this,"Guardar captura" ),*captura1);
+  guardarCaptura ( QFileDialog::getSaveFileName ( this,"Guardar captura" ),*img->pixmap());
 }
 void ventanaEscritorio::cambioCalidad()
 {
@@ -232,7 +233,7 @@ void ventanaEscritorio::ponerCaptura (QImage imagen1)
         QString capGuarda;
         this->numCapturas++;
         capGuarda.setNum(this->numCapturas);
-        guardarCaptura(capGuarda + ".jpg",imagen);
+        guardarCaptura(capGuarda + ".jpg",*img->pixmap());
       }
       if(interruptor) //Cuando ha llegado la captura y si esta activado el boton de captura seguidas entonces seguimos pidiendo
           refresco.start();
