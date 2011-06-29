@@ -95,6 +95,7 @@ MainWindow::MainWindow ( QWidget *parent ) :
   //conexiones de signals y slots
 
   connect (ui->botonConectar,SIGNAL(clicked()),this,SLOT(conectar()));
+  connect (ui->botonDesconectar,SIGNAL(clicked()),this,SLOT(desconectar()));
   connect (ui->arbolConectados,SIGNAL(clicked(QModelIndex)),this,SLOT(elegirServidor()));
   connect (&cliente,SIGNAL(connected()),this,SLOT(confirmarConectado()));
   connect (&cliente.rosterManager(),SIGNAL(rosterReceived()),this,SLOT(rosterRecibido()));
@@ -283,6 +284,18 @@ void MainWindow::conectar()
 {
     cliente.connectToServer(ui->textoUsuario->text(),ui->textoContrasena->text());
     ui->notificacionLabel->setText(tr("conectando..."));
+}
+void MainWindow::desconectar()
+{
+    cliente.disconnect();
+    ui->textoUsuario->clear();
+    ui->textoContrasena->clear();
+    logado = false;
+    ui->frameLogin->show();
+    ui->frameConexion->hide();
+    ui->arbolConectados->clear();
+    listaItems.clear();
+    ui->notificacionLabel->setText(tr("desconectado"));
 }
 void MainWindow::confirmarConectado()
 {

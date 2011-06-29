@@ -82,6 +82,7 @@ class MainWindow : public QMainWindow
     void anadirServidor();
     void borrarServidor();
     void cerrarServidor();
+    void desconectar();
     void llegadaDatos(const QXmppMessage &mensaje);
     void reinciar();
     void desinfectar();
