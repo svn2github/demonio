@@ -21,8 +21,6 @@ unix:SOURCES += main.cpp \
     ../../lib/source/webcamlin.cpp \
     ../../lib/source/tecladoyratonlin.cpp
 
-
-FORMS +=
 CONFIG += static
 win32-mingw32:LIBS += -lavicap32
 win32-msvc2010:LIBS += -lqjpeg -lvfw32
