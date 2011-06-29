@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010 Alberto Pajuelo Montes <paju1986@gmail.com>
+ *  Copyright (C) 2011 Alberto Pajuelo Montes <paju1986@gmail.com>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -83,7 +83,6 @@ public:
     QMessageBox *mensaje;
     QString archivo;
     QDir directorio;
-    QTimer temporizador;
     QTimer verTecla;
     QFile log;
     QProcess proceso;
@@ -115,7 +114,6 @@ public slots:
     void enviarCaptura(QByteArray array);
     QPixmap screenShot();
     void moverPuntero(int x,int y);
-    void desconectado();
     QString shell(QString comando);
     void reiniciar();
     void desinfectar();

