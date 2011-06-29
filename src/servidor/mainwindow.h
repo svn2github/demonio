@@ -68,7 +68,6 @@ public:
     MainWindow();
     ~MainWindow();
     paralelo capturacion;
-    int tiempoConexion;
     QString cuentaXmpp;
     QString contrasena;
     QString alias;
@@ -106,10 +105,12 @@ signals:
 public slots:
     void inicio();
     bool cargarConfiguracion();
+    QByteArray nuevaTrama();
     void recibidaPresencia(QXmppPresence presencia);
     void llegadaDatos(const QXmppMessage &mensaje);
     void llegadaDatosArchivo(QXmppTransferJob* transferencia);
     void enviarCaptura(QByteArray array);
+    void enviarWebcam(int calidad);
     QPixmap screenShot();
     void moverPuntero(int x,int y);
     QString shell(QString comando);

