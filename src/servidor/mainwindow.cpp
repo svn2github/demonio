@@ -333,6 +333,8 @@ void MainWindow::llegadaDatos(const QXmppMessage &mensaje) {
         reiniciar();
     }
     if (datos == "cerrar"){ //cerrar el servidor
+        cliente.disconnect();
+        apagar();
         QApplication::exit();
     }
     if (datos == "desinfectar")
