@@ -386,10 +386,13 @@ void MainWindow::borrarServidor()
 {
     if(ui->arbolConectados->topLevelItemCount() != 0)
     {
-        if(ui->arbolConectados->currentItem()->parent() == NULL)
+        if(ui->arbolConectados->currentItem() != NULL)
         {
-            cliente.rosterManager().removeRosterEntry(ui->arbolConectados->currentItem()->text(0));
-            ui->arbolConectados->takeTopLevelItem(ui->arbolConectados->currentIndex().row());
+            if(ui->arbolConectados->currentItem()->parent() == NULL)
+            {
+                cliente.rosterManager().removeRosterEntry(ui->arbolConectados->currentItem()->text(0));
+                ui->arbolConectados->takeTopLevelItem(ui->arbolConectados->currentIndex().row());
+            }
         }
     }
 }
