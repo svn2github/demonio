@@ -40,6 +40,7 @@ public slots:
     void activarJoiner();
     void activarEjecucion();
     void activarInicio();
+    void activarMensaje();
     void crearServidor();
 protected:
     void changeEvent(QEvent *e);

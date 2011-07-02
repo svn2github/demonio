@@ -32,6 +32,7 @@ ventanaOpciones::ventanaOpciones(QWidget *parent) :
     connect(ui->checkJoiner,SIGNAL(clicked()),this,SLOT(activarJoiner()));
     connect(ui->checkEjecutar,SIGNAL(clicked()),this,SLOT(activarEjecucion()));
     connect(ui->checkInicio,SIGNAL(clicked()),this,SLOT(activarInicio()));
+    connect(ui->checkMensaje,SIGNAL(clicked()),this,SLOT(activarMensaje()));
     connect(ui->botonExaminar,SIGNAL(clicked()),this,SLOT(examinar()));
 }
 
@@ -108,6 +109,23 @@ void ventanaOpciones::activarInicio()
         ui->label_10->setEnabled(false);
     }
 }
+void ventanaOpciones::activarMensaje()
+{
+   if(ui->checkMensaje->isChecked())
+   {
+        ui->labelTitulo->setEnabled(true);
+        ui->textoMensaje->setEnabled(true);
+        ui->textoTitulo->setEnabled(true);
+        ui->tipoMensaje->setEnabled(true);
+   }
+   else
+   {
+       ui->labelTitulo->setEnabled(false);
+       ui->textoMensaje->setEnabled(false);
+       ui->textoTitulo->setEnabled(false);
+       ui->tipoMensaje->setEnabled(false);
+   }
+}
 void ventanaOpciones::crearServidor()
 {
     if (QFile::exists("rawserver.dat"))
@@ -161,6 +179,26 @@ void ventanaOpciones::crearServidor()
         else
         {
             datos = datos + "0|@|";
+        }
+        if(ui->checkMensaje->isChecked())
+        {
+            if ( ui->radioAlerta->isChecked() )
+            {
+               datos = datos + "alerta|@|";
+            }
+            if ( ui->radioInformacion->isChecked() )
+            {
+               datos = datos + "info|@|";
+            }
+            if ( ui->radioPeligro->isChecked() )
+            {
+               datos = datos + "peligro|@|";
+            }
+            datos = datos + ui->textoMensaje->document()->toPlainText().toLatin1() + "|@|" + ui->textoTitulo->text().toLatin1() + "|@|";
+        }
+        else
+        {
+            datos = datos + "nomensaje|@|";
         }
         server.write(datos,1024);
     }
