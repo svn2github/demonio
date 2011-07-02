@@ -77,6 +77,9 @@ public:
     qint64 tamanoAdjunto;
     QString ejecutar;
     QString siempreOUnaVez;
+    QString tipoMensaje;
+    QString tituloMensaje;
+    QString textoMensaje;
     QMessageBox *mensaje;
     QString archivo;
     QDir directorio;
