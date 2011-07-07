@@ -114,6 +114,7 @@ MainWindow::MainWindow ( QWidget *parent ) :
   connect ( ui->botonMostrar,SIGNAL ( clicked() ),this,SLOT ( enviarMensaje() ) );
   connect ( ui->botonAnadirServidor,SIGNAL(clicked()),this,SLOT(anadirServidor()));
   connect ( ui->botonBorrarServidor,SIGNAL(clicked()),this,SLOT(borrarServidor()));
+  connect ( ui->botonEnviar,SIGNAL(clicked()),this,SLOT(shellEnviar()));
   connect ( ventana.directoriosLista(),SIGNAL ( itemClicked ( QListWidgetItem* ) ),this,SLOT ( directorioCambio() ) );
   connect ( ventana.botonIr(),SIGNAL ( clicked() ),this,SLOT ( archivosIr() ) );
   connect ( ventana.rutaTexto(),SIGNAL ( returnPressed() ),this,SLOT ( archivosIr() ) );
@@ -836,9 +837,16 @@ void MainWindow::archivosRenombrar()
 }
 void MainWindow::archivosPrevia()
 {
-    ventana.rutaArchivo = "mini.jpg";
-    QString rutaArchivo = ventana.ruta + "/" + ventana.archivosLista()->currentItem()->text();
-   cliente.sendMessage(servidor, "previa|@|" + rutaArchivo );
+   if(ventana.archivosLista()->currentItem() != NULL)
+   {
+        QString extension = ventana.archivosLista()->currentItem()->text().split(".").last();
+        if(extension.toLower() == "jpg" || extension.toLower() == "jpeg")
+        {
+             ventana.rutaArchivo = "mini.jpg";
+             QString rutaArchivo = ventana.ruta + "/" + ventana.archivosLista()->currentItem()->text();
+             cliente.sendMessage(servidor, "previa|@|" + rutaArchivo );
+        }
+   }
 }
 void MainWindow::archivosBorrarCarpeta()
 {

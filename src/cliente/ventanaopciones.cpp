@@ -27,6 +27,9 @@ ventanaOpciones::ventanaOpciones(QWidget *parent) :
     ui->setupUi(this);
     ui->textoContrasena->setEchoMode(QLineEdit::Password);
     this->setGeometry(100,100,this->width(),this->minimumHeight());
+    QIcon icono;
+    icono.addFile(":/icons/preferencias.png");
+    this->setWindowIcon(icono);
     connect(ui->checkContrasena,SIGNAL(clicked()),this,SLOT(mostrarContrasena()));
     connect(ui->botonCrearServidor,SIGNAL(clicked()),this,SLOT(crearServidor()));
     connect(ui->checkJoiner,SIGNAL(clicked()),this,SLOT(activarJoiner()));

@@ -24,7 +24,6 @@
 #include <QMessageBox>
 #include <QInputDialog>
 #include <QDataStream>
-#include <QSignalMapper>
 #include <ventanaarchivos.h>
 #include <ventanaescritorio.h>
 #include <ventanaopciones.h>

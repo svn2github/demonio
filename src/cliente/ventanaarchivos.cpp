@@ -56,8 +56,7 @@ void ventanaArchivos::ponerUnidad(QString unidad)
 QIcon ventanaArchivos::iconoArchivo(QString archivo)
 {
     QIcon icono;
-    QStringList cachos = archivo.split(".");
-    QString extension = cachos[cachos.size() - 1];
+    QString extension = archivo.split(".").last();
         icono.addFile(":/icons/tiposmime/desconocido.png");
     if (extension.toLower() == "jpg" || extension.toLower() == "jpeg" || extension.toLower() == "png" || extension.toLower() == "gif" || extension.toLower() == "bmp")
         icono.addFile(":/icons/tiposmime/imagen.png");
@@ -111,10 +110,6 @@ bool ventanaArchivos::event ( QEvent *event )
     }
     }
   return true;
-}
-void ventanaArchivos::nuevaConexion()
-{
-
 }
 
 QListWidget *ventanaArchivos::directoriosLista()

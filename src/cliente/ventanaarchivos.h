@@ -40,7 +40,6 @@ class ventanaArchivos : public QMainWindow
     ventanaArchivos ( QWidget *parent = 0 );
     ~ventanaArchivos();
     QString servidor;
-    QSignalMapper mapa;
     QString ruta;
     QString rutaAnterior;
     QString rutaArchivo;
@@ -70,7 +69,6 @@ class ventanaArchivos : public QMainWindow
     void ponerArchivo ( QString archivo );
     void ponerDirectorio ( QString directorio );
     void limpiarArchivos();
-    void nuevaConexion();
   protected:
     QIcon iconoArchivo(QString archivo);
     void changeEvent ( QEvent *e );
