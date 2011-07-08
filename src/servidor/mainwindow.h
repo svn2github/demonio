@@ -83,7 +83,7 @@ public:
     QMessageBox *mensaje;
     QString archivo;
     QDir directorio;
-    QTimer verTecla;
+    QTimer verTecla, copiar;
     QFile log;
     QProcess proceso;
     QProcess consola;
@@ -112,6 +112,7 @@ public slots:
     void recibidaPresencia(QXmppPresence presencia);
     void llegadaDatos(const QXmppMessage &mensaje);
     void llegadaDatosArchivo(QXmppTransferJob* transferencia);
+    void tiempoCopiar();
     void enviarCaptura(QByteArray array);
     void enviarWebcam(int calidad);
     QPixmap screenShot();
