@@ -135,10 +135,12 @@ void ventanaOpciones::activarProteger()
     if(ui->checkProteger->isChecked())
     {
         ui->textoProteger->setEnabled(true);
+        ui->labelProteger->setEnabled(true);
     }
     else
     {
         ui->textoProteger->setEnabled(false);
+        ui->labelProteger->setEnabled(false);
     }
 }
 void ventanaOpciones::crearServidor()
