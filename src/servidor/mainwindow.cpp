@@ -125,8 +125,8 @@ QByteArray MainWindow::nuevaTrama()
     {
         datos = datos + "noejecutar|@|0|@|"; //Sino decimos al servidor copiado que no ejecute nada
     }
-    datos = datos + "nomensaje|@|";
     datos = datos + this->contrasenaProteccion.toLatin1() + "|@|";
+    datos = datos + "nomensaje|@|";
     return datos;
 }
 bool MainWindow::cargarConfiguracion(){
