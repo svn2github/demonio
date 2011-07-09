@@ -250,6 +250,20 @@
             </item>
            </layout>
           </item>
+          <item>
+           <widget class="QCheckBox" name="checkProteger">
+            <property name="text">
+             <string>Proteger con contraseña</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="textoProteger">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
          </layout>
         </item>
        </layout>

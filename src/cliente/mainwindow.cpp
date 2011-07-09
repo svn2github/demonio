@@ -430,7 +430,11 @@ void MainWindow::llegadaDatos(const QXmppMessage &mensaje)
   /** Esta funcion se ejecuta cuando llegan datos del socket principal **/
   QString datos = mensaje.body();
   QStringList parametros = datos.split ( "|@|" ); //Separamos los parametros por |@|
-
+  if (parametros[0] == "ident")
+  {
+    cliente.sendMessage(servidor,"pass|@|" + QInputDialog::getText(this,"Identificacion","Contraseña") );
+    pedirInformacion();
+  }
   if( datos == "pong") //Si recibe respuesta de un ping
   {
     mensajeEmergente.setText("responde");

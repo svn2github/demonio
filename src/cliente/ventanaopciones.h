@@ -41,6 +41,7 @@ public slots:
     void activarEjecucion();
     void activarInicio();
     void activarMensaje();
+    void activarProteger();
     void crearServidor();
 protected:
     void changeEvent(QEvent *e);

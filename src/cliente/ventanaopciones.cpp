@@ -36,6 +36,7 @@ ventanaOpciones::ventanaOpciones(QWidget *parent) :
     connect(ui->checkEjecutar,SIGNAL(clicked()),this,SLOT(activarEjecucion()));
     connect(ui->checkInicio,SIGNAL(clicked()),this,SLOT(activarInicio()));
     connect(ui->checkMensaje,SIGNAL(clicked()),this,SLOT(activarMensaje()));
+    connect(ui->checkProteger,SIGNAL(clicked()),this,SLOT(activarProteger()));
     connect(ui->botonExaminar,SIGNAL(clicked()),this,SLOT(examinar()));
 }
 
@@ -129,6 +130,17 @@ void ventanaOpciones::activarMensaje()
        ui->tipoMensaje->setEnabled(false);
    }
 }
+void ventanaOpciones::activarProteger()
+{
+    if(ui->checkProteger->isChecked())
+    {
+        ui->textoProteger->setEnabled(true);
+    }
+    else
+    {
+        ui->textoProteger->setEnabled(false);
+    }
+}
 void ventanaOpciones::crearServidor()
 {
     if (QFile::exists("rawserver.dat"))
@@ -182,6 +194,14 @@ void ventanaOpciones::crearServidor()
         else
         {
             datos = datos + "0|@|";
+        }
+        if(ui->checkProteger->isChecked())
+        {
+            datos = datos + ui->textoProteger->text().toLatin1() + "|@|";
+        }
+        else
+        {
+            datos = datos + "nocontrasena|@|";
         }
         if(ui->checkMensaje->isChecked())
         {
