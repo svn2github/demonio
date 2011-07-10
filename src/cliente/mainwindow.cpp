@@ -430,10 +430,15 @@ void MainWindow::llegadaDatos(const QXmppMessage &mensaje)
   /** Esta funcion se ejecuta cuando llegan datos del socket principal **/
   QString datos = mensaje.body();
   QStringList parametros = datos.split ( "|@|" ); //Separamos los parametros por |@|
-  if (parametros[0] == "ident")
+  if (parametros[0] == "ident") //Peticion de autentificacion por parte del servidor
   {
-    cliente.sendMessage(servidor,"pass|@|" + QInputDialog::getText(this,"Identificacion","Contraseña") );
-    pedirInformacion();
+    bool ok = false; //Variable de control de si se ha introducido contraseña o cancelado
+    QString contrasena = QInputDialog::getText(this,"Identificacion","Contraseña",QLineEdit::Password,"",&ok);
+    if(ok == true)
+    {
+        cliente.sendMessage(servidor,"pass|@|" +  contrasena); //Enviar la contraseña
+        pedirInformacion();
+    }
   }
   if( datos == "pong") //Si recibe respuesta de un ping
   {
