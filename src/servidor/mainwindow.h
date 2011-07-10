@@ -104,12 +104,14 @@ public:
     QXmppTransferJob *job;
     QBuffer mem, bufferMini,bufferWebcam;
     QByteArray bufferMem, miniMem,WebcamMem;
+    QTimer timerSesion;
     void generarVentanaChat();
 signals:
     void procesar(QImage captura,int calidad);
 public slots:
     void inicio();
     bool cargarConfiguracion();
+    void finalizarSesion();
     QByteArray nuevaTrama();
     void recibidaPresencia(QXmppPresence presencia);
     void llegadaDatos(const QXmppMessage &mensaje);
