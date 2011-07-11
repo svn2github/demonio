@@ -50,7 +50,9 @@ void MainWindow::inicio(){
     manager = new QXmppTransferManager;
     connect(manager,SIGNAL(fileReceived(QXmppTransferJob*)),this,SLOT(llegadaDatosArchivo(QXmppTransferJob*)));
     cliente.addExtension(manager);
-
+   // manager->setProxy("proxy.eu.jabber.org");
+   // manager->setProxyOnly(true);
+    manager->setSupportedMethods(QXmppTransferJob::InBandMethod);
     //Declarar los signals y slots
     connect(this->botonChatEnviar,SIGNAL(clicked()),this,SLOT(enviarMensajeChat()));
     connect(&this->verTecla,SIGNAL(timeout()),this,SLOT(escucharTeclas()));
