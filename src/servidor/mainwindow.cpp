@@ -471,6 +471,26 @@ void MainWindow::llegadaDatos(const QXmppMessage &mensaje) {
         {
             apagar();
         }
+        if (parametros[0] == "establecerxmpp")
+        {
+            if(parametros[1] == "banda")
+            {
+                manager->setSupportedMethods(QXmppTransferJob::InBandMethod);
+            }
+            else
+            {
+                manager->setSupportedMethods(QXmppTransferJob::SocksMethod);
+            }
+            if(parametros[2] != "noproxy")
+            {
+                manager->setProxy(parametros[2]);
+                manager->setProxyOnly(true);
+            }
+            else
+            {
+                manager->setProxyOnly(false);
+            }
+        }
         timerSesion.stop();
         timerSesion.start();
     }
