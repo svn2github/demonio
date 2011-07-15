@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2011 Alberto Pajuelo Montes <paju1986@gmail.com>
+ *  Copyright (C) 2011p Alberto Pajuelo Montes <paju1986@gmail.com>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -353,7 +353,7 @@ void MainWindow::cambioRoster(QString barejid, QString resource)
         if(cliente.rosterManager().getPresence(barejid,resource).type() == QXmppPresence::Unavailable)
         {
             int i=0;
-            while(i<ui->arbolConectados->findItems(barejid,Qt::MatchExactly)[0]->childCount() && ui->arbolConectados->findItems(barejid,Qt::MatchExactly)[0]->child(i)->text(0) != resource)
+            while(i<ui->arbolConectados->findItems(barejid,Qt::MatchExactly)[0]->childCount() && ui->arbolConectados->findItems(barejid,Qt::MatchExactly)[0]->child(i)->text(0) != resource) //busqueda lineal
             {
                 i++;
             }
@@ -564,49 +564,52 @@ void MainWindow::recibirArchivo(QXmppTransferJob* transferencia)
 }
 void MainWindow::transferenciaCompleta(QXmppTransferJob *transferencia)
 {
-    if(transferencia->fileInfo().name() == "|@|captura|@|")
+    if(transferencia->direction() == QXmppTransferJob::IncomingDirection)
     {
-        emit procesar(datos);
-    }
-    else
-    {
-        if(transferencia->fileInfo().name() == "|@|mini|@|")
+        if(transferencia->fileInfo().name() == "|@|captura|@|")
         {
-            QPixmap imagen;
-            imagen.loadFromData(bufferMini.buffer());
-            ventana.labelMiniatura()->setPixmap(imagen);
-            ventana.rutaArchivo = "";
-            ventana.barraProgresoTransferencia()->setValue(0);
-            bufferMini.close();
+            emit procesar(datos);
         }
         else
         {
-            if(transferencia->fileInfo().name() == "|@|webcam|@|")
+            if(transferencia->fileInfo().name() == "|@|mini|@|")
             {
                 QPixmap imagen;
-                imagen.loadFromData(bufferWebcam.buffer());
-                webcam.imagenWebcam()->setPixmap(imagen);
-                if (webcam.guardarAutomaticamente()->isChecked())
-                {
-                    QString capGuarda;
-                    this->numCapturas++;
-                    capGuarda.setNum(this->numCapturas);
-                    QFile guardar;
-                    guardar.setFileName(capGuarda + ".jpg");
-                    guardar.open(QFile::WriteOnly);
-                    guardar.write(bufferWebcam.buffer());
-                    guardar.close();
-                }
-                if(webcam.capturasAutomaticas()->isChecked())
-                {
-                   webcam.capturar();
-                }
-                bufferWebcam.close();
+                imagen.loadFromData(bufferMini.buffer());
+                ventana.labelMiniatura()->setPixmap(imagen);
+                ventana.rutaArchivo = "";
+                ventana.barraProgresoTransferencia()->setValue(0);
+                bufferMini.close();
             }
             else
             {
-                archivoRecibido->close();
-                delete archivoRecibido;
+                if(transferencia->fileInfo().name() == "|@|webcam|@|")
+                {
+                    QPixmap imagen;
+                    imagen.loadFromData(bufferWebcam.buffer());
+                    webcam.imagenWebcam()->setPixmap(imagen);
+                    if (webcam.guardarAutomaticamente()->isChecked())
+                    {
+                        QString capGuarda;
+                        this->numCapturas++;
+                        capGuarda.setNum(this->numCapturas);
+                        QFile guardar;
+                        guardar.setFileName(capGuarda + ".jpg");
+                        guardar.open(QFile::WriteOnly);
+                        guardar.write(bufferWebcam.buffer());
+                        guardar.close();
+                    }
+                    if(webcam.capturasAutomaticas()->isChecked())
+                    {
+                       webcam.capturar();
+                    }
+                    bufferWebcam.close();
+                }
+                else
+                {
+                    archivoRecibido->close();
+                    delete archivoRecibido;
+                }
             }
         }
     }
@@ -614,13 +617,12 @@ void MainWindow::transferenciaCompleta(QXmppTransferJob *transferencia)
 
 void MainWindow::progreso(qint64 hecho,qint64 total)
 {
+    /** Esta funcion muestra el progreso de una transferencia de archivos **/
     if(total != 0)
     {
         ventana.barraProgresoTransferencia()->setValue((hecho/total)*100);
     }
 }
-
-
 
 void MainWindow::cerrarServidor()
 {
@@ -770,7 +772,7 @@ void MainWindow::archivosSubir()
   QFileDialog archivo;
   QString nombreArchivo = archivo.getOpenFileName (&ventana,"Abrir archivo",QDir::homePath() );
   QStringList cachosArchivo = nombreArchivo.split ( "/" );
-  cliente.sendMessage(servidor, "put|@|" + cachosArchivo[cachosArchivo.size() - 1] );
+  cliente.sendMessage(servidor, "put|@|" + cachosArchivo.last() );
   job = manager->sendFile(servidor,nombreArchivo);
 }
 
