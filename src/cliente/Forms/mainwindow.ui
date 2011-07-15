@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>828</width>
-    <height>373</height>
+    <height>372</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -175,6 +175,13 @@
         <widget class="QPushButton" name="botonDesinfectar">
          <property name="text">
           <string>Desinstalar </string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="botonOpcionesXMPP">
+         <property name="text">
+          <string>Opciones XMPP</string>
          </property>
         </widget>
        </item>

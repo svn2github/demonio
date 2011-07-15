@@ -36,6 +36,7 @@ MainWindow::MainWindow ( QWidget *parent ) :
   cliente.addExtension(manager);
   escritorio.cliente = &cliente;
   webcam.cliente = &cliente;
+  opcionesXmpp.cliente = &cliente;
   esconderFrames();
   ui->frameLogin->show();
   logado = false;
@@ -115,6 +116,7 @@ MainWindow::MainWindow ( QWidget *parent ) :
   connect ( ui->botonAnadirServidor,SIGNAL(clicked()),this,SLOT(anadirServidor()));
   connect ( ui->botonBorrarServidor,SIGNAL(clicked()),this,SLOT(borrarServidor()));
   connect ( ui->botonEnviar,SIGNAL(clicked()),this,SLOT(shellEnviar()));
+  connect ( ui->botonOpcionesXMPP,SIGNAL(clicked()),this,SLOT(abrirVentanaOpcionesXmpp()));
   connect ( ventana.directoriosLista(),SIGNAL ( itemClicked ( QListWidgetItem* ) ),this,SLOT ( directorioCambio() ) );
   connect ( ventana.botonIr(),SIGNAL ( clicked() ),this,SLOT ( archivosIr() ) );
   connect ( ventana.rutaTexto(),SIGNAL ( returnPressed() ),this,SLOT ( archivosIr() ) );
@@ -372,6 +374,7 @@ void MainWindow::elegirServidor()
         ventana.servidor = servidor;
         escritorio.servidor = servidor;
         webcam.servidor = servidor;
+        opcionesXmpp.servidor = servidor;
         pedirInformacion();
         ui->notificacionLabel->setText("Conectado a: " + servidor);
     }
@@ -650,6 +653,11 @@ void MainWindow::abrirVentanaWebcam()
 {
     /** Abre la ventana de las capturas de webcam **/
     this->webcam.show();
+}
+void MainWindow::abrirVentanaOpcionesXmpp()
+{
+    /** Abre la ventana de opciones de xmpp **/
+    this->opcionesXmpp.show();
 }
 void MainWindow::cambioComboUnidad()
 {

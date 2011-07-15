@@ -28,6 +28,7 @@
 #include <ventanaescritorio.h>
 #include <ventanaopciones.h>
 #include <ventanawebcam.h>
+#include <ventanaopcionesxmpp.h>
 #include <QDir>
 #include <QFile>
 #include <QGridLayout>
@@ -61,6 +62,7 @@ class MainWindow : public QMainWindow
     ventanaEscritorio escritorio;
     ventanawebcam webcam;
     ventanaOpciones opciones;
+    ventanaopcionesxmpp opcionesXmpp;
     QXmppClient cliente;
     QList<QTreeWidgetItem *> listaItems;
     QString servidor;
@@ -104,6 +106,7 @@ class MainWindow : public QMainWindow
     void cambioComboUnidad();
     void abrirVentanaArchivos();
     void abrirVentanaWebcam();
+    void abrirVentanaOpcionesXmpp();
     void ponerUnidades(QStringList unidades);
     void ponerArchivos ( QStringList archivos );
     void ponerDirectorios ( QStringList directorios );

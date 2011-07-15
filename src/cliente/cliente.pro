@@ -9,18 +9,20 @@ SOURCES += main.cpp \
     ventanaarchivos.cpp \
     ventanaescritorio.cpp \
     ventanaopciones.cpp \
-    ventanawebcam.cpp
+    ventanawebcam.cpp \
+    ventanaopcionesxmpp.cpp
 HEADERS += mainwindow.h \
     ventanaarchivos.h \
     ventanaescritorio.h \
-    Forms/ventanaopciones.h \
     ventanaopciones.h \
-    ventanawebcam.h
+    ventanawebcam.h \
+    ventanaopcionesxmpp.h
 FORMS += Forms/mainwindow.ui \
     Forms/ventanaArchivos.ui \
     Forms/ventanaescritorio.ui \
     Forms/ventanaopciones.ui \
-    Forms/ventanawebcam.ui
+    Forms/ventanawebcam.ui \
+    Forms/ventanaopcionesxmpp.ui
 
 win32 {
 win32-mingw32:QMAKE_LFLAGS += -static-libgcc
