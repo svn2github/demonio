@@ -6,6 +6,9 @@ ventanaopcionesxmpp::ventanaopcionesxmpp(QWidget *parent) :
     ui(new Ui::ventanaopcionesxmpp)
 {
     ui->setupUi(this);
+    QIcon icono;
+    icono.addFile(":/icons/preferencias.png");
+    this->setWindowIcon(icono);
     connect(ui->botonEstablecer,SIGNAL(clicked()),this,SLOT(establecer()));
 }
 

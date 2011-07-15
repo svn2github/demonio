@@ -20,32 +20,25 @@
       <property name="title">
        <string>Metodos de transferencia de archivos</string>
       </property>
-      <widget class="QRadioButton" name="checkEnBanda">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>30</y>
-         <width>97</width>
-         <height>21</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>En banda</string>
-       </property>
-      </widget>
-      <widget class="QRadioButton" name="checkFueraDeBanda">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>60</y>
-         <width>131</width>
-         <height>21</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Fuera de banda</string>
-       </property>
-      </widget>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QRadioButton" name="checkEnBanda">
+         <property name="text">
+          <string>En banda</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="checkFueraDeBanda">
+         <property name="text">
+          <string>Fuera de banda</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </widget>
     </item>
     <item>
