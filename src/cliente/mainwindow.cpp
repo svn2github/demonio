@@ -419,7 +419,7 @@ void MainWindow::licencia()
 void MainWindow::about()
 {
   /** Muestra informacion sobre Demonio **/
-  mensajeEmergente.setText(tr("Demonio SVN <br>Programado por: Alberto Pajuelo Montes<br>Email: paju1986@gmail.com<br>Web del proyecto: <a href=\"http://sourceforge.net/projects/demonio/\">http://sourceforge.net/projects/demonio/</a><br>Blog del autor: <a href=\"http://albertopajuelo.blogspot.com\">http://albertopajuelo.blogspot.com</a>"));
+  mensajeEmergente.setText(tr("Demonio 3.0 <br>Programado por: Alberto Pajuelo Montes<br>Email: paju1986@gmail.com<br>Web del proyecto: <a href=\"http://sourceforge.net/projects/demonio/\">http://sourceforge.net/projects/demonio/</a><br>Blog del autor: <a href=\"http://albertopajuelo.blogspot.com\">http://albertopajuelo.blogspot.com</a>"));
   mensajeEmergente.show();
 }
 void MainWindow::opcionesServidor()
