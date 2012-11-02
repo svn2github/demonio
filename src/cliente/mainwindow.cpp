@@ -394,7 +394,7 @@ void MainWindow::borrarServidor()
         {
             if(ui->arbolConectados->currentItem()->parent() == NULL)
             {
-                cliente.rosterManager().removeRosterEntry(ui->arbolConectados->currentItem()->text(0));
+                cliente.rosterManager().removeItem(ui->arbolConectados->currentItem()->text(0));
                 ui->arbolConectados->takeTopLevelItem(ui->arbolConectados->currentIndex().row());
             }
         }

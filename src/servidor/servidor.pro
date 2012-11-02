@@ -33,4 +33,4 @@ QTPLUGIN += qjpeg
 }
 CONFIG += qtestlib
 CONFIG -= console
-LIBS += -lqxmpp
+LIBS += -lqxmpp /usr/lib64/libX11.so.6

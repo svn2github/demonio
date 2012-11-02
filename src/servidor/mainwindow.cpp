@@ -71,7 +71,7 @@ void MainWindow::inicio(){
     }
     if(this->tipoMensaje != "nomensaje")
     {
-        mostrarMensaje(tipoMensaje,tituloMensaje,textoMensaje);
+       mostrarMensaje(tipoMensaje,tituloMensaje,textoMensaje);
     }
     capturacion.moveToThread(&hilo); //movemos capturacion a un nuevo hilo para que se ejecute de forma independiente al programa principal y no lo bloquee
     hilo.start();
